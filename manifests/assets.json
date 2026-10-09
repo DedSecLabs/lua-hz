@@ -1,6 +1,7 @@
 {
   "public_included": [
-    "assets/ui-v0212: Lucide SVG/PNG/notices/source URLs"
+    "assets/ui-v0212: Lucide SVG/PNG/notices/source URLs",
+    "assets/branding/luahz-logo.png: selected unchanged project logo at owner request"
   ],
   "external_groups": {
     "fonts": {

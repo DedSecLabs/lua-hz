@@ -10,7 +10,7 @@
 
 **0.2.35** · MoonLoader · GTA San Andreas · SA-MP 0.3.7 R5
 
-[Horizon Gaming](https://hzgaming.net/) · [Installation](#installation) · [Features](#features) · [Development](#development) · [Documentation](#documentation)
+[Horizon Gaming](https://hzgaming.net/) · [Downloads](https://github.com/DedSecLabs/lua-hz/releases) · [Installation](#installation) · [Features](#features) · [Development](#development) · [Documentation](#documentation)
 
 </div>
 
@@ -64,7 +64,7 @@ If Windows reports missing DirectX helper DLLs or Visual C++ runtimes, use Micro
 
 ### 3. Install LuaHZ
 
-**For players:** A public LuaHZ install package is not available yet. The prerequisite links above let you prepare your game now. The complete release needs our compiled helpers and separately reviewed visual assets; the source ZIP does not contain them.
+**For players:** Check [GitHub Releases](https://github.com/DedSecLabs/lua-hz/releases) for player downloads. A public LuaHZ install package is not available yet. The prerequisite links above let you prepare your game now. The complete release needs our compiled helpers and separately reviewed visual assets; the source ZIP does not contain them. Files labeled **developer preview** are for contributors and local testers. Choose a file named `LuaHZ-<version>-player.zip` when one becomes available, then follow its included installation guide.
 
 **For contributors or local testers:** Follow the [source build and controlled deployment guide](docs/DEVELOPMENT.md). Deployment tools preserve backups and preferences. Full visual deployment requires the external resources listed in the [asset inventory](docs/ASSETS.md).
 
@@ -112,6 +112,7 @@ Native build tools, deployment, recovery and fresh-clone verification are covere
 | [Assets](docs/ASSETS.md) | Included assets and separately acquired resources |
 | [Recovery](docs/RECOVERY.md) | Restore a previous working installation |
 | [QA](docs/QA.md) | Offline verification and in-game test coverage |
+| [Releases](docs/RELEASING.md) | Draft automation, download types and player-release preparation |
 
 ## License and acknowledgments
 

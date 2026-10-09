@@ -45,3 +45,7 @@ python tools/verify_source_clone.py --luajit /path/to/luajit --toolchain /usr
 ```
 
 The verifier exports only public source, makes a temporary local Git repository, clones it into a new directory, runs checks without --moonloader, then builds both native components from the public manifest fingerprint. It records a report in ignored build/. It never creates a GitHub repository, pushes, commits to the user's existing parent repository or accesses the game. This proves code/test/build portability, not redistribution permission or completeness of an external visual asset bundle.
+
+## Release packaging
+
+The [release guide](RELEASING.md) covers local packaging, Actions artifacts and draft prereleases. tools/package_release.py exports reviewed source and the two original compiled native helpers. Player output remains disabled until the complete resource and installation path is implemented and validated; the local QA ZIP is never a public release input.

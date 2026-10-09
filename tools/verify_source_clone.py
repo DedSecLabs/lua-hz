@@ -27,8 +27,12 @@ def verify(luajit,toolchain):
             fingerprint=dependencies['native_loading_artifact']['resource_fnv32']
             subprocess.run([sys.executable,'tools/build_native_loading.py','--toolchain',str(toolchain),'--asset-fnv',fingerprint],
                            cwd=clone,stdout=output,stderr=subprocess.STDOUT,check=True)
+            revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=clone,text=True).strip()
+            subprocess.run([sys.executable,'tools/package_release.py','--output','dist/release',
+                            '--native-dir','build/native','--revision',revision],
+                           cwd=clone,stdout=output,stderr=subprocess.STDOUT,check=True)
         report={'public_source_files':info['file_count'],'real_git_clone':True,'private_files_available':False,
-                'offline_checks':'passed','both_native_components':'built','game_required':False,
+                'offline_checks':'passed','both_native_components':'built','developer_preview_packaging':'passed','game_required':False,
                 'log':'build/fresh-source-verification.log','scope':'Code/test/build reproducibility; full cosmetic assets remain external'}
         (ROOT/'build/fresh-source-verification.json').write_text(json.dumps(report,indent=2)+'\n')
         return report

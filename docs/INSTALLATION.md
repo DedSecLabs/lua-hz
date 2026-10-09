@@ -85,7 +85,7 @@ This is a layout checklist, not a full archive inventory. The prerequisite archi
 
 ## Installing LuaHZ itself
 
-**Player package:** Pending. No download or one-click installer is advertised until the compiled native helpers and visual resources are packaged and reviewed.
+**Player package:** Pending. Watch [GitHub Releases](https://github.com/DedSecLabs/lua-hz/releases) for a file named `LuaHZ-<version>-player.zip`. Downloads labeled **developer preview** and GitHub’s automatic **Source code** archives are for contributors; they are not player installers. No one-click installer is advertised until the complete payload and installation path are validated.
 
 **Source/local testing:** Use [the development guide](DEVELOPMENT.md) to check/build the source and deploy it with backups. Our Lua entry point is historically named `HorizonBase.lua`; it belongs in `moonloader`, and `src/lib/horizonbase` becomes `moonloader/lib/horizonbase`. Use the deployment tools to stage the licensed UI icons and available external resources; copying only that Lua file is insufficient.
 
