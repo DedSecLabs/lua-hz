@@ -1,0 +1,81 @@
+name: Base player prerelease
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - tools/package_base.py
+      - tools/base_install.sh
+      - tools/base_restore.sh
+      - docs/BASE_INSTALL.md
+      - .github/workflows/base-release.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: base-player-release
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Developer tools
+        run: sudo apt-get update && sudo apt-get install -y luajit gcc
+      - run: python -m pip install -r requirements-dev.txt
+      - name: Source and recovery checks
+        run: python tools/check.py --luajit /usr/bin/luajit
+      - name: Package base player download
+        env:
+          SOURCE_REVISION: ${{ github.sha }}
+        run: python tools/package_base.py --output dist/base --revision "$SOURCE_REVISION"
+      - name: Verify ZIP
+        working-directory: dist/base
+        run: sha256sum --check SHA256SUMS.txt
+      - uses: actions/upload-artifact@v7.0.2
+        with:
+          name: base-player-preview
+          path: |
+            dist/base/*.zip
+            dist/base/SHA256SUMS.txt
+            dist/base/RELEASE_NOTES.md
+            dist/base/release-manifest.json
+          if-no-files-found: error
+
+  release:
+    needs: verify
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          name: base-player-preview
+          path: dist/base
+      - name: Publish new testing prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          SOURCE_REVISION: ${{ github.sha }}
+        run: |
+          cd dist/base
+          sha256sum --check SHA256SUMS.txt
+          tag=$(python3 -c 'import json; print(json.load(open("release-manifest.json"))["tag"])')
+          version=$(python3 -c 'import json; print(json.load(open("release-manifest.json"))["version"])')
+          if gh release view "$tag" --json url --jq .url > release-url.txt; then
+            echo 'Base prerelease already exists; leaving it unchanged.' >> "$GITHUB_STEP_SUMMARY"
+            cat release-url.txt >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          gh release create "$tag" ./*.zip SHA256SUMS.txt RELEASE_NOTES.md release-manifest.json \
+            --prerelease --latest=false --target "$SOURCE_REVISION" \
+            --title "LuaHZ $version — base player preview (Linux/Wine)" --notes-file RELEASE_NOTES.md
+          gh release view "$tag" --json url --jq .url >> "$GITHUB_STEP_SUMMARY"

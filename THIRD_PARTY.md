@@ -20,6 +20,8 @@ The maintained assets/ui-v0212 sidebar/close/status SVGs and rendered PNGs are L
 
 ## External runtime and cosmetic inputs
 
+The separate Linux/Wine base player preview bundles FYP's eight MIT-licensed SAMP.Lua v2.0.4 files with the documented material-handler adjustment. The packager verifies every file against the recorded tested hashes and includes the upstream full MIT license. Other prerequisite binaries remain separate downloads. This exception does not change the developer-preview packaging policy or permit inclusion of external visual packs.
+
 MoonLoader, SAMPFUNCS, CLEO, the ASI loader, mimgui renderer, SAMP.Lua, GTA and SA-MP are separately installed prerequisites, not bundled. Exact locally verified fingerprints and upstream links are in manifests/dependencies.json. SAMP.Lua’s upstream is https://github.com/THE-FYP/SAMP.Lua (MIT); native/runtime redistribution is not assumed from a download link.
 
 Reused LunaHZ resources reference https://github.com/lunahz/dependencies. Native/HUD font preparation uses owner-supplied DJDARKO 2025 v1.0.1 plain sheets/data. HD radar sprites come from the owner-supplied pack; Proper Radar v1.3 has Junior_Djjr/Grove Street Games/Jéssica Natália provenance. Standard skin previews are linked by https://open.mp/docs/scripting/resources/skins. Their binaries remain external and public package permissions need review. Per-file hashes and grouping are in manifests/assets.json; acquisition/preparation roles are in docs/ASSETS.md.

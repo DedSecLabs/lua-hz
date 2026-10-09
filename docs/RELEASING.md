@@ -4,6 +4,10 @@ Players will download a named player ZIP from [GitHub Releases](https://github.c
 
 ## Available packaging today
 
+The separate **Base player prerelease** workflow builds LuaHZ-0.2.35-base.zip and publishes a new testing prerelease after source/installer checks. It includes the Lua feature modules, maintained UI icons/logo and verified MIT SAMP.Lua files, with a Linux/Wine shell installer and guarded recovery. It excludes native graphics helpers, HD assets, portrait previews and Quickmap backgrounds. No clean-install gameplay or Windows support is claimed before the corresponding live tests. See [base installation](BASE_INSTALL.md). Published versions are left unchanged on reruns; prerequisite binaries remain separate.
+
+This minimal edition is built by tools/package_base.py. The developer-preview packager's full-visual player mode remains disabled; its policy below is separate from the base edition.
+
 The **Draft release** workflow builds a **developer preview**, not the complete player mod. It contains audited source, licensed UI assets, the logo and our compiled x86 native helpers. External texture/font/portrait/loading resources and prerequisites are absent. `START-HERE.md` inside the ZIP explains these limits and points contributors to the development guide. The helpers cannot reproduce the approved visual build without their matching external resources.
 
 The download is named `LuaHZ-0.2.35-developer-preview.zip`. `release-manifest.json` records the source commit and every payload hash; `SHA256SUMS.txt` covers the ZIP, manifest and release notes.

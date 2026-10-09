@@ -18,7 +18,7 @@
 
 LuaHZ brings clearer player and vehicle information, a useful map and configurable controls to **Horizon Gaming / Horizon Roleplay**. It activates only on `samp.hzgaming.net:7777` / `213.32.6.232:7777`. You can continue using the same SA-MP installation for other servers.
 
-> **Release status:** This repository currently provides **source code**, not a ready-to-install release. Prerequisites are downloaded separately. The full visual package is still being prepared for public distribution; downloading GitHub's source ZIP will not install the complete mod.
+> **Player testing download:** [LuaHZ 0.2.35 base preview](https://github.com/DedSecLabs/lua-hz/releases/tag/v0.2.35-base-preview) provides the Lua features and licensed UI assets with a backed-up **Linux/Wine** installer. It keeps stock native visuals and excludes HD artwork, portraits and Quickmap backgrounds. Fresh-install gameplay QA is pending. Prerequisites remain separate; GitHub's automatic source ZIP is developer source.
 
 ## Features
 
@@ -36,7 +36,7 @@ Live health, armor, cash and skin information come from the game client. Account
 
 ## Installation
 
-**New to mods?** Start with the [step-by-step prerequisite guide](docs/INSTALLATION.md). It explains which folder to use, what to copy and how to check your setup. A player install package is still pending; the steps below prepare your game for that release.
+**New to mods?** Start with the [step-by-step prerequisite guide](docs/INSTALLATION.md). For the Linux/Wine base preview, follow [its installation guide](docs/BASE_INSTALL.md). The full visual package remains pending.
 
 ### 1. Prepare your game
 
@@ -67,7 +67,7 @@ If Windows reports missing DirectX helper DLLs or Visual C++ runtimes, use Micro
 
 ### 3. Install LuaHZ
 
-**For players:** Check [GitHub Releases](https://github.com/DedSecLabs/lua-hz/releases) for player downloads. A public LuaHZ install package is not available yet. The prerequisite links above let you prepare your game now. The complete release needs our compiled helpers and separately reviewed visual assets; the source ZIP does not contain them. Files labeled **developer preview** are for contributors and local testers. Choose a file named `LuaHZ-<version>-player.zip` when one becomes available, then follow its included installation guide.
+**For Linux/Wine player testing:** Download **LuaHZ-0.2.35-base.zip** from the [base prerelease](https://github.com/DedSecLabs/lua-hz/releases/tag/v0.2.35-base-preview), extract outside GTA and follow [INSTALL.md](docs/BASE_INSTALL.md). It includes the verified SAMP.Lua adjustment, so skip the separate SAMP.Lua download/edit step. The shell installer targets a separate clean supported game and makes backups. It retains stock native graphics; portrait previews, custom loading and Quickmap backgrounds are absent. Native Windows installation and a complete visual pack remain pending. The developer preview and automatic source ZIPs remain contributor downloads.
 
 **For contributors or local testers:** Follow the [source build and controlled deployment guide](docs/DEVELOPMENT.md). Deployment tools preserve backups and preferences. Full visual deployment requires the external resources listed in the [asset inventory](docs/ASSETS.md).
 
