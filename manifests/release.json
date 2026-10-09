@@ -6,7 +6,7 @@
   "player_release_blockers": [
     "External font, map, icon, portrait and loading resources need redistribution review or replacement.",
     "A complete player payload and a backed-up installation/update path still need packaging and validation.",
-    "The 0.2.35 loading artwork still needs owner in-game QA.",
+    "Clean installation of the downloaded player package on a separate Linux/Wine game copy is pending.",
     "Native Windows clean-install QA is pending."
   ]
 }

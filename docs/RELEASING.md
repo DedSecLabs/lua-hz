@@ -15,7 +15,7 @@ The download is named `LuaHZ-0.2.35-developer-preview.zip`. `release-manifest.js
 3. Actions verifies checksums, saves a 30-day build artifact, then creates or updates a **draft prerelease** with tag `v0.2.35-source-preview` at the exact tested commit.
 4. Review its notes and four attached assets (ZIP, checksums, manifest and notes file) on the Releases page while signed in. A draft is visible to repository members with the necessary access; players see it only after publication.
 
-Pull requests build and verify artifacts with read-only repository permissions. They cannot create releases. Only the separate main-branch draft job receives write permission. The workflow never publishes a release automatically and refuses to overwrite a published version. A rerun can replace the assets of an existing draft; earlier build artifacts remain available during their retention period.
+Pull requests build and verify artifacts with read-only repository permissions. They cannot create releases. Only the separate main-branch draft job receives write permission. The workflow never publishes a release automatically. If the version is already published, it reports that the release is unchanged and finishes successfully; verified build artifacts remain available on the run. Use a new version for another release. A rerun can replace the assets of an existing draft; earlier build artifacts remain available during their retention period.
 
 The version in `manifests/release.json` must match `src/HorizonBase.lua` and `tools/deploy.py`. Bump those together for a new mod version. Native loading builds always use the paired resource fingerprint in `manifests/dependencies.json`.
 
@@ -39,7 +39,7 @@ The tracked policy in [release.json](../manifests/release.json) lists the curren
 - Acquire permission for the required visual resources or replace them with distributable alternatives; include their notices and provenance.
 - Assemble the full player folder layout, including the loading helper/resource pair, and validate completeness against explicit file/hash manifests.
 - Provide a first-install/update path that closes GTA/SA-MP, verifies supported stock prerequisites, backs up owned files, rolls back failures and preserves player settings/locations.
-- Complete owner gameplay/artwork QA and native Windows clean-install testing, and state the actual supported platforms in the notes.
+- Complete [fresh player installation QA](PLAYER_INSTALL_QA.md) and native Windows clean-install testing, and state the actual supported platforms in the notes. The owner has already approved the existing 0.2.35 artwork build; that does not replace testing the downloaded package.
 - Add and test player packaging before changing the download status. Editing `player_installable` alone cannot enable it: the current packager refuses player output.
 
 Then prepare a new draft prerelease for player testing. After its required QA, publish a stable version and update the README's player download link. Prerequisites remain separate. GitHub Packages is unused because these downloads are ZIP release assets.

@@ -46,19 +46,22 @@ Close **both GTA and the SA-MP browser** before installing or updating files. Ke
 
 ### 2. Install the tested prerequisites
 
-Use the versions below to reproduce the tested setup. All game/mod components are **32-bit (x86)**, including on 64-bit Windows. Choose the named version rather than a site's newest release.
+Install these **in the order shown**, with GTA and SA-MP closed. Use the named **32-bit (x86)** versions even on 64-bit Windows.
 
-| Prerequisite | Tested version | Download / installation |
-|---|---|---|
-| SA-MP | **0.3.7 R5**; HZ's `R5-2-MP` installer | [Horizon download page](https://hzgaming.net/fullpage.php?id=download) — install into your GTA folder |
-| CLEO | **4.4.4** | [Exact release](https://github.com/cleolibrary/CLEO4/releases/tag/v4.4.4) · [CLEO4.zip](https://github.com/cleolibrary/CLEO4/releases/download/v4.4.4/CLEO4.zip) |
-| ASI loader | **Silent's ASI Loader 1.2** | Use the loader supplied inside the **CLEO 4.4.4 ZIP above**, matching our installation |
-| MoonLoader | **0.26.5-beta** | [Author's thread](https://www.blast.hk/threads/13305/) · [Archive download](https://blast.hk/moonloader/download.php?archive) — retain the included `moonloader/lib` files |
-| SAMPFUNCS | **5.7.1 rel.25, R5 build** | [Author's thread](https://www.blast.hk/threads/17/) · [R5 attachment](https://www.blast.hk/attachments/255877/) — choose R5, not R1/R3 |
-| mimgui | **1.7.0** | [Exact release](https://github.com/THE-FYP/mimgui/releases/tag/v1.7.0) · [mimgui-v1.7.0.zip](https://github.com/THE-FYP/mimgui/releases/download/v1.7.0/mimgui-v1.7.0.zip) — place `mimgui` in `moonloader/lib` |
-| SAMP.Lua | **2.0.4 + two-line material-handler adjustment** | [Pinned release](https://github.com/THE-FYP/SAMP.Lua/releases/tag/v2.0.4) — copy its `samp` folder into `moonloader/lib`, then follow the [exact baseline instructions](docs/INSTALLATION.md#samplua-baseline) |
+Your **GTA folder** is the folder containing `gta_sa.exe`. Paths such as `moonloader/lib` are inside that folder. Open each ZIP and copy its runtime files to the destination below; do not copy the ZIP itself or an extra wrapper folder. Keep the complete supplied libraries.
 
-Some downloads require a browser or challenge verification. Installed-file hashes and download verification details are recorded in the [dependency manifest](manifests/dependencies.json) and [installation guide](docs/INSTALLATION.md). The MoonLoader archive URL is not immutable: confirm its version and hash before installing. An upstream link alone does not establish that every download on that page matches our tested files.
+| Download — tested version | Where it goes / what to do |
+|---|---|
+| **1. SA-MP 0.3.7 R5** — [Horizon download page](https://hzgaming.net/fullpage.php?id=download); choose `R5-2-MP` | Run the installer and select your **GTA folder**. Afterwards, `samp.exe` and `samp.dll` should be beside `gta_sa.exe`. |
+| **2. CLEO 4.4.4 + ASI loader** — [CLEO4.zip](https://github.com/cleolibrary/CLEO4/releases/download/v4.4.4/CLEO4.zip) | Follow the ZIP's README to install its runtime files in your **GTA folder**. Use its supplied **Silent's ASI Loader 1.2** (`vorbisFile.dll` and `vorbisHooked.dll`). Developer SDK/examples are not required. |
+| **3. MoonLoader 0.26.5-beta** — [author's thread](https://www.blast.hk/threads/13305/) · [archive](https://blast.hk/moonloader/download.php?archive) | Extract its runtime payload into your **GTA folder**. Keep `MoonLoader.asi`, the supplied runtime DLLs and the complete `moonloader/lib` folder. |
+| **4. SAMPFUNCS 5.7.1 rel.25, R5 build** — [author's thread](https://www.blast.hk/threads/17/) · [R5 attachment](https://www.blast.hk/attachments/255877/) | Follow the included instructions. `SAMPFUNCS.asi` belongs in your **GTA folder**. Choose the **R5** build; R1/R3 builds are not interchangeable. |
+| **5. mimgui 1.7.0** — [release Assets](https://github.com/THE-FYP/mimgui/releases/tag/v1.7.0); choose `mimgui-v1.7.0.zip` | Merge its library payload into **`moonloader/lib`**. Check that `moonloader/lib/mimgui/init.lua` and `mimgui/cimguidx9.dll` exist there. |
+| **6. SAMP.Lua 2.0.4 + baseline adjustment** — [v2.0.4 source ZIP](https://github.com/THE-FYP/SAMP.Lua/archive/refs/tags/v2.0.4.zip) | Copy the complete **`samp` folder into `moonloader/lib`**, producing `moonloader/lib/samp/events.lua`. The tested setup also needs the [two-line adjustment](docs/INSTALLATION.md#samplua-baseline); the ZIP alone does not include it. |
+
+On **Linux/Wine**, install all prerequisites inside the **same Wine prefix as this game copy**. See the [Windows/Wine guide](docs/WINDOWS_WINE_PREREQUISITE_QA.md) for the tested environment.
+
+Some downloads require browser verification. The MoonLoader archive link can change: confirm **0.26.5-beta** and its recorded hash. The [installation guide](docs/INSTALLATION.md) provides the complete folder checklist, download verification and troubleshooting; the [dependency manifest](manifests/dependencies.json) records the tested file hashes.
 
 If Windows reports missing DirectX helper DLLs or Visual C++ runtimes, use Microsoft's [DirectX June 2010 package](https://www.microsoft.com/en-us/download/details.aspx?id=8109) and [Visual C++ x86 runtime guidance](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist). These are conditional system requirements; compatible components already installed need no duplicate installation.
 

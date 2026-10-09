@@ -4,9 +4,9 @@
 
 The user performs in-game visual/gameplay QA. Reported normal-launch HZ → another server → HZ tests passed for the Lua gate (0.2.30), native fonts/icons/maps (0.2.32) and loading screen/bar (0.2.33). Those tests used one SA-MP browser/installation under Wine and were repeated. The approved loading artwork before the current edit is v8. Native Windows, arbitrary other mods/client builds and separate same-process splash redisplay are not claimed as tested.
 
-## Current 0.2.35 visual check
+## Accepted 0.2.35 artwork
 
-Fully restart on HZ. Confirm the new user-supplied GTA-style artwork matches the supplied PNG, with clear outlines/colors, intact title/footer and the centered live bar. The source is copied unchanged at 1672×941; the accepted 2048×1024 uncompressed native format remains. Briefly confirm another server keeps the stock screen. No endpoint/rendering logic changed; visual approval of this replacement remains with the user.
+The owner confirmed the 0.2.35 in-game test is complete on the existing Wine installation. The user-supplied artwork is copied unchanged at 1672×941; the accepted 2048×1024 uncompressed native format remains. No endpoint/rendering logic changed. This approval is separate from fresh installation of a downloaded player package, which remains untested. Follow [player installation QA](PLAYER_INSTALL_QA.md) for that test.
 
 ## Regression cases
 

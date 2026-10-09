@@ -80,8 +80,9 @@ jobs:
           version=$(python3 -c 'import json; print(json.load(open("dist/release/release-manifest.json"))["version"])')
           if gh release view "$tag" --json isDraft --jq .isDraft > draft-state.txt; then
             if [ "$(cat draft-state.txt)" != true ]; then
-              echo "Refusing to change a published release. Use a new version."
-              exit 1
+              echo "Release $tag is already published; leaving its tag, notes and assets unchanged."
+              echo "Release $tag is already published. Verified build artifacts are available on this run; use a new version for another release." >> "$GITHUB_STEP_SUMMARY"
+              exit 0
             fi
             gh release edit "$tag" --draft --prerelease --latest=false --target "$SOURCE_REVISION" \
               --title "LuaHZ $version — developer preview" --notes-file dist/release/RELEASE_NOTES.md
