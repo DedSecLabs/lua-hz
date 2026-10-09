@@ -1,0 +1,6 @@
+LIBRARY LuaHZLoading
+EXPORTS
+    HZL_Destination
+    HZL_Status
+    HZL_ValidateEncoded
+    HZL_ProbeGetterABI=hzl_bridge

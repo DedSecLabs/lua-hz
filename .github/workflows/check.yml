@@ -1,0 +1,21 @@
+name: Source checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Developer tools
+        run: sudo apt-get update && sudo apt-get install -y luajit gcc binutils-mingw-w64-i686 mingw-w64-i686-dev
+      - run: python -m pip install -r requirements-dev.txt
+      - run: python tools/check.py --luajit /usr/bin/luajit
+      - run: python tools/build_native_visuals.py --toolchain /usr
+      - name: Native loading source build
+        run: python tools/build_native_loading.py --toolchain /usr --asset-fnv "$(python -c 'import json; print(json.load(open("manifests/dependencies.json"))["native_loading_artifact"]["resource_fnv32"])')"

@@ -1,0 +1,2 @@
+# Tested tooling dependency. Not an in-game requirement.
+Pillow==12.1.1

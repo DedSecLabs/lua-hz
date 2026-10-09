@@ -1,0 +1,8 @@
+LIBRARY LuaHZVisuals
+EXPORTS
+    HZV_Init
+    HZV_Update
+    HZV_Deactivate
+    HZV_Status
+    HZV_Shutdown
+    HZV_ValidateTxd

@@ -1,0 +1,16 @@
+/build/
+/.local/
+/branding/
+/.venv/
+/dist/
+/output/
+__pycache__/
+*.pyc
+*.log
+*.dll
+*.asi
+*.exe
+*.txd
+*.img
+*.luac
+*.zip

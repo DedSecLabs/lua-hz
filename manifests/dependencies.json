@@ -1,0 +1,165 @@
+{
+  "supported_endpoint": {
+    "ip": "213.32.6.232",
+    "hostname": "samp.hzgaming.net",
+    "port": 7777
+  },
+  "runtime_binaries": {
+    "gta_sa.exe": {
+      "version": "GTA SA 1.0 US verified local build",
+      "sha256": "a559aa772fd136379155efa71f00c47aad34bbfeae6196b0fe1047d0645cbd26",
+      "source": null,
+      "bundled": false
+    },
+    "samp.dll": {
+      "version": "SA-MP 0.3.7 R5",
+      "sha256": "b72b5dbe725f81864ca3f78bc7063bda56cc05fc7188af822fa7a754432553a2",
+      "source": "https://hzgaming.net/fullpage.php?id=download",
+      "bundled": false,
+      "installer": "sa-mp-0.3.7-R5-2-MP-install.exe"
+    },
+    "MoonLoader.asi": {
+      "version": "0.26.5-beta",
+      "sha256": "2dde661ed1954f242ac76e8c5dc30aee77541910edb30fe7133893b90aa1da3f",
+      "source": "https://www.blast.hk/threads/13305/",
+      "bundled": false,
+      "download": "https://blast.hk/moonloader/download.php?archive",
+      "archive_sha256": "21d55eeefe4c7bb9962a879c0f64ba28c564bc36a330fd282dcd46c8b7280d9f",
+      "download_verification": "Archive matched upstream during 2026-10-08 audit; mutable URL, verify before use"
+    },
+    "SAMPFUNCS.asi": {
+      "version": "5.7.1 rel.25 R5",
+      "sha256": "642fc80f022ef41d9d6c11988de03e3bf32afb4a51b5806f1fecebc4e73c9fb0",
+      "source": "https://www.blast.hk/threads/17/",
+      "bundled": false,
+      "download": "https://www.blast.hk/attachments/255877/",
+      "download_verification": "Author attachment identified; upstream archive byte match pending browser challenge"
+    },
+    "CLEO.asi": {
+      "version": "4.4.4",
+      "sha256": "748ea0b36a1580652146c8b443066bdd81ef14556431805b2102f0f1f44caa08",
+      "source": "https://github.com/cleolibrary/CLEO4/releases/tag/v4.4.4",
+      "bundled": false,
+      "download": "https://github.com/cleolibrary/CLEO4/releases/download/v4.4.4/CLEO4.zip",
+      "archive_sha256": "aca8a1ca9dfc85d6f886b5963388059b2580501219f1f6b891114560552a8560"
+    },
+    "vorbisFile.dll": {
+      "version": "Silent's ASI Loader 1.2 (from CLEO 4.4.4 archive)",
+      "sha256": "c33e1bafafd441b42eaa6d322393b9dd700f8a9c13fb2e7780daf49707a46353",
+      "source": "https://github.com/cleolibrary/CLEO4/releases/tag/v4.4.4",
+      "bundled": false
+    },
+    "vorbisHooked.dll": {
+      "version": "Silent's ASI Loader 1.2 (from CLEO 4.4.4 archive)",
+      "sha256": "a08923479000cec366967fb8259e0920b7aa18859722c7dda1415726bed4774f",
+      "source": "https://github.com/cleolibrary/CLEO4/releases/tag/v4.4.4",
+      "bundled": false
+    }
+  },
+  "runtime_lua_files": {
+    "lib/mimgui/init.lua": {
+      "sha256": "01b6eeed97631c7a350b7f8b23b924432d5b78116a0e426fe70ab6f8b7421f73",
+      "bundled": false
+    },
+    "lib/samp/events.lua": {
+      "sha256": "6dc758e5dde13c5d9013e883c1bfb203309cfaa21f58d5c67591977bb46e89dd",
+      "bundled": false
+    },
+    "lib/samp/events/core.lua": {
+      "sha256": "2f5e563aed6f558fa94134b83a36868abe6a68b8270bf5d975eecbe146adb615",
+      "bundled": false
+    },
+    "lib/vkeys.lua": {
+      "sha256": "a74b3f76666e8c8b9fa078e239bcfd3123762ee064c242f9349fdda9a449718b",
+      "bundled": false
+    },
+    "lib/windows/message.lua": {
+      "sha256": "4ab3845c28e7755c86736162fd22cba165e534ec1df5c76665ce8ffdbb8a929f",
+      "bundled": false
+    },
+    "lib/samp/events/bitstream_io.lua": {
+      "sha256": "00e85ade0fc4ea4c868bb42b27c3b93cc12f5c8feee7c2528454c5ea87e03dfa",
+      "bundled": false
+    },
+    "lib/samp/events/extra_types.lua": {
+      "sha256": "431b95a4bc9c51f15178418e6c302c9450380530fe82eb31fbe2f24983dc2228",
+      "bundled": false
+    },
+    "lib/samp/events/handlers.lua": {
+      "sha256": "69a103ab535ad8cb0ce19ae802a79a1d7faded0cbe1cc75fb6b98ebf50c4df83",
+      "bundled": false
+    },
+    "lib/samp/events/utils.lua": {
+      "sha256": "a2398822d9a10fc6bd5cf459b6b3b9e0f42721b9629b22b74ae16c2e1932cebb",
+      "bundled": false
+    },
+    "lib/samp/raknet.lua": {
+      "sha256": "488a60296bb5c41f5a2a4007308bfbe33e78f512bbb60fafc978437d0f7bf7b0",
+      "bundled": false
+    },
+    "lib/samp/synchronization.lua": {
+      "sha256": "5e2e5ad3bfba848b20b8035f1b7a0ad997c958b924f231931c5a95b619a34ac7",
+      "bundled": false
+    },
+    "lib/mimgui/cdefs.lua": {
+      "sha256": "55b10a5b13590a076ffaf3a109f4748be305a76943313ddf22c9d9a5761bcaad",
+      "bundled": false
+    },
+    "lib/mimgui/cimguidx9.dll": {
+      "sha256": "1a7a059974c33095edc2f2da880d7c79c99d7e3b3c189e2f51036bb7e519d88b",
+      "bundled": false
+    },
+    "lib/mimgui/dx9.lua": {
+      "sha256": "94522c3ea629b7e1daf92ce64376097ad222a62b67f5ed1adf7f8879f1b46f2f",
+      "bundled": false
+    },
+    "lib/mimgui/imgui.lua": {
+      "sha256": "a55619546334392b1c654c9c0d9034dd971049906f277a60f27dd77bf7ae2cc6",
+      "bundled": false
+    }
+  },
+  "developer_tools": {
+    "python": ">=3.11",
+    "pillow": "12.1.1",
+    "luajit": "2.1",
+    "host_gcc": ">=12, Linux freestanding x86 build",
+    "mingw": "x86 binutils and libkernel32.a"
+  },
+  "native_loading_artifact": {
+    "resource_bytes": 8388776,
+    "resource_fnv32": "0x6b2c7864",
+    "resource_sha256": "01a25aeaac9ba8f3140a722821d2401af6b1c36c21e3fc380354d234f2ad604f",
+    "raster": [
+      2048,
+      1024
+    ],
+    "format": "A8R8G8B8"
+  },
+  "platform_validation": {
+    "wine": "Wine 11.0 via GE-Proton11-7 x86_64",
+    "windows_native": "not yet tested"
+  },
+  "publication_scope": "Source, tests, tools, notices, licensed Lucide assets and the owner-approved README/menu logo",
+  "runtime_libraries": {
+    "mimgui": {
+      "version": "1.7.0",
+      "source": "https://github.com/THE-FYP/mimgui/releases/tag/v1.7.0",
+      "download": "https://github.com/THE-FYP/mimgui/releases/download/v1.7.0/mimgui-v1.7.0.zip",
+      "archive_sha256": "902247f223372518116ccb8a8ff97d88582ad75b355d29ee61e809aa3016cce5",
+      "verification": "Installed renderer byte match and all four Lua files match after CRLF-to-LF normalization on 2026-10-09",
+      "bundled": false
+    },
+    "SAMP.Lua": {
+      "version": "2.0.4 + local material-handler adjustment",
+      "source": "https://github.com/THE-FYP/SAMP.Lua/releases/tag/v2.0.4",
+      "download": "https://github.com/THE-FYP/SAMP.Lua/archive/refs/tags/v2.0.4.zip",
+      "verification": "Seven installed files match v2.0.4 exactly; handlers.lua adds data.actionType = actionType in both on_create_object_reader material action branches",
+      "reproduction": "docs/INSTALLATION.md#samplua-baseline",
+      "bundled": false
+    }
+  },
+  "link_review": {
+    "date": "2026-10-09",
+    "notes": "Pinned GitHub release pages, HZ landing page, MoonLoader author/archive and SAMPFUNCS author page checked on 2026-10-09. The SAMPFUNCS attachment returns HTML; its binary and HZ installer still require manual byte verification."
+  }
+}

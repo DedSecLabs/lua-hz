@@ -1,0 +1,13 @@
+{
+  "monitor": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/monitor.svg",
+  "map": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/map.svg",
+  "bot": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/bot.svg",
+  "keyboard": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/keyboard.svg",
+  "gauge": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/gauge.svg",
+  "terminal": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/terminal.svg",
+  "settings": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/settings.svg",
+  "scroll-text": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/scroll-text.svg",
+  "x": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/x.svg",
+  "check": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/check.svg",
+  "triangle-alert": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/triangle-alert.svg"
+}
