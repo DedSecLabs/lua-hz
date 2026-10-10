@@ -4,9 +4,13 @@
 
 The user performs in-game visual/gameplay QA. Reported normal-launch HZ → another server → HZ tests passed for the Lua gate (0.2.30), native fonts/icons/maps (0.2.32) and loading screen/bar (0.2.33). Those tests used one SA-MP browser/installation under Wine and were repeated. The approved loading artwork before the current edit is v8. Native Windows, arbitrary other mods/client builds and separate same-process splash redisplay are not claimed as tested.
 
+## Accepted 0.2.35 base clean install
+
+On 2026-10-09 the owner tested published LuaHZ-0.2.35-base.zip on a separate Linux/Wine copy launched by Lutris with GE-Proton11-7. SA-MP R5 joined Horizon before the base package. After a restart from one post-login stall, the owner confirmed the load notice, settings, Character Status, cruise, a saved settings change, and HZ → another server → HZ isolation. Quickmap had no background. The custom HUD font and map pins were absent. Stock game fonts, radar and loading were intended. Native Windows, in-place update and live recovery were not part of this test.
+
 ## Accepted 0.2.35 artwork
 
-The owner confirmed the 0.2.35 in-game test is complete on the existing Wine installation. The user-supplied artwork is copied unchanged at 1672×941; the accepted 2048×1024 uncompressed native format remains. No endpoint/rendering logic changed. This approval is separate from fresh installation of a downloaded player package, which remains untested. Follow [player installation QA](PLAYER_INSTALL_QA.md) for that test.
+The owner confirmed the 0.2.35 in-game test is complete on the existing Wine installation. The user-supplied artwork is copied unchanged at 1672×941; the accepted 2048×1024 uncompressed native format remains. No endpoint/rendering logic changed. This approval is separate from the later base-package clean install recorded above. Follow [player installation QA](PLAYER_INSTALL_QA.md) for that test's remaining Windows and visual-pack scope.
 
 ## Regression cases
 

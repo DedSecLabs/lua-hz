@@ -48,4 +48,4 @@ done < "$root/FILES.sha256"
 (cd "$game" && sha256sum --check "$root/FILES.sha256")
 trap - ERR
 echo "Installed. Recovery: bash '$backup/restore.sh' '$game'"
-echo 'Launch Horizon from SA-MP in this game copy. F9: settings; I: stats; X: cruise. Live QA remains pending.'
+echo 'Launch Horizon from SA-MP in this game copy. F9: settings; I: stats; X: cruise.'

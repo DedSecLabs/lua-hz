@@ -14,9 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def sha(data):
     return hashlib.sha256(data).hexdigest()
 
-def package(output, revision):
-    if output.exists() or not re.fullmatch('[0-9a-f]{40}', revision):
-        raise ValueError('Use a new output directory and full Git revision')
+def base_payload():
     deps = json.loads((ROOT / 'manifests/dependencies.json').read_text())
     version = json.loads((ROOT / 'manifests/release.json').read_text())['version']
     payload = {}
@@ -55,9 +53,15 @@ def package(output, revision):
     licenses = [n for n in archive.namelist() if n.lower().endswith(('/license', '/license.txt', '/license.md'))]
     if len(licenses) != 1:
         raise ValueError('Missing upstream MIT notice')
+    return payload, archive.read(licenses[0]), version, deps
+
+def package(output, revision):
+    if output.exists() or not re.fullmatch('[0-9a-f]{40}', revision):
+        raise ValueError('Use a new output directory and full Git revision')
+    payload, license_text, version, deps = base_payload()
     files = {name: sha(data) for name, data in sorted(payload.items())}
     result = {'version': version, 'tag': 'v' + version + '-base-preview', 'edition': 'base', 'source_revision': revision,
-              'platform': 'Linux/Wine installer; clean-install gameplay QA pending', 'files': files,
+              'platform': 'Linux/Wine installer; 0.2.35 clean-install owner QA recorded. Windows untested.', 'files': files,
               'excluded': ['native graphics helpers', 'HD fonts/maps/icons', 'portrait pack', 'custom loading artwork'],
               'samp_lua': 'v2.0.4 plus verified material-handler adjustment; MIT notice included'}
     output.mkdir(parents=True)
@@ -68,12 +72,14 @@ def package(output, revision):
         path.write_bytes(data)
     for name in ('LICENSE', 'THIRD_PARTY.md'):
         (work / name).write_bytes((ROOT / name).read_bytes())
-    (work / 'SAMP-Lua-LICENSE.txt').write_bytes(archive.read(licenses[0]))
+    (work / 'SAMP-Lua-LICENSE.txt').write_bytes(license_text)
     (work / 'FILES.sha256').write_text(''.join(h + '  ' + n + '\n' for n, h in files.items()))
     required = ['gta_sa.exe', 'samp.dll', 'SAMPFUNCS.asi', 'MoonLoader.asi', 'vorbisFile.dll', 'vorbisHooked.dll']
     (work / 'PREREQUISITES.sha256').write_text(''.join(deps['runtime_binaries'][n]['sha256'] + '  ' + n + '\n' for n in required))
     (work / 'install.sh').write_bytes((ROOT / 'tools/base_install.sh').read_bytes())
     (work / 'restore.sh').write_bytes((ROOT / 'tools/base_restore.sh').read_bytes())
+    (work / 'install.ps1').write_bytes((ROOT / 'tools/base_install.ps1').read_bytes())
+    (work / 'restore.ps1').write_bytes((ROOT / 'tools/base_restore.ps1').read_bytes())
     (work / 'INSTALL.md').write_bytes((ROOT / 'docs/BASE_INSTALL.md').read_bytes())
     (work / 'release-manifest.json').write_text(json.dumps(result, indent=2) + '\n')
     zip_path = output / (work.name + '.zip')
@@ -95,8 +101,8 @@ Quickmap is unavailable in this base edition; use the game's ESC map.
 
 The shell installer verifies supported binary hashes, refuses an existing LuaHZ install,
 backs up replaced library files and supports guarded recovery. Settings are not bundled.
-Offline installation/rollback and source checks pass. Clean-install gameplay QA is pending:
-this is a testing prerelease, not a claim of validated Windows support.
+Offline installation/rollback and source checks pass. The owner recorded a Linux/Wine
+clean-install test for 0.2.35. This is not a claim of validated Windows support.
 Source commit: {revision}
 '''
     (output / 'RELEASE_NOTES.md').write_text(notes)

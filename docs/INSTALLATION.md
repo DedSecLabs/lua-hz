@@ -1,6 +1,6 @@
 # Installation guide
 
-**Linux/Wine base player preview:** follow [BASE_INSTALL.md](BASE_INSTALL.md) for the small installable payload, guarded shell installer and recovery. It includes verified SAMP.Lua and omits the full visual package. The older source/developer-preview boundary below describes the complete visual build, which remains pending. Native Windows clean-install QA is pending.
+**Linux/Wine base player preview:** follow [BASE_INSTALL.md](BASE_INSTALL.md) for the small installable payload, guarded shell installer and recovery. It includes verified SAMP.Lua and omits the full visual package. The owner passed a clean Linux/Wine install test of the published 0.2.35 base ZIP on 2026-10-09. The older source/developer-preview boundary below describes the complete visual build, which remains pending. Native Windows clean-install QA is pending.
 
 LuaHZ 0.2.35 targets classic **GTA San Andreas 1.0 US**, **SA-MP 0.3.7 R5** and the prerequisite versions linked in the [README](../README.md#installation). A public player package is not available yet. This guide documents the tested prerequisite setup and how the eventual LuaHZ payload fits into it; the repository source ZIP is not that payload.
 

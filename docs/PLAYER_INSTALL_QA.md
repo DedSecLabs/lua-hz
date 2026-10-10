@@ -4,6 +4,10 @@ The existing 0.2.35 artwork build passed the owner's in-game test. This test ans
 
 The owner selected a separate Linux/Wine game copy. Native Windows coverage remains a separate task. The owner launches the game and performs gameplay/visual checks; offline inspection alone does not establish a successful installation.
 
+## Base edition result — 2026-10-09
+
+The published base ZIP passed the owner's Linux/Wine clean-install test for the features that package includes. One first launch stalled after login and a restart worked. Menus, cruise, a settings change and the other-server round trip were reported working. The absent Quickmap background, HUD bitmap font and map pins matched the package limits. Update, recovery and native Windows were not tested. Details are in STATUS.md and QA.md.
+
 ## Published preview inspection
 
 The public v0.2.35-source-preview download was fetched from GitHub Releases. All three attached-file checksums and all 139 ZIP payload hashes matched. It contains 136 source files, START-HERE.md and two compiled helpers. UI icons and the project logo are included as source assets.
