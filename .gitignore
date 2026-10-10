@@ -1,6 +1,9 @@
 /build/
 /.local/
-/branding/
+/branding/*
+!/branding/loading/
+/branding/loading/*
+!/branding/loading/horizon-mosaic-v11.png
 /.venv/
 /dist/
 /output/
