@@ -11,7 +11,7 @@
   <img src="assets/branding/luahz-logo.png" alt="LuaHZ logo" width="200">
 </p>
 
-<img width="1024" height="576" alt="image" src="https://github.com/user-attachments/assets/91f22112-672e-4db0-abca-1ad27f263950" />
+<img width="1024" height="410" alt="LuaHZ in Horizon Roleplay" src="docs/images/readme-banner.png">
 
 
 **A modern HUD and quality-of-life toolkit for Horizon Roleplay.**

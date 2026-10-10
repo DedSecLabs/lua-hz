@@ -658,8 +658,8 @@
     },
     "loading-artwork": {
       "redistribution": "local; server/GTA/software marks and screenshots need public-use review",
-      "sha256": "f784bddb8b954890e2811ddcddd99a3b7945dac32565f2de3880ed25987e9b4b",
-      "local_filename": "horizon-mosaic-v10.png",
+      "sha256": "739d80688e3ff765042e25fc46c57a89b09bf2cd8fb39aff0f3bf41c56e6b172",
+      "local_filename": "horizon-mosaic-v11.png",
       "source": "User-supplied PNG, copied unchanged"
     },
     "menu-branding": {

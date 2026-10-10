@@ -127,8 +127,8 @@
   },
   "native_loading_artifact": {
     "resource_bytes": 8388776,
-    "resource_fnv32": "0x6b2c7864",
-    "resource_sha256": "01a25aeaac9ba8f3140a722821d2401af6b1c36c21e3fc380354d234f2ad604f",
+    "resource_fnv32": "0x9f67e0e8",
+    "resource_sha256": "83241955ec3e443279014ddcc489d94e2d4ba012f051c683aa69fe1c9336a430",
     "raster": [
       2048,
       1024
