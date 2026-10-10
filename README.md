@@ -18,7 +18,7 @@
 
 LuaHZ brings clearer player and vehicle information, a useful map and configurable controls to **Horizon Gaming / Horizon Roleplay**. It activates only on `samp.hzgaming.net:7777` / `213.32.6.232:7777`. You can continue using the same SA-MP installation for other servers.
 
-> **Player testing download:** [LuaHZ 0.2.35 base preview](https://github.com/DedSecLabs/lua-hz/releases/tag/v0.2.35-base-preview) provides the Lua features and licensed UI assets with a backed-up **Linux/Wine** installer. It keeps stock native visuals and excludes HD artwork, portraits and Quickmap backgrounds. A Linux/Wine clean install of this preview passed owner testing on 2026-10-09. Native Windows remains untested. Prerequisites remain separate; GitHub's automatic source ZIP is developer source.
+> **Linux download:** [LuaHZ 0.2.35](https://github.com/DedSecLabs/lua-hz/releases/tag/v0.2.35-player) is the playable release. It includes the HUD, Quickmap, portraits, native visuals, loading artwork, and a backed-up Linux/Wine installer. Prerequisites remain separate. Windows is not supported yet. GitHub's automatic source ZIP is developer source.
 
 ## Features
 
@@ -67,7 +67,7 @@ If Windows reports missing DirectX helper DLLs or Visual C++ runtimes, use Micro
 
 ### 3. Install LuaHZ
 
-**For Linux/Wine player testing:** Download **LuaHZ-0.2.35-base.zip** from the [base prerelease](https://github.com/DedSecLabs/lua-hz/releases/tag/v0.2.35-base-preview), extract outside GTA and follow [INSTALL.md](docs/BASE_INSTALL.md). It includes the verified SAMP.Lua adjustment, so skip the separate SAMP.Lua download/edit step. The shell installer targets a separate clean supported game and makes backups. It retains stock native graphics; portrait previews, custom loading and Quickmap backgrounds are absent. The Linux/Wine clean-install test passed on 2026-10-09. Native Windows installation and a complete visual pack remain pending. The developer preview and automatic source ZIPs remain contributor downloads.
+**For Linux/Wine:** Download **LuaHZ-0.2.35-player.zip** from the [Linux player release](https://github.com/DedSecLabs/lua-hz/releases/tag/v0.2.35-player), extract outside GTA and follow INSTALL.md inside the archive. It includes the verified SAMP.Lua adjustment, so skip the separate SAMP.Lua download/edit step. The shell installer targets a separate clean supported game and makes backups. Native Windows installation is not supported yet. The developer preview and automatic source ZIPs remain contributor downloads.
 
 **For contributors or local testers:** Follow the [source build and controlled deployment guide](docs/DEVELOPMENT.md). Deployment tools preserve backups and preferences. Full visual deployment requires the external resources listed in the [asset inventory](docs/ASSETS.md).
 
