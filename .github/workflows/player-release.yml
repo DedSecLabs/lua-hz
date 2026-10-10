@@ -73,12 +73,12 @@ jobs:
           version=$(python3 -c 'import json; print(json.load(open("release-manifest.json"))["version"])')
           if gh release view "$tag" --json url --jq .url > release-url.txt; then
             gh release edit "$tag" --prerelease=false --latest \
-              --title "LuaHZ $version — Linux player release" --notes-file RELEASE_NOTES.md
+              --title "LuaHZ $version — player release" --notes-file RELEASE_NOTES.md
             echo 'Linux player release is the latest published download.' >> "$GITHUB_STEP_SUMMARY"
             cat release-url.txt >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           gh release create "$tag" ./*.zip SHA256SUMS.txt RELEASE_NOTES.md release-manifest.json \
             --latest --target "$SOURCE_REVISION" \
-            --title "LuaHZ $version — Linux player release" --notes-file RELEASE_NOTES.md
+            --title "LuaHZ $version — player release" --notes-file RELEASE_NOTES.md
           gh release view "$tag" --json url --jq .url >> "$GITHUB_STEP_SUMMARY"

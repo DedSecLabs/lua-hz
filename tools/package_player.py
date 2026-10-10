@@ -63,27 +63,21 @@ def add_visuals(payload, resources, asi):
 
 
 def install_notes(version):
-    return f'''# LuaHZ {version} — player download
+    return f'''# LuaHZ {version} — player release
 
-Install the prerequisites first: SA-MP 0.3.7 R5, CLEO 4.4.4 and its ASI loader, MoonLoader 0.26.5-beta, SAMPFUNCS 5.7.1 rel.25 R5, and mimgui 1.7.0. GTA and those programs are not in this archive. Skip a separate SAMP.Lua download; the verified files are included.
+One download for Linux and Windows. It contains the HUD font, Quickmap, portraits, native visuals, and loading artwork. GTA, SA-MP, CLEO, MoonLoader, SAMPFUNCS, and mimgui stay separate. The verified SAMP.Lua files are included.
 
 Close GTA and the SA-MP browser. Extract this ZIP outside the game folder.
 
-Linux/Wine:
+**Windows:** copy `payload/moonloader` into the GTA folder, merging it with the existing `moonloader` folder. Copy `payload/LuaHZLoading.asi` next to `gta_sa.exe`.
+
+**Linux/Wine:** from the extracted folder, run:
 
 ```sh
 bash install.sh "/path/to/GTA San Andreas"
 ```
 
-Windows, not yet tested on a Windows PC:
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\\install.ps1 "C:\\path\\to\\GTA San Andreas"
-```
-
-The path must contain gta_sa.exe. The installer checks the tested program hashes, refuses a folder that already contains LuaHZ, backs up replaced files, and can roll back. This archive includes the HUD font, Quickmap tiles, weapon icons, portraits, native font/radar/map files, and the loading-screen artwork.
-
-Launch samp.hzgaming.net:7777. F9 opens settings, I opens Character Status, M opens Quickmap, and X toggles cruise while driving.
+The path must contain `gta_sa.exe`. Join samp.hzgaming.net:7777. F9 opens settings, I opens Character Status, M opens Quickmap, and X toggles cruise while driving.
 '''.encode()
 
 
