@@ -152,6 +152,25 @@ assert(c.draft.fields.Division=='Chief' and c.draft.fields.Job=='Detective [lvl:
 assert(c.draft.fields.Crimes=='226' and c.draft.fields.Arrests=='33' and c.draft.fields['Wanted Level']=='0')
 assert(c.draft.fields.Crates==nil)
 print('PASS the captured Horizon lines keep work, crimes, arrests and wanted level')
+c.fields.Job='Detective [lvl: 5]'
+c.fields['Job 2']=nil
+c.draft=nil;c.pending=nil
+c:beginHelp(true)
+assert(c:ingestHelp('*** JOB *** /fix /tunecar /nos /hyd /repair /mechduty'))
+assert(c:ingestHelp('*** JOB *** /find /cohort'))
+assert(not c:ingestHelp('Advertisement: hello'))
+clock=clock+750;c:update()
+assert(c.fields['Job 2']=='Mechanic' and c.fields.Job=='Detective [lvl: 5]')
+c.fields.Job='None [lvl: 0]';c.fields['Job 2']='None [lvl: 0]'
+c:beginHelp(true);c:ingestHelp('*** OTHER *** /jobhelp /carhelp');clock=clock+750;c:update()
+assert(c.fields['Job 2']=='None [lvl: 0]','A jobless /help list must not invent a job')
+c.fields.Job='Detective [lvl: 5]';c.fields['Job 2']=nil
+c:beginHelp(true)
+assert(c:ingestHelp('*** JOB *** /mechduty'))
+assert(not c:ingestHelp('Advertisement: /sellcar now'))
+clock=clock+750;c:update()
+assert(c.fields['Job 2']=='Mechanic','Chat during /help must not add another job')
+print('PASS a cut-off Job 2 is filled from /help and a jobless list is left alone')
 c:reset();c:begin()
 for _,line in ipairs(lines)do c:ingest(line,'John_Doe')end
 assert(c.fields.Materials=='150' and c.fields.Lockpicks==nil)

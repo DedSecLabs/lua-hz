@@ -22,5 +22,6 @@ Read README.md, docs/STATUS.md, docs/ARCHITECTURE.md, docs/DEVELOPMENT.md and do
 4. Update docs/STATUS.md: accepted baseline, current pending QA, material limitations. Record local activation/verification in ignored build/ receipts.
 5. Before publication, run tools/export_source.py and tools/verify_source_clone.py. No game installation or private art is needed for source checks/native code compilation; full visual deployment requires external assets.
 6. Do not publish a player release until the owner has launched that exact build and confirmed the changed behavior.
+7. When a fix is agreed, put it in the next local build. Do not leave an agreed bugfix as a note, a suggestion, or “not built yet.”
 
 Do not remove historical work irreversibly: archive obsolete local experiments under ignored .local/archive with a move ledger. Keep legacy recovery tools until documented backups are retired. Do not create additional agents unless the user requests delegation.

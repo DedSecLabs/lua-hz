@@ -184,7 +184,7 @@ function M:hud()
     self:updateNative(true)
     local w,h=getScreenResolution()
     local staminaShown=self.config.settings.stamina and not s.vehicle and (s.running or s.stamina<.995)
-    local oxygenShown=self.config.settings.oxygen and (s.oxygen<.995 or s.swimming and s.swimState>=3)
+    local oxygenShown=self.config.settings.oxygen and s.swimming and s.swimState>=3
     local innerWidth=hudStyle.playerWidth-2*hudStyle.padding
     local baseHeight=264
     local layout=logic.hudLayout(w,h,self.config.hud,baseHeight,hudStyle.playerWidth)

@@ -12,6 +12,29 @@ local known={}
 for _,group in ipairs(M.groups) do for _,label in ipairs(group[2]) do known[label:lower()]=label end end
 known.armour='Armor';known['spawn armour']='Spawn armor'
 known.family='Faction';known.crew='Division'
+-- Distinct commands from the Horizon job guide. /help lists these only for jobs the player has.
+M.helpJobs={
+    {name='Detective',commands={'cohort'}},
+    {name='Lawyer',commands={'lawyerduty','defend'}},
+    {name='Mechanic',commands={'mechduty'}},
+    {name='Bodyguard',commands={'guard'}},
+    {name='Arms Dealer',commands={'sellgun'}},
+    {name='Boxer',commands={'boxstats'}},
+    {name='Drug Smuggler',commands={'getcrate'}},
+    {name='Taxi Driver',commands={'fare'}},
+    {name='Craftsman',commands={'craft'}},
+    {name='Trucker',commands={'loadtruck','hijacktruck'}},
+    {name='Pizza Delivery',commands={'getpizza'}},
+    {name='Aircraft Pilot',commands={'loadaircraft'}},
+    {name='Farmer',commands={'harvest'}},
+    {name='Garbage Man',commands={'pickuptrash'}},
+    {name='Lumberjack',commands={'chopwood'}},
+    {name='Miner',commands={'mine'}},
+    {name='Forklift Driver',commands={'pickupcrates'}},
+    {name='Fishing',commands={'sellallfish'}},
+    {name='Car Jacker',commands={'sellcar'}},
+    {name='Drug Dealer',commands={'sellpot','sellcrack'}},
+}
 local function count(t)local n=0;for _ in pairs(t)do n=n+1 end;return n end
 function M.new(clock)
     return setmetatable({now=clock,fields={},lines={},state='empty',lastRequest=-10000},M)
@@ -19,7 +42,9 @@ end
 function M:reset()
     self.quiet=false;self.quietTailUntil=nil;self.quietStarted=false
     self.fields={};self.lines={};self.state='empty';self.pending=nil;self.draft=nil
-    self.updatedAt=nil;self.name=nil;self.error=nil;self.partial=nil;self.merge=false;self.inventoryDue=false;self.lastLine=nil;self.lastRequest=-10000
+    self.updatedAt=nil;self.name=nil;self.error=nil;self.partial=nil;self.merge=false;self.inventoryDue=false
+    self.helpNeeded=false;self.helpPending=nil;self.helpQuiet=false;self.helpText=nil;self.helpLast=nil
+    self.lastLine=nil;self.lastRequest=-10000
 end
 function M:begin(quiet,merge)
     self.quiet=quiet==true;self.quietStarted=false;self.quietTailUntil=nil
@@ -37,6 +62,7 @@ function M:commit()
     else
         self.name=d.name;self.fields=d.fields;self.partial=d.fields.Donator==nil
         self.inventoryDue=true
+        self.helpNeeded=self.fields['Job 2']==nil or self.fields.Job==nil
     end
     self.merge=false;self.updatedAt=self.now()
     self.quietTailUntil=self.quiet and self.now()+250 or nil
@@ -103,7 +129,44 @@ function M:ingest(text,expectedName)
     end
     return hide
 end
+function M:beginHelp(quiet)
+    local now=self.now()
+    self.helpQuiet=quiet==true;self.helpPending=now+12000;self.helpText='';self.helpLast=nil
+end
+function M:ingestHelp(text)
+    if not self.helpPending or self.now()>self.helpPending then return false end
+    local clean=logic.strip(text)
+    -- Only the server's *** category lines belong to /help. Nearby chat stays on the normal path.
+    if clean:find('***',1,true)==nil then return false end
+    self.helpText=self.helpText..'\n'..clean
+    self.helpLast=self.now()
+    return self.helpQuiet==true
+end
+function M:finishHelp()
+    local commands={}
+    for command in (self.helpText or ''):lower():gmatch('/([%w]+)') do commands[command]=true end
+    local function names(field)
+        return field and field:lower() or ''
+    end
+    local leftover={}
+    for _,job in ipairs(M.helpJobs) do
+        local present=false
+        for _,command in ipairs(job.commands) do if commands[command] then present=true;break end end
+        if present and not names(self.fields.Job):find(job.name:lower(),1,true)
+            and not names(self.fields['Job 2']):find(job.name:lower(),1,true) then
+            leftover[#leftover+1]=job.name
+        end
+    end
+    if #leftover==1 and self.fields['Job 2']==nil and self.fields.Job~=nil then
+        self.fields['Job 2']=leftover[1]
+    elseif #leftover==1 and self.fields.Job==nil then
+        self.fields.Job=leftover[1]
+    end
+    self.helpNeeded=false;self.helpPending=nil;self.helpQuiet=false;self.helpText=nil;self.helpLast=nil
+end
 function M:update()
+    if self.helpPending and self.helpLast and self.now()-self.helpLast>=750 then self:finishHelp() end
+    if self.helpPending and self.now()>self.helpPending then self.helpPending=nil;self.helpQuiet=false end
     if self.pending and self.now()>self.pending then
         self.quiet=false;self.quietTailUntil=nil;self.quietStarted=false
     end

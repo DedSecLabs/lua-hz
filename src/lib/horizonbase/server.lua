@@ -49,6 +49,12 @@ function M:enqueue(command, delay, kind, offer)
 end
 
 function M:onMessage(text)
+    if self.horizon and self.character.helpPending and self.character:ingestHelp(text) then
+        local clean = logic.strip(text)
+        self.recent[#self.recent + 1] = clean
+        if #self.recent > 20 then table.remove(self.recent, 1) end
+        return true
+    end
     local clean = logic.strip(text)
     self.recent[#self.recent + 1] = clean
     if #self.recent > 20 then table.remove(self.recent, 1) end
@@ -125,6 +131,9 @@ function M:onOutgoing(command,automatic)
     elseif self.horizon and lower:match('^/inv%s*$') then
         local quiet=automatic==true or self.sendingInv==true
         self.character:begin(quiet,true)
+    elseif self.horizon and lower:match('^/help%s*$') then
+        local quiet=automatic==true or self.sendingHelp==true
+        self.character:beginHelp(quiet)
     end
     if command:match('^/trackcar') then
         self.track.pendingDialog = true
@@ -202,6 +211,15 @@ function M:update(send, respond, canFetch)
         self.sendingInv=nil
         if not ok then error(err) end
         self.invDue=nil;self.lastSend=now;self.lastAction='/inv'
+    end
+    if self.horizon and canFetch and self.character.helpNeeded and not self.invDue and not self.character.pending
+        and not self.character.helpPending and now-self.lastSend>=1200 then
+        self:onOutgoing('/help',true)
+        self.sendingHelp=true
+        local ok,err=pcall(send,'/help')
+        self.sendingHelp=nil
+        if not ok then error(err) end
+        self.character.helpNeeded=false;self.lastSend=now;self.lastAction='/help'
     end
     if self.horizon then
         if self.find.active and not self.find.paused and now >= self.find.nextAt then
