@@ -36,7 +36,7 @@ Live health, armor, cash and skin information come from the game client. Account
 
 ## Installation
 
-**New to mods?** Start with the [step-by-step prerequisite guide](docs/INSTALLATION.md). For the Linux/Wine base preview, follow [its installation guide](docs/BASE_INSTALL.md). The full visual package remains pending.
+**New to mods?** Start with the [step-by-step prerequisite guide](docs/INSTALLATION.md). The playable download is [LuaHZ 0.2.35](https://github.com/DedSecLabs/lua-hz/releases/tag/v0.2.35-player).
 
 ### 1. Prepare your game
 
@@ -90,7 +90,7 @@ On other servers, LuaHZ features and custom visuals remain inactive. The minimal
 
 ## Compatibility
 
-The tested native target is **GTA SA 1.0 US / SA-MP R5 / SAMPFUNCS 5.7.1 rel.25**. Unknown builds keep the original native behavior. Gameplay QA for the existing Wine install and a separate Linux/Wine clean install of the 0.2.35 base preview has been performed. Native Windows clean-install QA is still pending. See [current status](docs/STATUS.md) and [QA coverage](docs/QA.md).
+The tested native target is **GTA SA 1.0 US / SA-MP R5 / SAMPFUNCS 5.7.1 rel.25**. Unknown builds keep the original native behavior. Linux/Wine gameplay is recorded. Windows uses the same files, copied into the GTA folder. See [current status](docs/STATUS.md) and [QA coverage](docs/QA.md).
 
 ## Development
 

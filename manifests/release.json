@@ -4,9 +4,7 @@
   "package_kind": "developer-preview",
   "player_installable": false,
   "player_release_blockers": [
-    "External font, map, icon, portrait and loading resources need redistribution review or replacement.",
-    "A complete player payload and a backed-up installation/update path still need packaging and validation.",
-    "The 0.2.35 base preview passed a separate Linux/Wine clean install. The complete visual player package and its installer remain unvalidated.",
-    "Native Windows clean-install QA is pending."
+    "The published player archive is v0.2.35-player. Windows installs by copying moonloader and LuaHZLoading.asi into the GTA folder.",
+    "A Windows play report has not been recorded yet."
   ]
 }

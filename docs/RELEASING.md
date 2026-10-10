@@ -4,7 +4,7 @@ Players will download a named player ZIP from [GitHub Releases](https://github.c
 
 ## Available packaging today
 
-The separate **Base player prerelease** workflow builds LuaHZ-0.2.35-base.zip and publishes a new testing prerelease after source/installer checks. It includes the Lua feature modules, maintained UI icons/logo and verified MIT SAMP.Lua files, with a Linux/Wine shell installer and guarded recovery. It excludes native graphics helpers, HD assets, portrait previews and Quickmap backgrounds. The owner passed a Linux/Wine clean-install test of the published 0.2.35 base ZIP on 2026-10-09. That test is recorded in STATUS.md. The Linux player release workflow packages `player-resources/` into `LuaHZ-<version>-player.zip` and publishes tag `v<version>-player` when that tag does not already exist. Native Windows support is not claimed. See [base installation](BASE_INSTALL.md). Published versions are left unchanged on reruns; prerequisite binaries remain separate.
+The separate **Base player prerelease** workflow builds LuaHZ-0.2.35-base.zip and publishes a new testing prerelease after source/installer checks. It includes the Lua feature modules, maintained UI icons/logo and verified MIT SAMP.Lua files, with a Linux/Wine shell installer and guarded recovery. It excludes native graphics helpers, HD assets, portrait previews and Quickmap backgrounds. The owner passed a Linux/Wine clean-install test of the published 0.2.35 base ZIP on 2026-10-09. That test is recorded in STATUS.md. The Linux player release workflow packages `player-resources/` into `LuaHZ-<version>-player.zip` and publishes tag `v<version>-player`. Windows uses the same archive by copying `moonloader` and `LuaHZLoading.asi` into the GTA folder. See [base installation](BASE_INSTALL.md) for the earlier small preview. Published versions are left unchanged on reruns; prerequisite binaries remain separate.
 
 This minimal edition is built by tools/package_base.py. The developer-preview packager's full-visual player mode remains disabled; its policy below is separate from the base edition.
 
@@ -36,16 +36,8 @@ sha256sum --check SHA256SUMS.txt
 
 Use a new output directory for another local build; existing output is preserved. The packager uses the audited source exporter plus the two explicitly named original native builds. It never imports the installed game, private `.local` resources, branding experiments or `LuaHZ-local-QA.zip`.
 
-## Preparing the complete player release
+## Player release
 
-The tracked policy in [release.json](../manifests/release.json) lists the current blockers. Before introducing a `LuaHZ-<version>-player.zip`:
-
-- Acquire permission for the required visual resources or replace them with distributable alternatives; include their notices and provenance.
-- Assemble the full player folder layout, including the loading helper/resource pair, and validate completeness against explicit file/hash manifests.
-- Provide a first-install/update path that closes GTA/SA-MP, verifies supported stock prerequisites, backs up owned files, rolls back failures and preserves player settings/locations.
-- Complete [fresh player installation QA](PLAYER_INSTALL_QA.md) and native Windows clean-install testing, and state the actual supported platforms in the notes. The owner has already approved the existing 0.2.35 artwork build; that does not replace testing the downloaded package.
-- Add and test player packaging before changing the download status. Editing `player_installable` alone cannot enable it: the current packager refuses player output.
-
-Then prepare a new draft prerelease for player testing. After its required QA, publish a stable version and update the README's player download link. Prerequisites remain separate. GitHub Packages is unused because these downloads are ZIP release assets.
+`LuaHZ-0.2.35-player.zip` is the published player download. `tools/package_player.py` builds it from `player-resources/`, and `.github/workflows/player-release.yml` publishes tag `v0.2.35-player`. The developer-preview packager still refuses its own player mode; that switch does not affect this download. A Windows play report is the remaining check. Prerequisites remain separate. GitHub Packages is unused because these downloads are ZIP release assets.
 
 GitHub references: [releases](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases), [draft/prerelease CLI](https://cli.github.com/manual/gh_release_create), [workflow artifacts](https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts).
