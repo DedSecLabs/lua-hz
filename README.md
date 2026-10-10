@@ -141,3 +141,10 @@ Build and deploy steps are in [development](docs/DEVELOPMENT.md). GitHub's autom
 Original LuaHZ code is [MIT licensed](LICENSE). The mimgui adapter and Lucide icons retain their upstream notices. External software and artwork retain their own terms. See [third-party notices](THIRD_PARTY.md).
 
 LuaHZ is an independent project informed by the visible LunaHZ feature baseline. No affiliation with Horizon Gaming, Rockstar Games, SA-MP, or the prerequisite authors is implied.
+
+## Support
+
+If you find this project or any of my open-source work helpful, consider supporting future development:
+
+- 💖 [Sponsor on GitHub](https://github.com/sponsors/amir0ff)
+- ☕ [Buy me a coffee on Ko-fi](https://ko-fi.com/amir0ff)
