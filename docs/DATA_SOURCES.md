@@ -13,6 +13,7 @@ Prefer a documented MoonLoader/SA-MP getter for live data already present on the
 | Bank, total wealth, insurance, marriage | Horizon /stats snapshot | Displayed cash alone cannot establish bank or total wealth. |
 | Spawn armor, crimes, arrests, server Wanted Level, radio | Horizon /stats snapshot | Server records may differ from native gameplay fields. |
 | Materials, drugs, packages, crates and other RPG inventory | Horizon /stats snapshot | Not the native GTA weapon inventory. |
+| Screwdriver, wristwatch, tire, first aid, receiver, GPS, bug sweep, lockpicks | Horizon /inv snapshot | Sent once after each /stats request. A manual /inv updates the same fields. |
 | /find, /trackcar | Normal server commands | Server-authorized last-known/remote locations; local coordinates only exist for entities in range and don't reproduce detective eligibility or saved vehicle selection. |
 | /accept offers, /reload 2 | Normal server actions | Requests a server-controlled transaction/animation. A native getter cannot replace the action. |
 | Map POIs | Observed server icon events + existing local catalog | Active native/SA-MP pools contain received markers. They cannot enumerate unseen server locations. The cache retains locations that streamed out. |

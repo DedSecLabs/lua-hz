@@ -3,7 +3,7 @@
 # LuaHZ
 
 <p align="center">
-  <a href="https://github.com/DedSecLabs/luahz/releases/tag/v0.2.35-player"><img src="https://img.shields.io/badge/release-0.2.35-2563eb" alt="release 0.2.35"></a>
+  <a href="https://github.com/DedSecLabs/luahz/releases/tag/v0.2.36-player"><img src="https://img.shields.io/badge/release-0.2.36-2563eb" alt="release 0.2.36"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-64748b" alt="license MIT"></a>
 </p>
 
@@ -18,7 +18,7 @@
 
 It activates only on `samp.hzgaming.net:7777` / `213.32.6.232:7777`. The same SA-MP installation can still join other servers.
 
-[Download](https://github.com/DedSecLabs/luahz/releases/tag/v0.2.35-player) · [Install](#install) · [Controls](#controls) · [Features](#features) · [Development](#development)
+[Download](https://github.com/DedSecLabs/luahz/releases/tag/v0.2.36-player) · [Install](#install) · [Controls](#controls) · [Features](#features) · [Development](#development)
 
 </div>
 
@@ -26,7 +26,7 @@ It activates only on `samp.hzgaming.net:7777` / `213.32.6.232:7777`. The same SA
 
 ## Install
 
-Download **[LuaHZ-0.2.35-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.2.35-player/LuaHZ-0.2.35-player.zip)**.
+Download **[LuaHZ-0.2.36-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.2.36-player/LuaHZ-0.2.36-player.zip)**.
 
 ### 1. Prepare the game
 

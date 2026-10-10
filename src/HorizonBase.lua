@@ -1,6 +1,6 @@
 script_name('LuaHZ')
 script_author('LuaHZ contributors')
-script_version('0.2.35')
+script_version('0.2.36')
 script_description('Horizon Gaming only: endpoint-gated MoonLoader helper')
 require 'lib.moonloader'
 

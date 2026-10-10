@@ -8,6 +8,7 @@ import argparse
 import json
 from pathlib import Path
 import re
+import subprocess
 import zipfile
 
 from package_base import ROOT, base_payload, sha
@@ -60,6 +61,49 @@ def add_visuals(payload, resources, asi):
         if b'/home/' in data or b'Documents/ChatGPT' in data:
             raise ValueError('Personal path in player file: ' + name)
     return payload
+
+
+def previous_player_tag(version):
+    try:
+        output = subprocess.check_output(['git', 'tag', '-l', 'v*-player'], cwd=ROOT, text=True)
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    current = 'v' + version + '-player'
+    tags = [tag for tag in output.split() if tag != current and re.fullmatch(r'v[0-9.]+-player', tag)]
+    if not tags:
+        return None
+    def numbers(tag):
+        return tuple(int(part) for part in re.findall(r'\d+', tag))
+    return sorted(tags, key=numbers)[-1]
+
+
+def change_notes(version):
+    previous = previous_player_tag(version)
+    current = 'v' + version + '-player'
+    log = ''
+    if previous:
+        try:
+            log = subprocess.check_output(
+                ['git', 'log', '--no-merges', '--pretty=%s', previous + '..HEAD'],
+                cwd=ROOT, text=True)
+        except (OSError, subprocess.CalledProcessError):
+            log = ''
+    bullets = []
+    for subject in log.splitlines():
+        subject = subject.strip()
+        if not subject:
+            continue
+        match = re.fullmatch(r'([a-z]+)(?:\([^)]+\))?: (.+)', subject)
+        if match:
+            bullets.append('* **' + match.group(1) + '**: ' + match.group(2))
+        else:
+            bullets.append('* ' + subject)
+    if not bullets:
+        bullets.append('* Player release.')
+    compare = ''
+    if previous:
+        compare = '\n**Full Changelog**: https://github.com/DedSecLabs/luahz/compare/' + previous + '...' + current + '\n'
+    return '## What\'s Changed\n\n' + '\n'.join(bullets) + '\n' + compare
 
 
 def install_notes(version):
@@ -117,7 +161,7 @@ def package(output, revision, resources, asi):
                 continue
             mode = zipfile.ZIP_STORED if path.suffix.lower() in {'.txd', '.enc', '.dll', '.asi'} else zipfile.ZIP_DEFLATED
             archive.write(path, path.relative_to(output), compress_type=mode)
-    notes = install_notes(version).decode() + f'\nSource commit: {revision}\nFiles: {len(files)}\n'
+    notes = change_notes(version) + '\n' + install_notes(version).decode() + f'\nSource commit: {revision}\nFiles: {len(files)}\n'
     (output / 'RELEASE_NOTES.md').write_text(notes)
     (output / 'release-manifest.json').write_text(json.dumps({key: result[key] for key in ('version', 'tag', 'edition', 'source_revision', 'includes')}, indent=2) + '\n')
     attached = [zip_path.name, 'RELEASE_NOTES.md', 'release-manifest.json']

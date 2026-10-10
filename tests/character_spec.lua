@@ -136,6 +136,38 @@ assert(not c:ingest(sep,'John_Doe'))
 for _,line in ipairs(lines)do assert(not c:ingest(line,'John_Doe'))end
 assert(not c:ingest(sep,'John_Doe'))
 print('PASS owned silent stats includes separators, preserves parsed data and leaves manual stats visible')
+c:reset();c:begin()
+c:ingest('John Doe - (Level: 1) - (Playing hours: 7) - (Gender: Male) - (Age: 35) - (Phone number: 1) - (Warnings: 0)','John_Doe')
+c:ingest('(Crimes: 22) - (Arrests: 33) - (Wanted Level: 0) - (Materials: 86,401) - (Pot: 128) - (Crack: 120) - (Packages: 0) - (Crat','John_Doe')
+assert(c.draft.fields.Crimes=='22' and c.draft.fields.Arrests=='33' and c.draft.fields['Wanted Level']=='0')
+assert(c.draft.fields.Materials=='86,401' and c.draft.fields.Crates==nil)
+assert(not c:ingest('(Cash: $999) Advertisement: unrelated','John_Doe') and c.draft.fields.Cash==nil)
+print('PASS a chat-split /stats line keeps Crimes, Arrests and Wanted Level')
+c:reset();c:begin()
+c:ingest('Cosmin Young - (Level: 30) - (Playing hours: 1684) - (Gender: Male) - (Age: 34) - (Phone number: 498) - (Warnings: 0)','Cosmin_Young')
+c:ingest('(Family: Magnolia Vigilance Protection) - (Rank: MVP Director [6]) - (Crew: Chief) - (Job: Detective [lvl: 5]) - (Job 2: Car Me','Cosmin_Young')
+c:ingest('(Crimes: 226) - (Arrests: 33) - (Wanted Level: 0) - (Materials: 58,401) - (Pot: 125) - (Crack: 120) - (Packages: 0) - (Crates: ','Cosmin_Young')
+assert(c.draft.fields.Faction=='Magnolia Vigilance Protection' and c.draft.fields.Rank=='MVP Director [6]')
+assert(c.draft.fields.Division=='Chief' and c.draft.fields.Job=='Detective [lvl: 5]' and c.draft.fields['Job 2']==nil)
+assert(c.draft.fields.Crimes=='226' and c.draft.fields.Arrests=='33' and c.draft.fields['Wanted Level']=='0')
+assert(c.draft.fields.Crates==nil)
+print('PASS the captured Horizon lines keep work, crimes, arrests and wanted level')
+c:reset();c:begin()
+for _,line in ipairs(lines)do c:ingest(line,'John_Doe')end
+assert(c.fields.Materials=='150' and c.fields.Lockpicks==nil)
+c:begin(false,true)
+for _,line in ipairs({
+    'Inventory:',
+    '(Screwdriver: 2)',
+    '(Wristwatch: 1) - (Tire: 1)',
+    '(Firstaid: 57) - (Receiver: 1)',
+    '(GPS: 1) - (Bug Sweep: 0)',
+    '(Lockpicks: 2)'
+}) do c:ingest(line,'John_Doe') end
+clock=clock+750;c:update()
+assert(c.fields.Lockpicks=='2' and c.fields.Screwdriver=='2' and c.fields['Bug Sweep']=='0')
+assert(c.fields.Materials=='150' and c.fields.Level=='1','Inventory must not erase the /stats snapshot')
+print('PASS /inv fields merge into Inventory and preserve /stats')
 c:begin(true);assert(not c:ingest(lines[1]:gsub('John Doe','Jane Doe'),'John_Doe'))
 assert(not c:ingest(sep,'John_Doe'))
 c:begin(true);assert(c:ingest(lines[1],'John_Doe'))
@@ -154,3 +186,11 @@ s:onOutgoing('/stats') -- A manual request takes over any automatic request alre
 assert(not s.character.quiet)
 for _,line in ipairs(lines)do assert(not s:onMessage(line))end
 print('PASS outgoing callback preserves owned silence and a manual request restores visible output')
+s:reset();s.horizon=true;s.ready=true;s.characterName='John_Doe'
+s:onMessage('Welcome to Horizon Roleplay, John Doe.')
+clock=clock+5001;s:update(send,function()end,true);assert(sent[#sent]=='/stats')
+for _,line in ipairs(lines)do s:onMessage(line)end
+clock=clock+1500;s:update(send,function()end,true)
+clock=clock+1500;s:update(send,function()end,true)
+assert(sent[#sent]=='/inv','A completed stats snapshot requests inventory once')
+print('PASS a completed /stats snapshot requests /inv once')

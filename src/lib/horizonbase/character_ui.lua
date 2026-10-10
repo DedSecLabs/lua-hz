@@ -84,7 +84,7 @@ function M:draw()
         math.max(0,math.floor((getGameTimer()-c.updatedAt)/1000)),c.partial and ' Some fields were not received.' or '')
     else status='Source: Horizon /stats. No stats are saved between sessions.' end
     im.TextWrapped(status)
-    im.SetCursorPos(im.ImVec2(22*S,516*S));im.TextDisabled('Health, armor and cash are live; other fields use the latest /stats.')
+    im.SetCursorPos(im.ImVec2(22*S,516*S));im.TextDisabled('Health, armor and cash are live. Other fields use /stats. Carried items use /inv.')
     im.End()
     if not ok then error(err) end
 end

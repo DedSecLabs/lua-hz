@@ -10,7 +10,7 @@ function M.new(config, notify, clock, catalog)
 end
 
 function M:reset()
-    self.character:reset();self.statsDue=nil;self.statsRequested=false;self.loginSeen=false;self.characterName=nil
+    self.character:reset();self.statsDue=nil;self.invDue=nil;self.statsRequested=false;self.loginSeen=false;self.characterName=nil
     if self.catalog then self.catalog:unbind() end
     self.iconsRevision=self.iconsRevision+1
     self.queue, self.seen, self.zones, self.icons, self.textdraws = {}, {}, {}, {}, {}
@@ -117,10 +117,14 @@ function M:requestStats()
 end
 
 function M:onOutgoing(command,automatic)
-    if self.horizon and command:lower():match('^/stats%s*$') then
+    local lower=command:lower()
+    if self.horizon and lower:match('^/stats%s*$') then
         self.statsDue=nil;self.statsRequested=false
         local quiet=automatic==true or self.sendingStats==true
         if not quiet or not self.character.pending then self.character:begin(quiet) end
+    elseif self.horizon and lower:match('^/inv%s*$') then
+        local quiet=automatic==true or self.sendingInv==true
+        self.character:begin(quiet,true)
     end
     if command:match('^/trackcar') then
         self.track.pendingDialog = true
@@ -186,6 +190,18 @@ function M:update(send, respond, canFetch)
         self.sendingStats=nil
         if not ok then error(err) end
         self.lastSend=now;self.lastAction='/stats'
+    end
+    if self.character.inventoryDue then
+        self.character.inventoryDue=false
+        self.invDue=now+1500
+    end
+    if self.horizon and canFetch and self.invDue and now>=self.invDue and not self.character.pending and now-self.lastSend>=1200 then
+        self:onOutgoing('/inv',true)
+        self.sendingInv=true
+        local ok,err=pcall(send,'/inv')
+        self.sendingInv=nil
+        if not ok then error(err) end
+        self.invDue=nil;self.lastSend=now;self.lastAction='/inv'
     end
     if self.horizon then
         if self.find.active and not self.find.paused and now >= self.find.nextAt then

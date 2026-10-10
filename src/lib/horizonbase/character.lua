@@ -6,11 +6,12 @@ M.groups={
     {'Work & faction',{'Faction','Rank','Division','Job','Job 2'}},
     {'Finances',{'Total wealth','Cash','Bank balance','Insurance','Married to'}},
     {'Health & record',{'Health','Armor','Spawn armor','Crimes','Arrests','Wanted Level','Radio'}},
-    {'Inventory',{'Materials','Pot','Crack','Packages','Crates','Rope','Cigars','Sprunk','Spray','Seeds','Blindfolds','Ref Tokens'}}
+    {'Inventory',{'Materials','Pot','Crack','Packages','Crates','Rope','Cigars','Sprunk','Spray','Seeds','Blindfolds','Ref Tokens','Screwdriver','Wristwatch','Tire','Firstaid','Receiver','GPS','Bug Sweep','Lockpicks'}}
 }
 local known={}
 for _,group in ipairs(M.groups) do for _,label in ipairs(group[2]) do known[label:lower()]=label end end
 known.armour='Armor';known['spawn armour']='Spawn armor'
+known.family='Faction';known.crew='Division'
 local function count(t)local n=0;for _ in pairs(t)do n=n+1 end;return n end
 function M.new(clock)
     return setmetatable({now=clock,fields={},lines={},state='empty',lastRequest=-10000},M)
@@ -18,17 +19,26 @@ end
 function M:reset()
     self.quiet=false;self.quietTailUntil=nil;self.quietStarted=false
     self.fields={};self.lines={};self.state='empty';self.pending=nil;self.draft=nil
-    self.updatedAt=nil;self.name=nil;self.error=nil;self.partial=nil;self.lastLine=nil;self.lastRequest=-10000
+    self.updatedAt=nil;self.name=nil;self.error=nil;self.partial=nil;self.merge=false;self.inventoryDue=false;self.lastLine=nil;self.lastRequest=-10000
 end
-function M:begin(quiet)
+function M:begin(quiet,merge)
     self.quiet=quiet==true;self.quietStarted=false;self.quietTailUntil=nil
+    self.merge=merge==true
     local now=self.now()
-    self.pending=now+12000;self.draft=nil;self.lines={};self.lastRequest=now;self.state='loading';self.error=nil
+    self.pending=now+12000;self.draft=merge and {fields={}} or nil
+    self.lines={};self.lastRequest=now;self.state='loading';self.error=nil
 end
 function M:commit()
     local d=self.draft
-    if not d or count(d.fields)<5 then return false end
-    self.name=d.name;self.fields=d.fields;self.updatedAt=self.now();self.partial=d.fields.Donator==nil
+    local n=d and count(d.fields) or 0
+    if not d or (self.merge and n<1) or (not self.merge and n<5) then return false end
+    if self.merge then
+        for key,value in pairs(d.fields) do self.fields[key]=value end
+    else
+        self.name=d.name;self.fields=d.fields;self.partial=d.fields.Donator==nil
+        self.inventoryDue=true
+    end
+    self.merge=false;self.updatedAt=self.now()
     self.quietTailUntil=self.quiet and self.now()+250 or nil
     self.quiet=false;self.quietStarted=false
     self.draft=nil;self.pending=nil;self.state='ready';self.error=nil
@@ -72,10 +82,12 @@ function M:ingest(text,expectedName)
                     if key then
                         parsed[key]=value:match('^%s*(.-)%s*$'):gsub('[%c]',''):sub(1,160)
                         recognized=true
-                    else exact=false end
+                    end
                 end
+                -- A long /stats line is split by chat inside the next field, for example "(Crat".
+                -- Keep the completed fields. Ordinary chat mixed into the line still rejects it.
                 local leftover=body:gsub('%([^()]*%)',''):gsub('[%s%-]','')
-                if leftover~='' then exact=false end
+                if leftover~='' and not leftover:match('^%([^)]*$') then exact=false end
                 if not exact then recognized=false end
                 if recognized then
                     for key,value in pairs(parsed)do self.draft.fields[key]=value end

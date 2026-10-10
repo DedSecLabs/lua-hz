@@ -370,7 +370,11 @@ function M:content()
         im.TextDisabled('0% = left/top. 100% = right/bottom.')
     else
         self:section('Changelog')
-        im.TextUnformatted('LuaHZ 0.2.35')
+        im.TextUnformatted('LuaHZ 0.2.36')
+        im.BulletText('Character Status keeps finished /stats fields when chat cuts off the line')
+        im.BulletText('Family and Crew fill Faction and Division')
+        im.BulletText('Inventory adds carried items from /inv')
+        im.Spacing();im.TextUnformatted('LuaHZ 0.2.35')
         im.BulletText('User-supplied GTA-style loading artwork; source image preserved unchanged')
         im.Spacing();im.TextUnformatted('LuaHZ 0.2.34')
         im.BulletText('New upper-left gang scene; project source/handoff cleanup')
@@ -489,7 +493,7 @@ function M:draw()
     local lineHeight=im.GetFontSize()
     local headingY=40*S-(2*lineHeight+3*S)/2
     im.SetCursorPos(im.ImVec2(headingX,headingY));im.TextColored(im.ImVec4(1,.62,0,1),'LuaHZ')
-    im.SetCursorPos(im.ImVec2(headingX,headingY+lineHeight+3*S));im.TextDisabled('0.2.35')
+    im.SetCursorPos(im.ImVec2(headingX,headingY+lineHeight+3*S));im.TextDisabled('0.2.36')
     for i,label in ipairs(tabs) do
         if i<8 then im.SetCursorPos(im.ImVec2(12*S,(94+(i-1)*42)*S))
         else im.SetCursorPos(im.ImVec2(12*S,size.y-97*S)) end

@@ -12,7 +12,7 @@ import subprocess
 import zipfile
 
 PROJECT = Path(__file__).resolve().parents[1]
-VERSION = "0.2.35"
+VERSION = "0.2.36"
 OWNED = ("HorizonBase.lua", "lib/horizonbase", "resource/horizonbase")
 RESOURCE_GROUPS = ("fonts", "sa_map", "weaponicons", "mapicons")
 UI_ASSETS = "resource/horizonbase/ui-v0212"
