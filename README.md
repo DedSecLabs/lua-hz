@@ -11,6 +11,9 @@
   <img src="assets/branding/luahz-logo.png" alt="LuaHZ logo" width="200">
 </p>
 
+<img width="1024" height="576" alt="image" src="https://github.com/user-attachments/assets/91f22112-672e-4db0-abca-1ad27f263950" />
+
+
 **A modern HUD and quality-of-life toolkit for Horizon Roleplay.**
 
 It activates only on `samp.hzgaming.net:7777` / `213.32.6.232:7777`. The same SA-MP installation can still join other servers.
