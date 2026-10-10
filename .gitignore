@@ -14,3 +14,9 @@ __pycache__/
 *.img
 *.luac
 *.zip
+# The Linux player release tracks these files on purpose.
+!player-resources/
+!player-resources/**
+!player-resources/**/*.dll
+!player-resources/**/*.asi
+!player-resources/**/*.txd
