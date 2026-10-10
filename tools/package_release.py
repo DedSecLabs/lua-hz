@@ -61,7 +61,7 @@ def package(output, native_dir, revision, root=ROOT, kind='developer-preview'):
 
 This download is for contributors and local testers. It is not a player installer.
 The complete player ZIP is still being prepared. Check
-https://github.com/DedSecLabs/lua-hz/releases for future player downloads.
+https://github.com/DedSecLabs/luahz/releases for future player downloads.
 
 Contents:
 - source/: audited source, licensed UI assets, logo, tests and documentation.
@@ -96,7 +96,7 @@ Source commit: {revision}
 Download `{name}.zip` for the audited source and our compiled x86 native helpers.
 Read `START-HERE.md` inside the ZIP before using it. `SHA256SUMS.txt` verifies
 the attached files; `release-manifest.json` records every payload file and the
-exact [source commit](https://github.com/DedSecLabs/lua-hz/commit/{revision}).
+exact [source commit](https://github.com/DedSecLabs/luahz/commit/{revision}).
 
 Prerequisites and external visual resources are acquired separately. The native
 loading helper requires the matched loading resource; the compiled helper alone

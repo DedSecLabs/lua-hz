@@ -1,12 +1,12 @@
 # Installation guide
 
-**Player download:** [LuaHZ 0.2.35](https://github.com/DedSecLabs/lua-hz/releases/tag/v0.2.35-player). Windows copies `moonloader` and `LuaHZLoading.asi` into the GTA folder. Linux/Wine can use `install.sh` from that archive. [BASE_INSTALL.md](BASE_INSTALL.md) describes the earlier small preview, which omits the visuals.
+**Player download:** [LuaHZ 0.2.35](https://github.com/DedSecLabs/luahz/releases/tag/v0.2.35-player). Windows copies `moonloader` and `LuaHZLoading.asi` into the GTA folder. Linux/Wine can use `install.sh` from that archive. [BASE_INSTALL.md](BASE_INSTALL.md) describes the earlier small preview, which omits the visuals.
 
 LuaHZ 0.2.35 targets classic **GTA San Andreas 1.0 US**, **SA-MP 0.3.7 R5** and the prerequisite versions linked in the [README](../README.md#installation). This guide documents that prerequisite setup. The repository source ZIP is not the player download.
 
 ## What you can install today
 
-Install the prerequisites below, then download `LuaHZ-0.2.35-player.zip` from [Releases](https://github.com/DedSecLabs/lua-hz/releases/tag/v0.2.35-player). GitHub’s **Code → Download ZIP** contains developer source and cannot replace that package. Python, GCC and LuaJIT build tools are for contributors, not prerequisites players need to install separately.
+Install the prerequisites below, then download `LuaHZ-0.2.35-player.zip` from [Releases](https://github.com/DedSecLabs/luahz/releases/tag/v0.2.35-player). GitHub’s **Code → Download ZIP** contains developer source and cannot replace that package. Python, GCC and LuaJIT build tools are for contributors, not prerequisites players need to install separately.
 
 ## Find your game folder
 
@@ -87,7 +87,7 @@ This is a layout checklist, not a full archive inventory. The prerequisite archi
 
 ## Installing LuaHZ itself
 
-**Player package:** [LuaHZ-0.2.35-player.zip](https://github.com/DedSecLabs/lua-hz/releases/download/v0.2.35-player/LuaHZ-0.2.35-player.zip). On Windows, merge `payload/moonloader` into the GTA folder and copy `payload/LuaHZLoading.asi` next to `gta_sa.exe`. On Linux/Wine, run `install.sh` from the extracted archive. Downloads labeled **developer preview** and GitHub’s automatic **Source code** archives are for contributors.
+**Player package:** [LuaHZ-0.2.35-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.2.35-player/LuaHZ-0.2.35-player.zip). On Windows, merge `payload/moonloader` into the GTA folder and copy `payload/LuaHZLoading.asi` next to `gta_sa.exe`. On Linux/Wine, run `install.sh` from the extracted archive. Downloads labeled **developer preview** and GitHub’s automatic **Source code** archives are for contributors.
 
 **Source/local testing:** Use [the development guide](DEVELOPMENT.md) to check/build the source and deploy it with backups. Our Lua entry point is historically named `HorizonBase.lua`; it belongs in `moonloader`, and `src/lib/horizonbase` becomes `moonloader/lib/horizonbase`. Use the deployment tools to stage the licensed UI icons and available external resources; copying only that Lua file is insufficient.
 
@@ -115,7 +115,7 @@ The shared-installation workflow above has passed the owner's in-game QA on Wine
 | LuaHZ does not activate on another server | This is expected. It activates only on Horizon’s supported endpoint. |
 | The game stops starting after adding prerequisites | Close the game and browser, then restore your backup. Record the exact error before changing more files. |
 
-If you need help, open an issue at [DedSecLabs/lua-hz](https://github.com/DedSecLabs/lua-hz/issues) with your OS/Wine version, prerequisite versions, the action that failed, and the relevant error lines. Remove passwords, account details and personal paths from shared logs.
+If you need help, open an issue at [DedSecLabs/luahz](https://github.com/DedSecLabs/luahz/issues) with your OS/Wine version, prerequisite versions, the action that failed, and the relevant error lines. Remove passwords, account details and personal paths from shared logs.
 
 ## Missing runtime components
 

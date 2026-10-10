@@ -1,6 +1,6 @@
 # Releases and player downloads
 
-Players will download a named player ZIP from [GitHub Releases](https://github.com/DedSecLabs/lua-hz/releases), install the separately linked prerequisites, and follow the package's installation guide. They will not need to clone the repository or compile code. GitHub's automatic **Source code (zip)** and **Source code (tar.gz)** downloads remain developer source.
+Players will download a named player ZIP from [GitHub Releases](https://github.com/DedSecLabs/luahz/releases), install the separately linked prerequisites, and follow the package's installation guide. They will not need to clone the repository or compile code. GitHub's automatic **Source code (zip)** and **Source code (tar.gz)** downloads remain developer source.
 
 ## Available packaging today
 

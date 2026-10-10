@@ -3,7 +3,7 @@
 Use a separate clean classic GTA San Andreas 1.0 US copy. This prerelease keeps stock native fonts/radar/loading, excludes HD visual resources and portraits, and has no usable Quickmap background. Use the game's ESC map. Character statistics remain available without a portrait. HUD text uses the existing font fallback; final appearance needs your live test.
 
 1. Back up your game and use an isolated Wine prefix. Confirm you can join Horizon before adding LuaHZ.
-2. Install SA-MP R5 (Horizon R5-2-MP), CLEO 4.4.4 with its supplied loader, MoonLoader 0.26.5-beta, SAMPFUNCS 5.7.1 rel.25 R5 and mimgui 1.7.0 into the same game copy/prefix. Exact downloads and destinations: https://github.com/DedSecLabs/lua-hz#2-install-the-tested-prerequisites
+2. Install SA-MP R5 (Horizon R5-2-MP), CLEO 4.4.4 with its supplied loader, MoonLoader 0.26.5-beta, SAMPFUNCS 5.7.1 rel.25 R5 and mimgui 1.7.0 into the same game copy/prefix. Exact downloads and destinations: https://github.com/DedSecLabs/luahz#2-install-the-tested-prerequisites
 3. Skip the separate SAMP.Lua download/edit step: this package includes the eight verified MIT-licensed Lua files with the material-handler adjustment already applied. Their original notices and full license are included.
 4. Close GTA and the SA-MP browser. Extract this ZIP outside your game folder. In a Linux terminal, change into this extracted folder, then run:
 
