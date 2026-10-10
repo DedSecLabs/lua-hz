@@ -82,6 +82,11 @@ Add `samp.hzgaming.net:7777` in the SA-MP browser and connect. A LuaHZ notice ap
 
 Change shortcuts and preset speeds in **Settings → Hotkeys**. Cruise works while you drive a road vehicle. Brake, or press **X** again, to cancel.
 
+<p align="center">
+  <img src="docs/images/settings.png" alt="LuaHZ settings window open on the HUD tab" width="640"><br>
+  <b>Settings.</b> Press F9 or type /luahz.
+</p>
+
 ## Features
 
 | Area | What LuaHZ adds |
