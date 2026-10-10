@@ -94,6 +94,21 @@ Change shortcuts and preset speeds in **Settings → Hotkeys**. Cruise works whi
 | Horizon helpers | Ordinary server commands, offer handling, and tracking tools |
 | Visuals | Loading artwork, fonts, radar icons, and map textures, active only on Horizon |
 
+<p align="center">
+  <img src="docs/images/dashboard.png" alt="Vehicle dashboard showing speed and health" width="420"><br>
+  <b>HUD.</b> Vehicle name, speed, and health.
+</p>
+
+<p align="center">
+  <img src="docs/images/quickmap.jpg" alt="Quickmap of San Andreas with saved locations" width="720"><br>
+  <b>Quickmap.</b> The Horizon map and saved locations. Press M, or Escape, to close it.
+</p>
+
+<p align="center">
+  <img src="docs/images/character-status.png" alt="Character Status window with skin portrait and statistics" width="640"><br>
+  <b>Character Status.</b> Skin portrait and tabbed server statistics.
+</p>
+
 Live health, armor, cash, and skin come from the game client. Account, job, and inventory information comes from recognized server responses. See [data sources](docs/DATA_SOURCES.md).
 
 ## Other servers
