@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "version": "0.2.36",
+  "version": "0.2.37",
   "package_kind": "developer-preview",
   "player_installable": false,
   "player_release_blockers": [
-    "The published player archive is v0.2.36-player. Windows installs by copying moonloader and LuaHZLoading.asi into the GTA folder.",
+    "The published player archive is v0.2.37-player. Windows installs by copying moonloader and LuaHZLoading.asi into the GTA folder.",
     "A Windows play report has not been recorded yet."
   ]
 }

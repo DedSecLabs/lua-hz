@@ -63,6 +63,8 @@ function M:ingest(text,expectedName)
             self.quietStarted=true
         elseif trimmed=='' then
             if not (quiet and self.quietStarted) then hide=false end
+        elseif quiet and self.merge and trimmed:lower()=='inventory:' then
+            -- Header of an owned /inv reply. The item rows are hidden separately.
         else
             local name=line:match('^%s*(.-)%s*%-%s*%([Ll]evel:%s*')
             if name then

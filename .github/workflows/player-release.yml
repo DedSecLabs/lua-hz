@@ -6,6 +6,8 @@ on:
     branches: [main]
     paths:
       - player-resources/**
+      - src/**
+      - manifests/release.json
       - tools/package_player.py
       - tools/package_base.py
       - tools/base_install.sh

@@ -155,6 +155,10 @@ print('PASS the captured Horizon lines keep work, crimes, arrests and wanted lev
 c:reset();c:begin()
 for _,line in ipairs(lines)do c:ingest(line,'John_Doe')end
 assert(c.fields.Materials=='150' and c.fields.Lockpicks==nil)
+c:begin(true,true)
+assert(c:ingest('Inventory:','John_Doe'),'Owned /inv header must stay out of chat')
+c:reset();c:begin()
+for _,line in ipairs(lines)do c:ingest(line,'John_Doe')end
 c:begin(false,true)
 for _,line in ipairs({
     'Inventory:',
