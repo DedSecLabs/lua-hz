@@ -7,8 +7,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/DedSecLabs/luahz/releases/tag/v0.2.39-player"><img src="https://img.shields.io/badge/release-0.2.39-2563eb" alt="release 0.2.39"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-64748b" alt="license MIT"></a>
+  <a href="https://github.com/DedSecLabs/luahz/releases/tag/v0.2.39-player"><img src="https://img.shields.io/badge/Release-0.2.39-2563eb" alt="release 0.2.39"></a>
+  <img src="https://img.shields.io/badge/Platform-SA--MP-ff8000" alt="platform SA-MP">
+  <a href="https://github.com/DedSecLabs/luahz/actions/workflows/release.yml"><img src="https://img.shields.io/github/actions/workflow/status/DedSecLabs/luahz/release.yml?branch=main&label=Build&color=22c55e" alt="build status"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-64748b" alt="license MIT"></a>
 </p>
 
 <p align="center">
