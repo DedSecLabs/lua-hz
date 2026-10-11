@@ -4,7 +4,7 @@
   "package_kind": "developer-preview",
   "player_installable": false,
   "player_release_blockers": [
-    "Exact packaged 0.3.0 owner gameplay QA is pending.",
+    "This developer preview excludes the full visual resource packs; use the separate complete player ZIP.",
     "Native Windows gameplay QA has not been recorded."
   ]
 }

@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/DedSecLabs/luahz/releases/tag/v0.2.39-player"><img src="https://img.shields.io/badge/Release-0.2.39-2563eb" alt="release 0.2.39"></a>
+  <a href="https://github.com/DedSecLabs/luahz/releases/tag/v0.3.0"><img src="https://img.shields.io/badge/Release-0.3.0-2563eb" alt="release 0.3.0"></a>
   <img src="https://img.shields.io/badge/Platform-SA--MP-ff8000" alt="platform SA-MP">
   <a href="https://github.com/DedSecLabs/luahz/actions/workflows/release.yml"><img src="https://img.shields.io/github/actions/workflow/status/DedSecLabs/luahz/release.yml?branch=main&label=Build&color=22c55e" alt="build status"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-64748b" alt="license MIT"></a>
@@ -25,7 +25,7 @@
 
 It activates only on `samp.hzgaming.net:7777` / `213.32.6.232:7777`. The same SA-MP installation can still join other servers.
 
-[Download](https://github.com/DedSecLabs/luahz/releases/tag/v0.2.39-player) · [Install](#install) · [Controls](#controls) · [Features](#features) · [Development](#development)
+[Download](https://github.com/DedSecLabs/luahz/releases/tag/v0.3.0) · [Install](#install) · [Controls](#controls) · [Features](#features) · [Development](#development)
 
 </div>
 
@@ -33,7 +33,7 @@ It activates only on `samp.hzgaming.net:7777` / `213.32.6.232:7777`. The same SA
 
 ## Install
 
-Download **[LuaHZ-0.2.39-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.2.39-player/LuaHZ-0.2.39-player.zip)**.
+Download **[LuaHZ-0.3.0-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.3.0/LuaHZ-0.3.0-player.zip)**.
 
 ### 1. Prepare the game
 
@@ -60,7 +60,13 @@ On **Linux/Wine**, install the prerequisites inside the **same Wine prefix** as 
 
 Close GTA and the SA-MP browser. Extract the player ZIP outside the GTA folder.
 
-**Windows:** merge `payload/moonloader` into the GTA `moonloader` folder. Copy `payload/LuaHZLoading.asi` next to `gta_sa.exe`.
+**Windows:** from the extracted folder, run:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 "C:\Games\GTA San Andreas"
+```
+
+For an existing LuaHZ installation, add `-Upgrade`.
 
 **Linux/Wine:** from the extracted folder, run:
 
@@ -68,15 +74,15 @@ Close GTA and the SA-MP browser. Extract the player ZIP outside the GTA folder.
 bash install.sh "/path/to/GTA San Andreas"
 ```
 
-The path must contain `gta_sa.exe`.
+For an existing LuaHZ installation, add `--upgrade`. The path must contain `gta_sa.exe`.
+
+Both installers verify the payload and prerequisites, preserve preferences and saved locations, and print a recovery command. Keep the backup until the new build works. Linux/Wine gameplay is owner-tested; native Windows gameplay remains unverified. See the [installation guide](docs/INSTALLATION.md#player-installation-and-upgrade).
 
 ### 4. Join Horizon Roleplay
 
 Add `samp.hzgaming.net:7777` in the SA-MP browser and connect. A LuaHZ notice appears at the **bottom right**.
 
 ## Features
-
-> Development preview: the new Server pages, command combos, Quick Actions and updated HUD shown below belong to **0.3.0-rc.1**, currently undergoing packaged-build QA. The public download above is still **0.2.39**.
 
 | Area | What LuaHZ adds |
 |---|---|

@@ -1,12 +1,12 @@
 # Installation guide
 
-**Player download:** [LuaHZ 0.2.39](https://github.com/DedSecLabs/luahz/releases/tag/v0.2.39-player). Windows copies `moonloader` and `LuaHZLoading.asi` into the GTA folder. Linux/Wine can use `install.sh` from that archive. [BASE_INSTALL.md](BASE_INSTALL.md) describes the earlier small preview, which omits the visuals.
+**Player download:** [LuaHZ 0.3.0](https://github.com/DedSecLabs/luahz/releases/tag/v0.3.0). Use the supplied PowerShell or Linux/Wine installer; existing installations require an explicit upgrade. See [installation and upgrade](#player-installation-and-upgrade). [BASE_INSTALL.md](BASE_INSTALL.md) describes the earlier small preview, which omits the visuals.
 
-LuaHZ 0.2.39 targets classic **GTA San Andreas 1.0 US**, **SA-MP 0.3.7 R5** and the prerequisite versions linked in the [README](../README.md#install). This guide documents that prerequisite setup. The repository source ZIP is not the player download.
+LuaHZ 0.3.0 targets classic **GTA San Andreas 1.0 US**, **SA-MP 0.3.7 R5** and the prerequisite versions linked in the [README](../README.md#install). This guide documents that prerequisite setup. The repository source ZIP is not the player download.
 
 ## What you can install today
 
-Install the prerequisites below, then download `LuaHZ-0.2.39-player.zip` from [Releases](https://github.com/DedSecLabs/luahz/releases/tag/v0.2.39-player). GitHub’s **Code → Download ZIP** contains developer source and cannot replace that package. Python, GCC and LuaJIT build tools are for contributors, not prerequisites players need to install separately.
+Install the prerequisites below, then download `LuaHZ-0.3.0-player.zip` from [Releases](https://github.com/DedSecLabs/luahz/releases/tag/v0.3.0). GitHub’s **Code → Download ZIP** contains developer source and cannot replace that package. Python, GCC and LuaJIT build tools are for contributors, not prerequisites players need to install separately.
 
 ## Find your game folder
 
@@ -31,7 +31,7 @@ Use the exact links in the [README prerequisite table](../README.md#2-install-th
 4. **MoonLoader 0.26.5-beta:** Extract the author’s archive into the same GTA folder. Keep `MoonLoader.asi`, its supplied runtime DLLs and the complete `moonloader/lib` directory. Do not install only the ASI. The archive's `vkeys`, `windows.message`, encoding and other helper modules are part of this setup.
 5. **SAMPFUNCS 5.7.1 rel.25 for R5:** Open the author’s thread or the specific R5 attachment and follow its included installation instructions. Place `SAMPFUNCS.asi` in the GTA folder. An R1/R3 build is not interchangeable with the tested R5 build. A browser challenge or login may be required.
 6. **mimgui 1.7.0:** Download `mimgui-v1.7.0.zip` from the pinned release's **Assets** section, not GitHub's source archive. Merge its library payload into `moonloader/lib`, so `moonloader/lib/mimgui/init.lua` and `moonloader/lib/mimgui/cimguidx9.dll` exist. Avoid an extra nested `mimgui/mimgui` directory.
-7. **SAMP.Lua:** Use the pinned 2.0.4 source archive, copy the entire `samp` directory to `moonloader/lib/samp`, and apply the baseline adjustment below. Do not replace it with the current master branch or latest release when reproducing our tests.
+7. **SAMP.Lua:** The player ZIP includes the verified 2.0.4 baseline with the adjustment documented below. Players do not need to download or edit this library separately.
 
 Original GTA and SAMPFUNCS files must remain unmodified on disk for LuaHZ's native visual installation. Older globally patched loading screens/fonts/maps need the guarded migration described in [development](DEVELOPMENT.md), rather than overwriting them by hand.
 
@@ -48,11 +48,11 @@ SunSizeHack=0
 UseDesktopRefreshRate=0
 ```
 
-These disable optional mission-script, intro, sun-size and refresh-rate changes; the streaming-deadlock fix remains active. Keep `SmallSteamTexts=-1`, `MinimalHUD=0`, and `TrueInvincibility=0` as supplied. No GTA executable replacement is needed. Future player installers verify the tested ASI hash; the already-published 0.2.39 archive predates this prerequisite check.
+These disable optional mission-script, intro, sun-size and refresh-rate changes; the streaming-deadlock fix remains active. Keep `SmallSteamTexts=-1`, `MinimalHUD=0`, and `TrueInvincibility=0` as supplied. No GTA executable replacement is needed. The 0.3.0 player installers verify the tested ASI hash; the historical 0.2.39 archive predates this prerequisite check.
 
 ## SAMP.Lua baseline
 
-This is an advanced step for reproducing the exact tested library. It edits a Lua text file; the pinned upstream ZIP alone does not contain our adjustment. If you are unfamiliar with editing code, stop here until the player package provides a tested setup path. Do not guess at changes to this file.
+The player ZIP already includes this verified library. The following advanced reference explains the adjustment for contributors reproducing the baseline; players do not need to edit it.
 
 Our installed SAMP.Lua is **v2.0.4 with a two-line material-handler adjustment**. All eight installed Lua files were compared against the [pinned v2.0.4 source](https://github.com/THE-FYP/SAMP.Lua/tree/v2.0.4/samp): the other seven match exactly; `events/handlers.lua` has the two additional assignments below. We have not identified this complete copy as a separate upstream release, so it is not labeled as one.
 
@@ -105,7 +105,7 @@ This is a layout checklist, not a full archive inventory. The prerequisite archi
 
 ## Installing LuaHZ itself
 
-**Player package:** [LuaHZ-0.2.39-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.2.39-player/LuaHZ-0.2.39-player.zip). On Windows, merge `payload/moonloader` into the GTA folder and copy `payload/LuaHZLoading.asi` next to `gta_sa.exe`. On Linux/Wine, run `install.sh` from the extracted archive. Downloads labeled **developer preview** and GitHub’s automatic **Source code** archives are for contributors.
+**Player package:** [LuaHZ-0.3.0-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.3.0/LuaHZ-0.3.0-player.zip). Extract outside the GTA folder, then use `install.ps1` on Windows or `install.sh` on Linux/Wine. Follow the [first-install/upgrade commands](#player-installation-and-upgrade) below. Downloads labeled **developer preview** and GitHub’s automatic **Source code** archives are for contributors.
 
 **Source/local testing:** Use [the development guide](DEVELOPMENT.md) to check/build the source and deploy it with backups. Our Lua entry point is historically named `HorizonBase.lua`; it belongs in `moonloader`, and `src/lib/horizonbase` becomes `moonloader/lib/horizonbase`. Use the deployment tools to stage the licensed UI icons and available external resources; copying only that Lua file is insufficient.
 
@@ -116,8 +116,8 @@ The player ZIP already contains `LuaHZVisuals.dll`, the native visual files, and
 With LuaHZ deployed, launch Horizon from the same SA-MP browser you normally use:
 
 - A LuaHZ notification appears at the bottom right.
-- **F9** or `/luahz` opens settings; **M** opens Quickmap; **I** opens Character Status.
-- While driving a road vehicle, **X** toggles cruise control; **Numpad + / −** (or **= / −** on the main keyboard) adjusts the target by 1 mph. Brake or press **X** again to cancel. See the [README controls table](../README.md#4-check-an-installed-copy) for cruise preset shortcuts.
+- **F9** or `/luahz` opens settings; **M** opens Quickmap; **I** opens Character Status; **U** opens Quick Actions.
+- While driving a road vehicle, **X** toggles cruise control; **Numpad + / −** (or **= / −** on the main keyboard) adjusts the target by 1 mph. Brake or press **X** again to cancel. See the [README controls table](../README.md#controls) for cruise preset shortcuts.
 - Exit the game, connect to another server, and verify LuaHZ UI/custom visuals remain inactive.
 - Exit again and reconnect to Horizon; LuaHZ should activate normally.
 
@@ -162,9 +162,9 @@ Use archive hashes for downloaded ZIPs and installed-file hashes for extracted f
 
 The CLEO 4.4.4 and MoonLoader archives were fetched and matched during the earlier dependency audit. The mimgui 1.7.0 renderer and normalized Lua sources were matched during this README review. The SAMPFUNCS page identifies the R5 attachment, but its download challenge prevented upstream byte comparison; our recorded hash is the locally tested binary. Horizon's installer download also returned HTTP 403 during automated retrieval. These links require manual download verification before claiming a completely reproducible fresh player installation.
 
-## Release candidate installation and upgrade
+## Player installation and upgrade
 
-The 0.3.0 candidate ZIP includes guarded installers for Linux/Wine and PowerShell. These commands apply to the candidate, not the older published 0.2.39 installer. Close GTA and the SA-MP browser; install the prerequisite versions above, including SilentPatchSA 1.1 Build 34.1. Extract the ZIP outside the game folder.
+The 0.3.0 player ZIP includes guarded installers for Linux/Wine and PowerShell. These commands apply to 0.3.0; the historical 0.2.39 installer has different upgrade behavior. Close GTA and the SA-MP browser; install the prerequisite versions above, including SilentPatchSA 1.1 Build 34.1. Extract the ZIP outside the game folder.
 
 **Linux/Wine, first installation:**
 
@@ -190,4 +190,4 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 "C:\Games\GTA 
 powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 "C:\Games\GTA San Andreas" -Upgrade
 ```
 
-The installers validate supported prerequisites and payload hashes, back up overwritten files, and print a recovery command. Keep that backup until the candidate works. Preferences and saved locations under moonloader/config, unrelated mods and unused old resource groups remain untouched. Recovery restores overwritten files and removes newly added ones; it refuses files modified after the installation. A native Windows gameplay report remains pending.
+The installers validate supported prerequisites and payload hashes, back up overwritten files, and print a recovery command. Keep that backup until the new build works. Preferences and saved locations under moonloader/config, unrelated mods and unused old resource groups remain untouched. Recovery restores overwritten files and removes newly added ones; it refuses files modified after the installation. A native Windows gameplay report remains pending.
