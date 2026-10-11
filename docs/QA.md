@@ -188,3 +188,6 @@ The owner rejected the lock indicator’s separate square. Check that the indica
 
 
 The next two owner captures ended normally on user stop and supplied personal window/hood/trunk replies, the storage list and cancellation, and a tracking list selection plus location/checkpoint reply. No further discovery capture is requested for this stage. On 2026-10-11 the closed-game full suite passed and four exact 0.3.2 Lua sources were installed with 715 protected files preserved; owner visual review of the no-square lock indicator remains pending. Storage spawn/store actions and family control behavior are still unverified.
+
+
+On 2026-10-11 the owner replied “Looks good now” to the 0.3.2 Locked/Unlocked dashboard review. The shared-background presentation and readable state labels are accepted on Linux/Wine. This confirmation does not establish untested storage actions, family control behavior or native Windows gameplay.
