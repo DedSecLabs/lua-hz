@@ -62,6 +62,15 @@ class ReleaseTests(unittest.TestCase):
             self.assertEqual(hashlib.sha256((self.output / name).read_bytes()).hexdigest(), expected)
         self.assertFalse(result['player_installable'])
 
+    def test_release_candidate_version_is_supported(self):
+        policy = self.root / 'manifests/release.json'
+        data = json.loads(policy.read_text());data['version'] = '0.3.0-rc.1'
+        policy.write_text(json.dumps(data))
+        (self.root / 'src/HorizonBase.lua').write_text("script_version('0.3.0-rc.1')")
+        (self.root / 'tools/deploy.py').write_text('VERSION = "0.3.0-rc.1"')
+        result = self.build()
+        self.assertIn('0.3.0-rc.1', result['archive'])
+
     def test_player_package_is_refused_even_if_policy_is_edited(self):
         with self.assertRaisesRegex(ValueError, 'Player packaging'):
             self.build(kind='player')

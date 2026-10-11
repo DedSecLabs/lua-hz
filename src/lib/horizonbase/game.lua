@@ -65,7 +65,7 @@ function M:refresh()
     local ped = _G.PLAYER_PED
     local ready = ped ~= nil and call('doesCharExist', false, ped) and call('isSampAvailable', false) and
         call('sampGetGamestate',5)==3
-    local s = {ready=ready, alive=false, vehicle=false, swimming=false, stamina=1, oxygen=1}
+    local s = {ready=ready, alive=false, vehicle=false, swimming=false, underwater=false, stamina=1, oxygen=1}
     self.sample = s
     if not ready then self:stopCruise(); return s end
     local skin=call('getCharModel',-1,ped)
@@ -90,6 +90,7 @@ function M:refresh()
     s.wanted = logic.clamp(math.floor(call('storeWantedLevel', 0, PLAYER_HANDLE)),0,6)
     s.swimming = call('isCharSwimming', false, ped)
     s.swimState = s.swimming and call('getCharSwimState', 0, ped) or 0
+    s.underwater = s.swimming and s.swimState>=3
     s.running = call('getCharSpeed',0,ped)>2.5 or call('getPadState',0,0,16)>0
     self:readPlayerEnergy(ped)
     self:readNativeState(ped)
@@ -102,6 +103,13 @@ function M:refresh()
             s.driver = call('getDriverOfCar', -1, car) == ped
             s.model = call('getCarModel', 0, car)
             s.boat = boatModels[s.model] or false
+            -- Seated peds have no swim task. Require both the vehicle's water
+            -- state and the player's position below the water surface; boats
+            -- can report in-water while their occupants are above it.
+            if call('isCarInWater', false, car) then
+                local waterHeight=call('getWaterHeightAtCoords', s.z, s.x, s.y, false)
+                s.underwater=s.underwater or s.z<waterHeight
+            end
             s.speed = math.max(0, call('getCarSpeed', 0, car)) * 2.2369362921
             s.vehicleHealth = call('getCarHealth', 0, car)
             -- Observe the current car's actual lock state; /pvlock may change it.

@@ -2,10 +2,21 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+import shutil
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 import export_source
 
 class ExportTests(unittest.TestCase):
+    def test_existing_forum_headers_are_pinned_and_changed_bytes_are_refused(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)/'project';folder=root/'assets/branding';folder.mkdir(parents=True)
+            for name in ('luahz-hzheader.png','luahz-hzheader_small.png'):
+                shutil.copy2(export_source.ROOT/'assets/branding'/name,folder/name)
+            result=export_source.export(Path(directory)/'export',root)
+            self.assertEqual(len(result['files']),2)
+            (folder/'luahz-hzheader_small.png').write_bytes(b'changed header')
+            with self.assertRaises(ValueError):export_source.export(Path(directory)/'changed',root)
+
     def test_public_source_omits_local_inputs_binaries_and_personal_state(self):
         with tempfile.TemporaryDirectory()as directory:
             root=Path(directory)/'project';root.mkdir()

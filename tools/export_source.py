@@ -9,7 +9,11 @@ import shutil
 ROOT=Path(__file__).resolve().parents[1]
 DIRECTORIES={'src','native','tools','tests','assets','docs','manifests','.github'}
 FILES={'README.md','AGENTS.md','CONTRIBUTING.md','LICENSE','THIRD_PARTY.md','.gitignore','requirements-dev.txt'}
-APPROVED_BRANDING={'assets/branding/luahz-logo.png': '62d16ff2d1dec2a44e6dc75eac91cc66644a12a6a61981c54cc8ccd969a40dc5'}
+APPROVED_BRANDING={
+    'assets/branding/luahz-logo.png': '62d16ff2d1dec2a44e6dc75eac91cc66644a12a6a61981c54cc8ccd969a40dc5',
+    'assets/branding/luahz-hzheader.png': '62d16ff2d1dec2a44e6dc75eac91cc66644a12a6a61981c54cc8ccd969a40dc5',
+    'assets/branding/luahz-hzheader_small.png': 'd154afc36634f7c3463d2d21604dd36a68f1b0577918c7a799a36492ae8e6643',
+}
 FORBIDDEN_EXTENSIONS={'.dll','.asi','.exe','.txd','.img','.luac','.zip','.pyc','.log'}
 
 def candidates(root=ROOT):

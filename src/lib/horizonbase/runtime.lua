@@ -8,6 +8,7 @@ local Server=require 'horizonbase.server'
 local Game=require 'horizonbase.game'
 local app={faults={},focused=true,started=false,audioHistory={}}
 local ownedCommands,ownedEvents={},{}
+local queueQuickAction,onlinePlayers
 local function sessionActive() return app.started and authorized() end
 local root=getWorkingDirectory()
 local configPath=root..'\\config\\horizonbase.ini'
@@ -41,16 +42,69 @@ local function guard(component,fn,...)
         if (component=='HUD' or component=='Native HUD') and app.overlay then app.overlay:restoreNative() end
         if component=='Menu' and app.ui then app.ui.open[0]=false;app.ui.capture=nil end
         if component=='Character Status' and app.status then app.status.open[0]=false end
+        if component=='Quick Actions' then
+            if app.actions then app.actions:reset()end
+            app.quickRequest=nil
+        end
         if component=='Game' and app.game then app.game:cleanup();app.game.sample={ready=false} end
         if component=='Quickmap' and app.overlay then app.overlay.mapOpen=false end
         if component=='Native Map' and app.nativeLocations then pcall(function()app.nativeLocations:cleanup()end)end
+        if component=='Observations' and app.observations then pcall(function()app.observations:stop('observer error')end)end
     end
     return ok,result
 end
 
 app.game=Game.new(prefs,notify)
 app.catalog=require('horizonbase.location_catalog').new(root..'\\config\\luahz-locations')
-app.server=Server.new(prefs,notify,getGameTimer,app.catalog)
+app.server=Server.new(prefs,notify,getGameTimer,app.catalog,function(text,kind,key)
+    if sessionActive() and app.toast and app.interfaceReady and not app.faults.Notifications then
+        app.toast:push(text,kind or 'error',key or 'vehicle-lock-result')
+    else notify(text)end
+end)
+app.observations=require('horizonbase.observations').new(getGameTimer,notify)
+local captureSerial=0
+local function captureAction(action)
+    local o=app.observations
+    if action=='off' then app.captureRequest=nil;o:stop('user stopped');return end
+    if action=='status' then
+        notify('Capture '..(o.active and 'enabled' or 'off')..'; '..tostring(o.path or 'no capture file'));return
+    end
+    local command=require('horizonbase.observations').requestCommand(action)
+    if action~='on' and not command then
+        notify('Usage: /luahzcapture families|rules|members|info|settings|myguns|help, or on|off|status. Actions such as /buylevel are never sent by capture.');return
+    end
+    if app.captureRequest or o.active and command then notify('Finish the current capture first, or use /luahzcapture off.');return end
+    if o.active then notify('Capture is already enabled.');return end
+    if not sessionActive() or not app.server.loginSeen or not app.game.sample.ready then
+        notify('Log in to Horizon before enabling command capture.');return
+    end
+    local directory=root..'\\config\\luahz-observations'
+    if not doesDirectoryExist(directory) then createDirectory(directory) end
+    if not doesDirectoryExist(directory) then notify('Could not create the capture folder.');return end
+    local path
+    repeat
+        captureSerial=captureSerial+1
+        path=directory..'\\capture-'..os.date('%Y%m%d-%H%M%S')..'-'..getGameTimer()..'-'..captureSerial..'.jsonl'
+        local existing=io.open(path,'rb')
+        if existing then existing:close() else break end
+    until captureSerial>10000
+    if captureSerial>10000 then notify('Could not choose a new capture filename.');return end
+    local file,err=io.open(path,'wb')
+    if not file then notify('Could not open capture file: '..tostring(err));return end
+    local started,errorText=o:start(function(line)
+        local written,errorMessage=file:write(line)
+        if not written then return nil,errorMessage end
+        return file:flush()
+    end,function()return file:close()end,path)
+    if started then
+        if command then
+            app.captureRequest={command=command,expires=getGameTimer()+10000}
+            o.single=true
+            notify('Queued '..command..' capture. It runs once when gameplay is ready and stops after 8 seconds.')
+        else notify('Manual capture enabled for up to five minutes. Run a supported command; /luahzcapture off stops it.') end
+        notify('Capture file: '..path)
+    elseif errorText then notify(errorText) end
+end
 app.gangZones=require('horizonbase.gang_zones').new(app.server)
 app.nativeLocations=require('horizonbase.native_locations').new(app.server,prefs)
 app.game.server=app.server
@@ -61,10 +115,18 @@ if ok then
     if im.SetActivationCheck then im.SetActivationCheck(sessionActive) end
     app.toast=require('horizonbase.toast').new(im,getGameTimer)
     app.ui=require('horizonbase.ui').new(im,prefs,queueSave,notify)
+    app.ui.server=app.server
+    app.ui.observations=app.observations
+    app.ui.captureAction=function(action)guard('Observations',function()captureAction(action)end)end
     app.overlay=require('horizonbase.overlay').new(im,prefs,app.game,app.server)
     app.ui.overlay=app.overlay
     app.status=require('horizonbase.character_ui').new(im,app.ui,app.server)
+    app.actions=require('horizonbase.actions_ui').new(im,app.ui,app.server,function(kind,arg)return queueQuickAction(kind,arg)end,function()return onlinePlayers()end)
     app.toast.overlay=app.overlay
+    app.toast.hudVisible=function()
+        return sessionActive() and app.server.loginSeen and app.game.sample.ready and app.focused and not isPauseMenuActive()
+            and not app.overlay.mapOpen and not app.ui:isMapPreview() and not app.faults.HUD
+    end
     im.OnInitialize(function()
         local resourcesStart=getGameTimer()
         local menuReady=guard('Menu',function() app.ui:theme() end)
@@ -77,8 +139,8 @@ if ok then
             not app.overlay.mapOpen and not app.ui:isMapPreview()
     end,function()
         local hudReady=guard('HUD',function() app.overlay:hud() end)
-        if hudReady and app.toast:announce('0.2.39',app.faults,app.interfaceReady) then
-            notify('0.2.39 loaded. Settings: /luahz or '..app.ui:keyName(prefs.keybinds.settingsPanel,prefs.modifiers.settingsPanel))
+        if hudReady and app.toast:announce('0.3.0-rc.1',app.faults,app.interfaceReady) then
+            notify('0.3.0-rc.1 loaded. Settings: /luahz or '..app.ui:keyName(prefs.keybinds.settingsPanel,prefs.modifiers.settingsPanel))
         end
     end)
     app.hudFrame.HideCursor=true;app.hudFrame.LockPlayer=false
@@ -106,6 +168,10 @@ if ok then
         return sessionActive() and app.interfaceReady and app.focused and not isPauseMenuActive() and app.overlay:warmupPending()
     end,function() guard('Resources',function() app.overlay:warmupStep() end) end)
     app.resourceFrame.HideCursor=true;app.resourceFrame.LockPlayer=false
+    app.actionsFrame=im.OnFrame(function()
+        return sessionActive() and app.server.loginSeen and app.game.sample.ready and app.game.sample.alive and app.focused and app.actions.open[0] and not isPauseMenuActive()
+    end,function()guard('Quick Actions',function()app.actions:draw()end)end)
+    app.actionsFrame.HideCursor=false;app.actionsFrame.LockPlayer=true
 else
     app.faults.Menu=tostring(im)
 end
@@ -115,6 +181,7 @@ local function isTyping()
 end
 local function blocked(allowMap)
     return not app.focused or isPauseMenuActive() or isTyping() or not app.game.sample.alive or
+        app.actions and app.actions.open[0] or
         app.status and app.status.open[0] or
         app.ui and (app.ui.open[0] or app.ui.capture or getGameTimer()<(app.ui.ignoreKeysUntil or 0)) or
         not allowMap and app.overlay and app.overlay.mapOpen
@@ -122,20 +189,32 @@ end
 local function toggleMenu()
     if not app.ui or app.faults.Menu then notify('Settings UI unavailable. Use /hbdebug for the recorded error.');return end
     if app.status then app.status.open[0]=false end
+    if app.actions then app.actions:reset()end
     app.overlay.mapOpen=false;app.ui.open[0]=not app.ui.open[0];app.ui.capture=nil
 end
 
 local function toggleStatus()
     if not app.status or app.faults['Character Status'] then notify('Character Status UI unavailable. Use /luahzdebug.');return end
     app.ui.open[0]=false;app.ui.capture=nil;app.overlay.mapOpen=false
+    if app.actions then app.actions:reset()end
     app.status.open[0]=not app.status.open[0]
     if app.status.open[0] and not app.server.character.updatedAt then app.server:requestStats() end
+end
+local function toggleActions()
+    if not app.actions or app.faults['Quick Actions'] or not app.server.loginSeen or not app.game.sample.ready or not app.game.sample.alive then return end
+    local opening=not app.actions.open[0];app.actions:reset();app.actions.open[0]=opening
+    app.server:cancelSequence()
 end
 
 local function window(msg,key,lparam)
     if not sessionActive() then return end
     if msg==0x0008 or msg==0x001C and key==0 then
         app.focused=false;app.game:cleanup()
+        app.server:cancelSequence()
+        if app.actions then app.actions:reset()end
+        app.quickRequest=nil
+        app.observations:stop('window lost focus')
+        app.captureRequest=nil
         if app.ui then app.ui.open[0]=false;app.ui.capture=nil end
         if app.status then app.status.open[0]=false end
         if app.overlay then app.overlay.mapOpen=false end
@@ -149,23 +228,30 @@ local function window(msg,key,lparam)
         consumeWindowMessage(true,true,true);return
     end
     if key==27 and mods==0 then
-        if app.status and app.status.open[0] then app.status.open[0]=false;consumeWindowMessage(true,true,true)
+        if app.actions and app.actions.open[0] then app.actions:reset();consumeWindowMessage(true,true,true)
+        elseif app.status and app.status.open[0] then app.status.open[0]=false;consumeWindowMessage(true,true,true)
         elseif app.ui and app.ui.open[0] then app.ui.open[0]=false;consumeWindowMessage(true,true,true)
         elseif app.overlay and app.overlay.mapOpen then app.overlay.mapOpen=false;consumeWindowMessage(true,true,true) end
         return
     end
+    if key==13 and app.focused and not Game.call('isPauseMenuActive',false) and Game.call('sampIsChatInputActive',false) then
+        app.quickRequest=nil
+        guard('Server',function()app.server:noteManualCommand(Game.call('sampGetChatInputText',''))end)
+    end
     if isTyping() or isPauseMenuActive() or not app.focused then return end
     if Keys.matches(prefs.keybinds.settingsPanel,prefs.modifiers.settingsPanel,key,mods) then toggleMenu();consumeWindowMessage(true,true,true)
-    elseif app.status and app.game.sample.alive and Keys.matches(prefs.keybinds.characterStatus,prefs.modifiers.characterStatus,key,mods) then
+    elseif app.actions and app.ui and app.overlay and app.server.loginSeen and app.game.sample.ready and app.game.sample.alive and Keys.matches(prefs.keybinds.quickActions,prefs.modifiers.quickActions,key,mods) and not app.ui.open[0] and not(app.status and app.status.open[0]) and not app.overlay.mapOpen then
+        if not (app.actions and app.actions.open[0] and app.actions.findMode) then toggleActions();consumeWindowMessage(true,true,true)end
+    elseif app.status and app.game.sample.alive and not (app.ui and app.ui.open[0]) and not(app.actions and app.actions.open[0]) and Keys.matches(prefs.keybinds.characterStatus,prefs.modifiers.characterStatus,key,mods) then
         toggleStatus();consumeWindowMessage(true,true,true)
-    elseif app.overlay and not (app.status and app.status.open[0]) and Keys.matches(prefs.keybinds.quickmap,prefs.modifiers.quickmap,key,mods) and not app.ui.open[0] then
+    elseif app.overlay and not (app.status and app.status.open[0]) and not(app.actions and app.actions.open[0]) and Keys.matches(prefs.keybinds.quickmap,prefs.modifiers.quickmap,key,mods) and not app.ui.open[0] then
         app.overlay.mapOpen=not app.overlay.mapOpen;consumeWindowMessage(true,true,true)
     end
 end
 
 local function keyPressed(code,mods) return Keys.pressed(code,mods) end
 local function hotkeys()
-    if blocked() then return end
+    if blocked() then app.server:cancelSequence();return end
     if keyPressed(prefs.keybinds.siren,prefs.modifiers.siren) then app.game:siren() end
     if keyPressed(prefs.keybinds.reload,prefs.modifiers.reload) and getGameTimer()>=(app.commandBindDue or 0) then
         local command=app.game:reload()
@@ -183,8 +269,14 @@ local function hotkeys()
     end
     for _,binding in ipairs(prefs.custombinds) do
         if keyPressed(binding.key,binding.mods) and getGameTimer()>=(app.commandBindDue or 0) then
-            app.server:onOutgoing(binding.command)
-            sampSendChat(binding.command)
+            if binding.command2 then
+                app.server:requestSequence(binding)
+            else
+                app.server:cancelSequence()
+                app.server:onOutgoing(binding.command,false)
+                guard('Observations',function()app.observations:onOutgoing(binding.command,'keybind')end)
+                sampSendChat(binding.command)
+            end
             app.commandBindDue=getGameTimer()+300
             break
         end
@@ -194,7 +286,10 @@ end
 local function resolvePlayer(arg)
     arg=arg:gsub('^%s+',''):gsub('%s+$','')
     local id=tonumber(arg)
-    if id and id==math.floor(id) and sampIsPlayerConnected(id) then return id,sampGetPlayerNickname(id) end
+    if id then
+        if id==math.floor(id) and id>=0 and id<=1004 and sampIsPlayerConnected(id)then return id,sampGetPlayerNickname(id)end
+        return nil,'That player ID is not online.'
+    end
     local found,name
     local needle=Logic.normalizeName(arg)
     if needle=='' then return nil end
@@ -212,11 +307,52 @@ local function resolvePlayer(arg)
     return found,name
 end
 
+onlinePlayers=function()
+    local rows={}
+    for id=0,math.min(1004,Game.call('sampGetMaxPlayerId',1004,false))do
+        if id~=app.game.sample.playerId and sampIsPlayerConnected(id)then rows[#rows+1]={id=id,name=sampGetPlayerNickname(id)}end
+    end
+    return rows
+end
+queueQuickAction=function(kind,arg)
+    if not sessionActive() or not app.server.loginSeen or not app.server.ready or not app.focused or isTyping() or isPauseMenuActive()then return false,'Actions require active Horizon gameplay.'end
+    if app.quickRequest then return false,'Another action is queued.'end
+    if not ({clear=true,lock=true,track=true,find=true,stopFind=true})[kind]then return false,'Unknown action.'end
+    if app.server.clearNavigation and kind~='stopFind' and not(kind=='track' and app.server.track.active)then return false,'Navigation clear is awaiting confirmation.'end
+    app.quickRequest={kind=kind,arg=arg,expires=getGameTimer()+3000}
+    return true
+end
+local function executeQuickAction()
+    local request=app.quickRequest;if not request then return end
+    app.quickRequest=nil
+    if getGameTimer()>=request.expires or blocked() or not app.server.ready or not app.server.loginSeen then
+        app.server.actionNotify('Action canceled before sending.','error','quick-actions');return
+    end
+    local ok=true;local errorText
+    if request.kind=='clear' then ok=app.server:requestClearNavigation()
+    elseif request.kind=='lock' then ok=app.server:requestSequence({command='/pvl',command2='/gvl'})
+    elseif request.kind=='track' then ok=app.server:toggleTrack(true)
+    elseif request.kind=='stopFind' then app.server:stopFind();app.server.actionNotify('Player finding stopped.','info','quick-actions')
+    elseif request.kind=='find' then
+        local id,name
+        if type(request.arg)=='table' then
+            local row=request.arg
+            if type(row.id)=='number' and row.id==math.floor(row.id) and row.id>=0 and row.id<=1004 and sampIsPlayerConnected(row.id) and sampGetPlayerNickname(row.id)==row.name then id,name=row.id,row.name
+            else errorText='That player is no longer available. Choose again.'end
+        elseif type(request.arg)=='string' and #request.arg<=64 and not request.arg:find('[%c]')then id,name=resolvePlayer(request.arg)end
+        if not id or id==app.game.sample.playerId then ok=false;errorText=errorText or (not id and name) or 'Choose another online player by name or ID.'
+        else ok=app.server:startFind(id,name,true)end
+    end
+    if not ok then app.server.actionNotify(errorText or 'Action unavailable, already running or on cooldown.','error','quick-actions')end
+end
+
 local function diagnostics()
     print('[LuaHZ diagnostics] '..importSource)
     print('Font: '..tostring(app.im and app.im.FontSource or 'UI not initialized'))
     print('Horizon server detected: '..tostring(app.server.horizon))
     print('Player ready: '..tostring(app.game.sample.ready)..'; focused: '..tostring(app.focused))
+    print('Horizon version: '..tostring(app.observations.observedVersion or 'unknown')..'; '..app.observations:versionStatus())
+    print('Command capture: '..tostring(app.observations.active==true)..'; file='..tostring(app.observations.path))
     for _,entry in ipairs(app.server.character:diagnostics()) do print(entry) end
     print('Player appearance: skin='..tostring(app.game.sample.skin)..'; player ID='..tostring(app.game.sample.playerId))
     local reload=app.game.reloadGuard
@@ -252,10 +388,15 @@ local function registerCommands()
     register('hbase',toggleMenu)
     register('luahz',toggleMenu)
     register('luahzstatus',toggleStatus)
+    register('luahzactions',toggleActions)
     register('hbdebug',diagnostics)
     register('hbreload',function() app.reloadRequested=true end)
     register('luahzdebug',diagnostics)
     register('luahzreload',function() app.reloadRequested=true end)
+    register('luahzcapture',function(arg)guard('Observations',function()captureAction((arg or ''):lower():match('^%s*(.-)%s*$'))end)end)
+    register('luahzversion',function()
+        notify('Observed Horizon version: '..tostring(app.observations.observedVersion or 'unknown')..'. '..app.observations:versionStatus())
+    end)
     for command,key in pairs({togrepair='repair',toglawyer='lawyer',togwhore='whore',togdrugs='drugs',togtaxi='taxi'}) do
         local field=key
         register(command,function()
@@ -285,7 +426,7 @@ local function registerCommands()
     register('autofind',function(arg)
         arg=arg or ''
         if arg:match('^%s*$') then
-            app.server.find.active=false;notify('Autofind stopped.');return
+            app.server:stopFind();notify('Autofind stopped.');return
         end
         local id,name=resolvePlayer(arg)
         if not id then notify(name or 'Player not found. Use an online player ID or name.');return end
@@ -297,7 +438,7 @@ end
 local function hookEvents()
     local events=require 'samp.events'
     local previous={}
-    for _,name in ipairs({'onPlayAudioStream','onStopAudioStream','onServerMessage','onSendCommand','onApplyPlayerAnimation','onClearPlayerAnimation','onShowDialog','onSendDialogResponse','onCreateGangZone','onGangZoneDestroy','onGangZoneFlash','onGangZoneStopFlash','onSetMapIcon','onRemoveMapIcon','onSetCheckpoint','onDisableCheckpoint','onShowTextDraw','onTextDrawSetString','onTextDrawHide','onGamemodeRestart','onPlayerQuit','onPlayerJoin'}) do previous[name]=events[name] end
+    for _,name in ipairs({'onPlayAudioStream','onStopAudioStream','onServerMessage','onSendCommand','onApplyPlayerAnimation','onClearPlayerAnimation','onShowDialog','onSendDialogResponse','onCreateGangZone','onGangZoneDestroy','onGangZoneFlash','onGangZoneStopFlash','onSetMapIcon','onRemoveMapIcon','onSetCheckpoint','onDisableCheckpoint','onSetRaceCheckpoint','onDisableRaceCheckpoint','onShowTextDraw','onTextDrawSetString','onTextDrawHide','onGamemodeRestart','onPlayerQuit','onPlayerJoin'}) do previous[name]=events[name] end
     local function audioTrace(text)
         local entry=('t=%d %s'):format(getGameTimer(),text)
         app.audioHistory[#app.audioHistory+1]=entry
@@ -310,10 +451,14 @@ local function hookEvents()
     end
     function events.onStopAudioStream() audioTrace('server stop') end
     function events.onServerMessage(_,text)
+        guard('Observations',function()app.observations:event('chat',{text=text})end)
         local success,hide=guard('Server',function() return app.server:onMessage(text) end)
         if success and hide then return false end
     end
-    function events.onSendCommand(command) guard('Server',function() app.server:onOutgoing(command) end) end
+    function events.onSendCommand(command)
+        guard('Observations',function()app.observations:onOutgoing(command)end)
+        guard('Server',function() app.server:onOutgoing(command) end)
+    end
     function events.onApplyPlayerAnimation(playerId,animLib,animName)
         guard('Game',function()app.game.reloadGuard:onAnimation(playerId,animName)end)
     end
@@ -321,6 +466,7 @@ local function hookEvents()
         guard('Game',function()app.game.reloadGuard:onClear(playerId)end)
     end
     function events.onShowDialog(id,style,title,_,_,text)
+        guard('Observations',function()app.observations:dialog(id,style,title,text)end)
         local success,hide=guard('Server',function() return app.server:onDialog(id,title,text,style) end)
         if success and hide then return false end
     end
@@ -329,20 +475,55 @@ local function hookEvents()
     function events.onGangZoneDestroy(id) app.server.zones[id]=nil end
     function events.onGangZoneFlash(id,color) if app.server.zones[id] then app.server.zones[id].flashColor=color end end
     function events.onGangZoneStopFlash(id) if app.server.zones[id] then app.server.zones[id].flashColor=nil end end
-    function events.onSetMapIcon(id,position,kind,color,style) app.server:onMapIcon(id,position,kind,color,style) end
-    function events.onRemoveMapIcon(id) app.server:removeMapIcon(id) end
-    function events.onSetCheckpoint(position) app.server.checkpoint=position end
-    function events.onDisableCheckpoint() app.server.checkpoint=nil end
+    function events.onSetMapIcon(id,position,kind,color,style)
+        guard('Observations',function()app.observations:event('map_icon',{id=id,x=position.x,y=position.y,z=position.z,kind=kind,color=color,style=style})end)
+        app.server:onMapIcon(id,position,kind,color,style)
+    end
+    function events.onRemoveMapIcon(id)
+        guard('Observations',function()app.observations:event('remove_map_icon',{id=id})end)
+        app.server:removeMapIcon(id)
+    end
+    function events.onSetCheckpoint(position)
+        guard('Observations',function()app.observations:event('checkpoint',{x=position.x,y=position.y,z=position.z})end)
+        app.server.checkpoint=position
+    end
+    function events.onDisableCheckpoint()
+        guard('Observations',function()app.observations:event('disable_checkpoint')end)
+        app.server.checkpoint=nil
+    end
+    function events.onSetRaceCheckpoint(kind,position,nextPosition,size)
+        guard('Observations',function()
+            app.observations:event('race_checkpoint',{kind=kind,x=position.x,y=position.y,z=position.z,
+                next_x=nextPosition.x,next_y=nextPosition.y,next_z=nextPosition.z,size=size})
+        end)
+    end
+    function events.onDisableRaceCheckpoint()
+        guard('Observations',function()app.observations:event('disable_race_checkpoint')end)
+    end
     function events.onShowTextDraw(id,td)
+        guard('Observations',function()
+            app.observations:observeTextdraw(id,td.text,'login textdraw event')
+            app.observations:event('textdraw',{id=id,text=td.text or ''})
+        end)
         app.server:onTextdraw(id,td.text or '')
         if app.overlay then
             local ok,result=guard('Native HUD',function() return app.overlay.serverHud:onShow(id,td,app.server.horizon) end)
             if ok then return result end
         end
     end
-    function events.onTextDrawSetString(id,text) app.server:onTextdraw(id,text) end
-    function events.onTextDrawHide(id) app.server.textdraws[id]=nil;if app.overlay then app.overlay.serverHud.positions[id]=nil end end
+    function events.onTextDrawSetString(id,text)
+        guard('Observations',function()
+            app.observations:observeTextdraw(id,text,'textdraw update event');app.observations:event('textdraw_update',{id=id,text=text})
+        end)
+        app.server:onTextdraw(id,text)
+    end
+    function events.onTextDrawHide(id)
+        guard('Observations',function()app.observations:hideTextdraw(id);app.observations:event('hide_textdraw',{id=id})end)
+        app.server.textdraws[id]=nil;if app.overlay then app.overlay.serverHud.positions[id]=nil end
+    end
     function events.onGamemodeRestart()
+        app.captureRequest=nil
+        app.observations:reset()
         app.server:reset();app.server.horizon=true;app.game:cleanup()
         app.game.sample={ready=false,alive=false}
         if app.ui then app.ui.open[0]=false;app.ui.capture=nil;app.ui.previewMap=false end
@@ -352,6 +533,7 @@ local function hookEvents()
     end
     function events.onPlayerQuit(id)
         if app.server.find.active and tostring(id)==app.server.find.id then
+            app.server:dropNavigationQueue(true,false)
             app.server.find.paused=true;app.server.find.description='Target disconnected; waiting for rejoin.'
         end
     end
@@ -360,7 +542,7 @@ local function hookEvents()
             app.server.find.id=tostring(id);app.server.find.paused=false;app.server.find.nextAt=getGameTimer()+3000
         end
     end
-    for _,name in ipairs({'onPlayAudioStream','onStopAudioStream','onServerMessage','onSendCommand','onApplyPlayerAnimation','onClearPlayerAnimation','onShowDialog','onSendDialogResponse','onCreateGangZone','onGangZoneDestroy','onGangZoneFlash','onGangZoneStopFlash','onSetMapIcon','onRemoveMapIcon','onSetCheckpoint','onDisableCheckpoint','onShowTextDraw','onTextDrawSetString','onTextDrawHide','onGamemodeRestart','onPlayerQuit','onPlayerJoin'}) do
+    for _,name in ipairs({'onPlayAudioStream','onStopAudioStream','onServerMessage','onSendCommand','onApplyPlayerAnimation','onClearPlayerAnimation','onShowDialog','onSendDialogResponse','onCreateGangZone','onGangZoneDestroy','onGangZoneFlash','onGangZoneStopFlash','onSetMapIcon','onRemoveMapIcon','onSetCheckpoint','onDisableCheckpoint','onSetRaceCheckpoint','onDisableRaceCheckpoint','onShowTextDraw','onTextDrawSetString','onTextDrawHide','onGamemodeRestart','onPlayerQuit','onPlayerJoin'}) do
         local handler=events[name]
         local wrapper=function(...)
             if sessionActive() then return handler(...) end
@@ -371,9 +553,14 @@ local function hookEvents()
 end
 
 local function closePanels()
-    if app.ui then app.ui.open[0]=false;app.ui.capture=nil;app.ui.previewMap=false end
+    if app.ui then
+        app.ui.open[0]=false;app.ui.capture=nil;app.ui.previewMap=false;app.ui.infoNotice=nil
+        if app.ui.horizonSearch then for _,buffer in pairs(app.ui.horizonSearch)do app.im.StrCopy(buffer,'')end end
+    end
     if app.status then app.status.open[0]=false end
     if app.overlay then app.overlay.mapOpen=false;app.overlay.preview=false end
+    if app.actions then app.actions:reset()end
+    app.quickRequest=nil
 end
 
 local function stop()
@@ -393,9 +580,11 @@ local function stop()
     if app.nativeLocations then pcall(function()app.nativeLocations:cleanup()end) end
     pcall(function()app.game:cleanup()end)
     pcall(function()app.server:reset()end)
+    pcall(function()app.observations:reset()end)
     app.game.sample={ready=false,alive=false};app.game.ammoHistory={};app.game.lastAmmo=nil
     app.game.maxStamina=0;app.game.maxBreath=0
     app.audioHistory={};app.wasReady=false;app.commandBindDue=nil;app.saveDue=nil
+    app.captureRequest=nil
     app.reloadRequested=false
     if app.toast then app.toast.queue={};app.toast.current=nil;app.toast.announced=false end
     if app.limiter then app.limiter.last=nil;app.limiter.limit=0 end
@@ -413,19 +602,25 @@ local function start()
         local ok,limiter=pcall(function()return require('horizonbase.limiter').new()end)
         if ok then app.limiter=limiter else app.faults.Limiter=tostring(limiter) end
     end
-    print('[LuaHZ] 0.2.39 authorized endpoint 213.32.6.232:7777; waiting for login.')
+    print('[LuaHZ] 0.3.0-rc.1 authorized endpoint 213.32.6.232:7777; waiting for login.')
 end
 
 local function tick()
     if not sessionActive() then stop();return end
     if focusProvider then app.focused=focusProvider() end
+        guard('Observations',function()
+            if not app.focused then app.observations:stop('window lost focus') end
+            app.observations:update()
+        end)
         guard('Game',function()
             app.game:refresh();app.game.reloadGuard:update(app.game.sample,app.focused)
             hotkeys();app.game:drive(blocked(true))
         end)
+        if app.actions and (not app.game.sample.ready or not app.game.sample.alive)then app.actions:reset();app.quickRequest=nil end
         if not app.game.sample.ready then
             if app.wasReady and Game.call('sampGetGamestate',5)~=3 then
                 app.server:reset();app.server.horizon=true
+                app.observations:reset()
                 if app.ui then app.ui.open[0]=false;app.ui.capture=nil end
         if app.status then app.status.open[0]=false end
                 if app.overlay then app.overlay.mapOpen=false end
@@ -440,6 +635,25 @@ local function tick()
             app.server.characterName=id>=0 and Game.call('sampGetPlayerNickname','',id) or nil
         end
         app.server.horizon=true
+        guard('Quick Actions',executeQuickAction)
+        guard('Observations',function()
+            local request=app.captureRequest
+            if not request then return end
+            local now=getGameTimer()
+            if not app.observations.active then app.captureRequest=nil;return end
+            if now>=request.expires or not app.server.loginSeen then
+                app.captureRequest=nil;app.observations:stop('request expired before sending');return
+            end
+            if not blocked() and app.server.ready and now-app.server.lastSend>=1200 then
+                app.captureRequest=nil
+                app.observations:onOutgoing(request.command,'explicit read-only capture')
+                if not app.observations.active or not app.observations.window then return end
+                app.server:onOutgoing(request.command,false) -- Explicit diagnostic captures retain normal chat output.
+                local ok,err=pcall(sampSendChat,request.command)
+                if not ok then app.observations:stop('send failure');error(err) end
+                app.server.lastSend=now
+            end
+        end)
         if app.game.sample.ready and app.server.horizon then
                 local directory=root..'\\config\\luahz-locations'
                 if not app.catalogDirectoryReady then
@@ -460,8 +674,18 @@ local function tick()
                 app.overlay:updateNative(app.game.sample.ready and app.focused and not isPauseMenuActive() and not app.faults.HUD)
             end)
         end
-        guard('Server',function() app.server:update(sampSendChat,sampSendDialogResponse,not isTyping() and not isPauseMenuActive() and
-            not (app.ui and app.ui.open[0]) and not (app.overlay and app.overlay.mapOpen)) end)
+        guard('Server',function() app.server:update(function(command)
+            if app.server.commandSequence then
+                guard('Observations',function()app.observations:onOutgoing(command,'keybind sequence')end)
+            elseif app.server.clearNavigation and command=='/killcheckpoint' then
+                guard('Observations',function()app.observations:onOutgoing(command,'quick-actions')end)
+            end
+            sampSendChat(command)
+        end,sampSendDialogResponse,not (app.observations.single and app.observations.window) and not isTyping() and not isPauseMenuActive() and
+            not (app.ui and app.ui.open[0]) and not (app.actions and app.actions.open[0]) and not (app.overlay and app.overlay.mapOpen),
+            app.server.loginSeen and app.focused and not isTyping() and not isPauseMenuActive() and
+            not (app.overlay and app.overlay.mapOpen) and not (app.status and app.status.open[0]) and not(app.actions and app.actions.open[0]),
+            app.server.loginSeen and not blocked()) end)
         if app.ui then
             if app.ui.checkRequested then app.ui.checkRequested=false;diagnostics() end
             if app.ui.reloadRequested then app.ui.reloadRequested=false;app.reloadRequested=true end

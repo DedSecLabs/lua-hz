@@ -1,4 +1,4 @@
-name: Linux player release
+name: Player release candidate
 
 on:
   workflow_dispatch:
@@ -12,6 +12,9 @@ on:
       - tools/package_base.py
       - tools/base_install.sh
       - tools/base_restore.sh
+      - tools/base_install.ps1
+      - tools/base_restore.ps1
+      - docs/releases/**
       - .github/workflows/player-release.yml
 
 permissions:
@@ -57,6 +60,7 @@ jobs:
 
   release:
     needs: verify
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -65,7 +69,7 @@ jobs:
         with:
           name: linux-player-release
           path: dist/player
-      - name: Publish Linux player release
+      - name: Prepare draft player release
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
@@ -75,15 +79,19 @@ jobs:
           sha256sum --check SHA256SUMS.txt
           tag=$(python3 -c 'import json; print(json.load(open("release-manifest.json"))["tag"])')
           version=$(python3 -c 'import json; print(json.load(open("release-manifest.json"))["version"])')
-          if gh release view "$tag" --json url --jq .url > release-url.txt; then
+          if gh release view "$tag" --json isDraft --jq .isDraft > is-draft.txt; then
+            if [ "$(cat is-draft.txt)" != true ]; then
+              echo 'Published release preserved. Use a new version for changed bytes.' >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
             gh release upload "$tag" ./*.zip SHA256SUMS.txt RELEASE_NOTES.md release-manifest.json --clobber
-            gh release edit "$tag" --prerelease=false --latest \
+            gh release edit "$tag" --draft --prerelease --latest=false --target "$SOURCE_REVISION" \
               --title "LuaHZ $version — player release" --notes-file RELEASE_NOTES.md
-            echo 'Player release archive was replaced with this build.' >> "$GITHUB_STEP_SUMMARY"
-            cat release-url.txt >> "$GITHUB_STEP_SUMMARY"
+            echo 'Draft refreshed. Owner testing is required before publication.' >> "$GITHUB_STEP_SUMMARY"
+            gh release view "$tag" --json url --jq .url >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           gh release create "$tag" ./*.zip SHA256SUMS.txt RELEASE_NOTES.md release-manifest.json \
-            --latest --target "$SOURCE_REVISION" \
+            --draft --prerelease --latest=false --target "$SOURCE_REVISION" \
             --title "LuaHZ $version — player release" --notes-file RELEASE_NOTES.md
           gh release view "$tag" --json url --jq .url >> "$GITHUB_STEP_SUMMARY"

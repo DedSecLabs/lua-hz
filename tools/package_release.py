@@ -44,7 +44,7 @@ def package(output, native_dir, revision, root=ROOT, kind='developer-preview'):
         raise ValueError('Provide the full source Git commit SHA')
     policy = json.loads((root / 'manifests/release.json').read_text())
     version = policy['version']
-    if not re.fullmatch(r'\d+\.\d+\.\d+', version):
+    if not re.fullmatch(r'\d+\.\d+\.\d+(?:-rc\.[1-9]\d*)?', version):
         raise ValueError('Invalid release version')
     if kind != 'developer-preview' or policy.get('package_kind') != kind or policy.get('player_installable') is not False:
         raise ValueError('Player packaging is not ready. See manifests/release.json and docs/RELEASING.md.')

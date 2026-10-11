@@ -2,7 +2,7 @@
 
 **Player download:** [LuaHZ 0.2.39](https://github.com/DedSecLabs/luahz/releases/tag/v0.2.39-player). Windows copies `moonloader` and `LuaHZLoading.asi` into the GTA folder. Linux/Wine can use `install.sh` from that archive. [BASE_INSTALL.md](BASE_INSTALL.md) describes the earlier small preview, which omits the visuals.
 
-LuaHZ 0.2.39 targets classic **GTA San Andreas 1.0 US**, **SA-MP 0.3.7 R5** and the prerequisite versions linked in the [README](../README.md#installation). This guide documents that prerequisite setup. The repository source ZIP is not the player download.
+LuaHZ 0.2.39 targets classic **GTA San Andreas 1.0 US**, **SA-MP 0.3.7 R5** and the prerequisite versions linked in the [README](../README.md#install). This guide documents that prerequisite setup. The repository source ZIP is not the player download.
 
 ## What you can install today
 
@@ -23,16 +23,32 @@ When extracting a ZIP, open it first and look for the runtime files described be
 
 ## Prerequisite installation order
 
-Use the exact links in the [README prerequisite table](../README.md#2-install-the-tested-prerequisites).
+Use the exact links in the [README prerequisite table](../README.md#2-install-the-prerequisites).
 
 1. **SA-MP 0.3.7 R5:** Use Horizon's download page and select the `sa-mp-0.3.7-R5-2-MP-install.exe` installer. Select the folder containing `gta_sa.exe` when installing. A different installer carrying the R5 label has not been validated as equivalent; compare the installed `samp.dll` fingerprint in the manifest.
 2. **CLEO 4.4.4 and its ASI loader:** Extract the official `CLEO4.zip`. Install its runtime files into the GTA folder using the included README. Our tested loader is **Silent's ASI Loader 1.2**, supplied in this ZIP as `vorbisFile.dll` and `vorbisHooked.dll`. The separate download on [Silent's site](https://silentsblog.com/mods/gta-sa/#asiloader) is a different version; it is not the pinned baseline. Developer SDK and demonstration files are not required to play.
-3. **MoonLoader 0.26.5-beta:** Extract the author’s archive into the same GTA folder. Keep `MoonLoader.asi`, its supplied runtime DLLs and the complete `moonloader/lib` directory. Do not install only the ASI. The archive's `vkeys`, `windows.message`, encoding and other helper modules are part of this setup.
-4. **SAMPFUNCS 5.7.1 rel.25 for R5:** Open the author’s thread or the specific R5 attachment and follow its included installation instructions. Place `SAMPFUNCS.asi` in the GTA folder. An R1/R3 build is not interchangeable with the tested R5 build. A browser challenge or login may be required.
-5. **mimgui 1.7.0:** Download `mimgui-v1.7.0.zip` from the pinned release's **Assets** section, not GitHub's source archive. Merge its library payload into `moonloader/lib`, so `moonloader/lib/mimgui/init.lua` and `moonloader/lib/mimgui/cimguidx9.dll` exist. Avoid an extra nested `mimgui/mimgui` directory.
-6. **SAMP.Lua:** Use the pinned 2.0.4 source archive, copy the entire `samp` directory to `moonloader/lib/samp`, and apply the baseline adjustment below. Do not replace it with the current master branch or latest release when reproducing our tests.
+3. **SilentPatchSA 1.1 Build 34.1:** Download `SilentPatchSA.zip` from the [official release](https://github.com/CookiePLMonster/SilentPatch/releases/tag/1.1-BUILD34.1-SA). Copy `SilentPatchSA.asi` and `SilentPatchSA.ini` beside `gta_sa.exe`, then apply the configuration below. The ASI loader from step 2 loads this separate stability prerequisite. Build 34.1 fixes an SA-MP startup regression in Build 34; use the pinned hotfix.
+4. **MoonLoader 0.26.5-beta:** Extract the author’s archive into the same GTA folder. Keep `MoonLoader.asi`, its supplied runtime DLLs and the complete `moonloader/lib` directory. Do not install only the ASI. The archive's `vkeys`, `windows.message`, encoding and other helper modules are part of this setup.
+5. **SAMPFUNCS 5.7.1 rel.25 for R5:** Open the author’s thread or the specific R5 attachment and follow its included installation instructions. Place `SAMPFUNCS.asi` in the GTA folder. An R1/R3 build is not interchangeable with the tested R5 build. A browser challenge or login may be required.
+6. **mimgui 1.7.0:** Download `mimgui-v1.7.0.zip` from the pinned release's **Assets** section, not GitHub's source archive. Merge its library payload into `moonloader/lib`, so `moonloader/lib/mimgui/init.lua` and `moonloader/lib/mimgui/cimguidx9.dll` exist. Avoid an extra nested `mimgui/mimgui` directory.
+7. **SAMP.Lua:** Use the pinned 2.0.4 source archive, copy the entire `samp` directory to `moonloader/lib/samp`, and apply the baseline adjustment below. Do not replace it with the current master branch or latest release when reproducing our tests.
 
 Original GTA and SAMPFUNCS files must remain unmodified on disk for LuaHZ's native visual installation. Older globally patched loading screens/fonts/maps need the guarded migration described in [development](DEVELOPMENT.md), rather than overwriting them by hand.
+
+## SilentPatch configuration
+
+SilentPatch is required for the supported setup to address the original GTA asset-streaming deadlock observed during Horizon login. It is a separate game prerequisite; it can also fix the underlying game on other servers. LuaHZ itself still activates only on Horizon. The owner reported stable gameplay and working menus after installing Build 34.1 on Linux/Wine; native Windows and every mod combination remain unverified. It is downloaded separately, not included in the LuaHZ ZIP.
+
+In the supplied `SilentPatchSA.ini`, set these values under `[SilentPatch]` to reproduce the local setup, leaving the other entries supplied by the author intact:
+
+```ini
+EnableScriptFixes=0
+SkipIntroSplashes=0
+SunSizeHack=0
+UseDesktopRefreshRate=0
+```
+
+These disable optional mission-script, intro, sun-size and refresh-rate changes; the streaming-deadlock fix remains active. Keep `SmallSteamTexts=-1`, `MinimalHUD=0`, and `TrueInvincibility=0` as supplied. No GTA executable replacement is needed. Future player installers verify the tested ASI hash; the already-published 0.2.39 archive predates this prerequisite check.
 
 ## SAMP.Lua baseline
 
@@ -65,6 +81,8 @@ GTA San Andreas/
 ├── cleo/
 ├── vorbisFile.dll
 ├── vorbisHooked.dll
+├── SilentPatchSA.asi
+├── SilentPatchSA.ini
 ├── MoonLoader.asi
 ├── SAMPFUNCS.asi
 ├── bass.dll
@@ -113,6 +131,7 @@ The shared-installation workflow above has passed the owner's in-game QA on Wine
 | An error mentions `mimgui` or `samp.events` | Compare your folders with the layout above; an extra ZIP wrapper folder is a common cause. Use the pinned versions. |
 | Menus work but maps, portraits or custom fonts are missing | The source ZIP excludes several visual resource packs. See [assets](ASSETS.md); reinstalling prerequisites will not supply those resources. |
 | LuaHZ does not activate on another server | This is expected. It activates only on Horizon’s supported endpoint. |
+| Intermittent freeze on login or during model loading | Confirm SilentPatchSA Build 34.1 is installed. A known GTA asset-streaming deadlock can occur even with LuaHZ capture disabled. Preserve the session log if it recurs. |
 | The game stops starting after adding prerequisites | Close the game and browser, then restore your backup. Record the exact error before changing more files. |
 
 If you need help, open an issue at [DedSecLabs/luahz](https://github.com/DedSecLabs/luahz/issues) with your OS/Wine version, prerequisite versions, the action that failed, and the relevant error lines. Remove passwords, account details and personal paths from shared logs.
@@ -142,3 +161,33 @@ sha256sum MoonLoader.asi
 Use archive hashes for downloaded ZIPs and installed-file hashes for extracted files; they are different checks. mimgui's installed Lua files use LF while the official 1.7.0 ZIP uses CRLF: source text and the renderer DLL match, but raw Lua hashes differ until line endings are normalized.
 
 The CLEO 4.4.4 and MoonLoader archives were fetched and matched during the earlier dependency audit. The mimgui 1.7.0 renderer and normalized Lua sources were matched during this README review. The SAMPFUNCS page identifies the R5 attachment, but its download challenge prevented upstream byte comparison; our recorded hash is the locally tested binary. Horizon's installer download also returned HTTP 403 during automated retrieval. These links require manual download verification before claiming a completely reproducible fresh player installation.
+
+## Release candidate installation and upgrade
+
+The 0.3.0 candidate ZIP includes guarded installers for Linux/Wine and PowerShell. These commands apply to the candidate, not the older published 0.2.39 installer. Close GTA and the SA-MP browser; install the prerequisite versions above, including SilentPatchSA 1.1 Build 34.1. Extract the ZIP outside the game folder.
+
+**Linux/Wine, first installation:**
+
+```sh
+bash install.sh "/path/to/GTA San Andreas"
+```
+
+**Linux/Wine, existing LuaHZ installation:**
+
+```sh
+bash install.sh "/path/to/GTA San Andreas" --upgrade
+```
+
+**Windows, first installation:**
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 "C:\Games\GTA San Andreas"
+```
+
+**Windows, existing LuaHZ installation:**
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 "C:\Games\GTA San Andreas" -Upgrade
+```
+
+The installers validate supported prerequisites and payload hashes, back up overwritten files, and print a recovery command. Keep that backup until the candidate works. Preferences and saved locations under moonloader/config, unrelated mods and unused old resource groups remain untouched. Recovery restores overwritten files and removes newly added ones; it refuses files modified after the installation. A native Windows gameplay report remains pending.

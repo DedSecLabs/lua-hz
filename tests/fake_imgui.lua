@@ -31,7 +31,7 @@ function im.GetCursorScreenPos() return vec2(im.cursor.x,im.cursor.y) end
 function im.SetCursorScreenPos(v) im.cursor=vec2(v.x,v.y) end
 function im.SetCursorPos(v) im.cursor=vec2(v.x,v.y) end
 function im.SetNextWindowSizeConstraints(minimum,maximum)assert(minimum.y>0 and maximum.y>=minimum.y)end
-function im.SetNextWindowSize(v) assert(type(v.x)=='number') end
+function im.SetNextWindowSize(v) assert(type(v.x)=='number');im.lastWindowSize=v end
 function im.SetNextWindowPos(v,condition) assert(type(v.x)=='number');im.lastPositionCondition=condition end
 function im.Begin() im.stack=im.stack+1;return true end
 function im.End() im.stack=im.stack-1 end
@@ -70,6 +70,10 @@ function im.ComboStr(_,ptr,items)
 end
 function im.CalcTextSize(text)return vec2(#text*7*im.GetFontSize()/15,im.GetFontSize())end
 function im.InputText(_,ptr) assert(type(ptr)=='cdata');return false end
+function im.Columns(count)assert(count>=1);im.columnCount=count end
+function im.SetColumnWidth(index,width)assert(index>=0 and width>0)end
+function im.NextColumn()assert(im.columnCount and im.columnCount>1)end
+function im.SetClipboardText(text)im.clipboard=text end
 function im.IsItemDeactivatedAfterEdit() return false end
 function im.IsItemActive()return false end
 function im.IsItemHovered()return false end

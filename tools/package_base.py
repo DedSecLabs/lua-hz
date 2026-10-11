@@ -11,6 +11,11 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 
+def prerequisite_checksums(deps):
+    required = ['gta_sa.exe', 'samp.dll', 'SAMPFUNCS.asi', 'MoonLoader.asi',
+                'vorbisFile.dll', 'vorbisHooked.dll', 'SilentPatchSA.asi']
+    return ''.join(deps['runtime_binaries'][name]['sha256'] + '  ' + name + '\n' for name in required)
+
 def sha(data):
     return hashlib.sha256(data).hexdigest()
 
@@ -74,8 +79,7 @@ def package(output, revision):
         (work / name).write_bytes((ROOT / name).read_bytes())
     (work / 'SAMP-Lua-LICENSE.txt').write_bytes(license_text)
     (work / 'FILES.sha256').write_text(''.join(h + '  ' + n + '\n' for n, h in files.items()))
-    required = ['gta_sa.exe', 'samp.dll', 'SAMPFUNCS.asi', 'MoonLoader.asi', 'vorbisFile.dll', 'vorbisHooked.dll']
-    (work / 'PREREQUISITES.sha256').write_text(''.join(deps['runtime_binaries'][n]['sha256'] + '  ' + n + '\n' for n in required))
+    (work / 'PREREQUISITES.sha256').write_text(prerequisite_checksums(deps))
     (work / 'install.sh').write_bytes((ROOT / 'tools/base_install.sh').read_bytes())
     (work / 'restore.sh').write_bytes((ROOT / 'tools/base_restore.sh').read_bytes())
     (work / 'install.ps1').write_bytes((ROOT / 'tools/base_install.ps1').read_bytes())
@@ -91,7 +95,7 @@ def package(output, revision):
 
 Download **{zip_path.name}**, extract it outside GTA and read INSTALL.md.
 For a separate clean Linux/Wine GTA SA 1.0 US / SA-MP R5 installation.
-Install the linked CLEO/ASI loader, MoonLoader, SAMPFUNCS and mimgui prerequisites first.
+Install the linked CLEO/ASI loader, SilentPatchSA Build 34.1, MoonLoader, SAMPFUNCS and mimgui prerequisites first.
 Verified SAMP.Lua is included with its MIT notice; no manual Lua editing or compilation.
 
 Includes HUD with fallback text, vehicle dashboard, settings, character statistics,

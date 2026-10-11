@@ -60,10 +60,11 @@ function M.cruiseThrottle(currentMph, targetMph)
     return math.floor(M.clamp((targetMph - currentMph) * 34, 0, 255))
 end
 
-function M.interfaceScale(width,height,percent)
+M.menuWidth=900
+function M.interfaceScale(width,height,percent,baseWidth)
     local wanted=(height/1080)*(percent/100)
-    local fit=math.min((width-32)/660,(height-32)/540)
-    return math.max(.5,math.min(wanted,fit))
+    local fit=math.min((width-32)/(baseWidth or 660),(height-32)/540)
+    return math.min(fit,math.max(.5,wanted))
 end
 
 function M.hudLayout(width,height,prefs,baseHeight,baseWidth)

@@ -91,3 +91,9 @@ HUD design references viewed: https://imgur.com/UGft54Q, https://user-images.git
 
 
 0.2.17 presentation: requests owned by LuaHZ (login/Refresh) silently capture only matched stats chat rows and their exact observed framing. Manual /stats stays visible, including a manual request taking over one already pending. Normal/foreign/unknown messages and dialogs pass through. The 0.2.16 debug captured all 38 schema fields successfully.
+
+## Commands page — local 0.2.48
+
+The owner chose two sections: Server commands and LuaHZ commands. The Commands sidebar now contains two underlined tabs. Server commands requests `/help` only on explicit Refresh and displays searchable received category lines, including aliases/notes; availability can depend on the character's jobs or permissions. It shares bounded request handling and preserves the existing help-based missing-job inference. LuaHZ commands retains the registered local shortcut/reference groups. Neither list executes a command when viewed or searched.
+
+Vehicle locks preset is available in Keybinds: `/pvl` toggles a personal vehicle and `/gvl` toggles a group vehicle, as separately confirmed in the owner's capture. The optional second custom command runs two seconds after the first when gameplay remains eligible; it is canceled on interruption and is never replayed after returning. This is two ordinary commands, not a vehicle ownership detector or a guaranteed shared lock state. Combined use, server failures/cooldowns and held-key behavior remain owner gameplay QA.

@@ -1,7 +1,8 @@
-# Install the LuaHZ base payload onto a clean GTA folder. Not yet tested on native Windows.
+# Install or upgrade LuaHZ with backup/recovery. Native Windows gameplay remains unverified.
 param(
     [Parameter(Mandatory = $true, Position = 0)]
-    [string]$GamePath
+    [string]$GamePath,
+    [switch]$Upgrade
 )
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -31,7 +32,7 @@ function Read-HashList([string]$file) {
     foreach ($line in Get-Content -LiteralPath $file) {
         if ($line -match '^([0-9a-fA-F]{64})\s+(.+)$') {
             $rows += [pscustomobject]@{ Hash = $Matches[1].ToLowerInvariant(); Relative = $Matches[2] }
-        }
+        } else { throw "Invalid hash-list line in $file" }
     }
     if (-not $rows.Count) { throw "No hashes in $file" }
     return $rows
@@ -53,10 +54,26 @@ function Clear-EmptyOwned([string]$relative) {
 
 Test-GameClosed
 if (-not (Test-Path -LiteralPath (Join-Path $game 'gta_sa.exe') -PathType Leaf)) { throw "No gta_sa.exe in $game" }
-foreach ($marker in @('moonloader/HorizonBase.lua', 'moonloader/lib/horizonbase', 'moonloader/resource/horizonbase', 'LuaHZLoading.asi')) {
-    if (Test-Path -LiteralPath (Convert-GamePath $marker)) { throw 'Use a separate clean game copy; LuaHZ files already exist here.' }
+if ($Upgrade) {
+    if (-not (Test-Path -LiteralPath (Convert-GamePath 'moonloader/HorizonBase.lua') -PathType Leaf) -or
+        -not (Test-Path -LiteralPath (Convert-GamePath 'moonloader/lib/horizonbase') -PathType Container)) {
+        throw 'No existing LuaHZ installation to upgrade.'
+    }
+} else {
+    foreach ($marker in @('moonloader/HorizonBase.lua', 'moonloader/lib/horizonbase', 'moonloader/resource/horizonbase', 'LuaHZLoading.asi')) {
+        if (Test-Path -LiteralPath (Convert-GamePath $marker)) { throw 'LuaHZ already exists. Use -Upgrade to back it up and update it.' }
+    }
 }
 $payloadHashes = Read-HashList (Join-Path $root 'FILES.sha256')
+$seen = New-Object 'System.Collections.Generic.HashSet[string]' ([StringComparer]::OrdinalIgnoreCase)
+foreach ($row in $payloadHashes) {
+    $relative = $row.Relative
+    if ($relative -match '(^/|\\|:|//|(^|/)\.\.?(/|$))' -or
+        $relative -notmatch '^(moonloader/HorizonBase\.lua|moonloader/(lib/horizonbase|resource/horizonbase|lib/samp)/.+|LuaHZLoading\.asi)$') {
+        throw "Unowned payload path refused: $relative"
+    }
+    if (-not $seen.Add($relative)) { throw "Duplicate payload path: $relative" }
+}
 foreach ($row in $payloadHashes) { Assert-Hash (Join-Path $root 'payload') $row }
 foreach ($row in (Read-HashList (Join-Path $root 'PREREQUISITES.sha256'))) { Assert-Hash $game $row }
 foreach ($required in @('moonloader/lib/moonloader.lua', 'moonloader/lib/vkeys.lua', 'moonloader/lib/windows/message.lua', 'moonloader/lib/mimgui/init.lua', 'moonloader/lib/mimgui/cimguidx9.dll')) {
@@ -105,4 +122,4 @@ try {
     exit 1
 }
 Write-Output "Installed. Recovery: powershell -NoProfile -ExecutionPolicy Bypass -File `"$backup\restore.ps1`" `"$game`""
-Write-Output 'Launch Horizon from SA-MP in this game copy. F9: settings; I: stats; X: cruise. Native Windows QA has not been run.'
+Write-Output 'Preferences and saved locations preserved. F9: settings; I: character; M: map; U: Quick Actions; X: cruise. Native Windows gameplay QA has not been run.'

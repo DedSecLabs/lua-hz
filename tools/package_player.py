@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Build the player archive: Lua, current visuals, native helper, and installer.
 
-Asset bytes are read from an explicit local resource folder. They are not
-stored in the git source tree. Older resource versions are ignored.
+Asset bytes are read from the explicit player resource folder. Older resource
+versions are ignored. Release archives must identify a clean source commit.
 """
 import argparse
 import json
@@ -11,7 +11,7 @@ import re
 import subprocess
 import zipfile
 
-from package_base import ROOT, base_payload, sha
+from package_base import ROOT, base_payload, prerequisite_checksums, sha
 
 GROUPS = (
     'fonts', 'sa_map', 'weaponicons', 'hud-v0218', 'dashboard-v0221',
@@ -65,11 +65,13 @@ def add_visuals(payload, resources, asi):
 
 def previous_player_tag(version):
     try:
-        output = subprocess.check_output(['git', 'tag', '-l', 'v*-player'], cwd=ROOT, text=True)
+        output = subprocess.check_output(['git', 'tag', '-l', 'v*'], cwd=ROOT, text=True)
     except (OSError, subprocess.CalledProcessError):
         return None
-    current = 'v' + version + '-player'
-    tags = [tag for tag in output.split() if tag != current and re.fullmatch(r'v[0-9.]+-player', tag)]
+    core = tuple(int(part) for part in version.split('-')[0].split('.'))
+    tags = [tag for tag in output.split()
+            if re.fullmatch(r'v\d+\.\d+\.\d+(?:-player)?', tag)
+            and tuple(int(part) for part in tag.removeprefix('v').removesuffix('-player').split('.')) < core]
     if not tags:
         return None
     def numbers(tag):
@@ -77,14 +79,14 @@ def previous_player_tag(version):
     return sorted(tags, key=numbers)[-1]
 
 
-def change_notes(version):
+def change_notes(version, revision):
     previous = previous_player_tag(version)
-    current = 'v' + version + '-player'
+    current = 'v' + version
     log = ''
     if previous:
         try:
             log = subprocess.check_output(
-                ['git', 'log', '--no-merges', '--pretty=%s', previous + '..HEAD'],
+                ['git', 'log', '--no-merges', '--pretty=%s', previous + '..' + revision],
                 cwd=ROOT, text=True)
         except (OSError, subprocess.CalledProcessError):
             log = ''
@@ -99,7 +101,7 @@ def change_notes(version):
         else:
             bullets.append('* ' + subject)
     if not bullets:
-        bullets.append('* Player release.')
+        bullets.append('* No source commits since the previous player release.')
     compare = ''
     if previous:
         compare = '\n**Full Changelog**: https://github.com/DedSecLabs/luahz/compare/' + previous + '...' + current + '\n'
@@ -107,13 +109,21 @@ def change_notes(version):
 
 
 def install_notes(version):
-    return f'''# LuaHZ {version} — player release
+    return f'''## Installation
 
-One download for Linux and Windows. It contains the HUD font, Quickmap, portraits, native visuals, and loading artwork. GTA, SA-MP, CLEO, MoonLoader, SAMPFUNCS, and mimgui stay separate. The verified SAMP.Lua files are included.
+One download for Linux and Windows. It contains the HUD font, Quickmap, portraits, native visuals, and loading artwork. GTA, SA-MP, CLEO, SilentPatchSA Build 34.1, MoonLoader, SAMPFUNCS, and mimgui stay separate. The verified SAMP.Lua files are included. Install the tested prerequisites linked in the repository README first.
 
 Close GTA and the SA-MP browser. Extract this ZIP outside the game folder.
 
-**Windows:** copy `payload/moonloader` into the GTA folder, merging it with the existing `moonloader` folder. Copy `payload/LuaHZLoading.asi` next to `gta_sa.exe`.
+The **GTA folder** contains `gta_sa.exe`. The installer verifies the payload and supported prerequisite hashes, backs up files it replaces, and prints a recovery command. Preferences and saved locations under `moonloader/config` are not included or overwritten.
+
+**Windows (PowerShell):** from the extracted folder, run:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\\install.ps1 "C:\\Games\\GTA San Andreas"
+```
+
+To upgrade an existing LuaHZ installation, add `-Upgrade`. Keep the backup until the new build works. Native Windows gameplay QA has not been recorded; this candidate is being tested on Linux/Wine.
 
 **Linux/Wine:** from the extracted folder, run:
 
@@ -121,22 +131,52 @@ Close GTA and the SA-MP browser. Extract this ZIP outside the game folder.
 bash install.sh "/path/to/GTA San Andreas"
 ```
 
-The path must contain `gta_sa.exe`. Join samp.hzgaming.net:7777. F9 opens settings, I opens Character Status, M opens Quickmap, and X toggles cruise while driving.
+To upgrade, run `bash install.sh "/path/to/GTA San Andreas" --upgrade`. Existing resource groups not used by this build are left in place; recovery restores overwritten files and removes files added by this installation. Install SilentPatchSA Build 34.1 separately before upgrading from 0.2.39.
+
+Join samp.hzgaming.net:7777. F9 opens settings, I opens Character Status, M opens Quickmap, U opens Quick Actions, and X toggles cruise while driving.
+
+Download `LuaHZ-{version}-player.zip` to install the mod. The “Source code” archives are for developers.
 '''.encode()
+
+
+def release_notes(version, revision, file_count):
+    path = ROOT / 'docs/releases' / (version.split('-')[0] + '.md')
+    changes = path.read_text().strip()
+    if not changes.startswith('## Mod Changes\n'):
+        raise ValueError('Player notes must start with Mod Changes')
+    return (changes + '\n\n' + change_notes(version, revision) + '\n'
+            + install_notes(version).decode() + '\n'
+            + f'**Source commit**: [{revision}](https://github.com/DedSecLabs/luahz/commit/{revision})\n'
+            + f'**Files**: {file_count}\n')
+
+
+def verify_source_revision(revision):
+    actual = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
+    if actual != revision:
+        raise ValueError('Package the current checked source commit')
+    status = subprocess.check_output(['git', 'status', '--porcelain', '--untracked-files=normal'], cwd=ROOT, text=True)
+    if status.strip():
+        raise ValueError('Commit the release inputs before packaging; working tree is not clean')
 
 
 def package(output, revision, resources, asi):
     if output.exists() or not re.fullmatch('[0-9a-f]{40}', revision):
         raise ValueError('Use a new output directory and full Git revision')
+    verify_source_revision(revision)
+    if resources.resolve() != (ROOT / 'player-resources').resolve() or asi.resolve() != (resources / 'LuaHZLoading.asi').resolve():
+        raise ValueError('Player releases use only the committed player-resources inputs')
     payload, license_text, version, deps = base_payload()
+    if "script_version('" + version + "')" not in payload['moonloader/HorizonBase.lua'].decode():
+        raise ValueError('Release and Lua versions must match')
     add_visuals(payload, resources, asi)
     files = {name: sha(data) for name, data in sorted(payload.items())}
     result = {
-        'version': version, 'tag': 'v' + version + '-player', 'edition': 'player',
+        'version': version, 'tag': 'v' + version, 'edition': 'player',
         'source_revision': revision, 'files': files,
         'includes': list(GROUPS) + ['LuaHZLoading.asi'],
-        'excluded': ['GTA', 'SA-MP', 'CLEO', 'MoonLoader', 'SAMPFUNCS', 'mimgui', 'older resource versions'],
+        'excluded': ['GTA', 'SA-MP', 'CLEO', 'SilentPatchSA', 'MoonLoader', 'SAMPFUNCS', 'mimgui', 'older resource versions'],
     }
+    notes = release_notes(version, revision, len(files))
     output.mkdir(parents=True)
     work = output / ('LuaHZ-' + version + '-player')
     for name, data in payload.items():
@@ -147,12 +187,12 @@ def package(output, revision, resources, asi):
         (work / name).write_bytes((ROOT / name).read_bytes())
     (work / 'SAMP-Lua-LICENSE.txt').write_bytes(license_text)
     (work / 'FILES.sha256').write_text(''.join(digest + '  ' + name + '\n' for name, digest in files.items()))
-    required = ['gta_sa.exe', 'samp.dll', 'SAMPFUNCS.asi', 'MoonLoader.asi', 'vorbisFile.dll', 'vorbisHooked.dll']
-    (work / 'PREREQUISITES.sha256').write_text(''.join(deps['runtime_binaries'][name]['sha256'] + '  ' + name + '\n' for name in required))
+    (work / 'PREREQUISITES.sha256').write_text(prerequisite_checksums(deps))
     for script in ('base_install.sh', 'base_restore.sh', 'base_install.ps1', 'base_restore.ps1'):
         target = script.removeprefix('base_')
         (work / target).write_bytes((ROOT / 'tools' / script).read_bytes())
     (work / 'INSTALL.md').write_bytes(install_notes(version))
+    (work / 'RELEASE_NOTES.md').write_text(notes)
     (work / 'release-manifest.json').write_text(json.dumps(result, indent=2) + '\n')
     zip_path = output / (work.name + '.zip')
     with zipfile.ZipFile(zip_path, 'w') as archive:
@@ -161,9 +201,8 @@ def package(output, revision, resources, asi):
                 continue
             mode = zipfile.ZIP_STORED if path.suffix.lower() in {'.txd', '.enc', '.dll', '.asi'} else zipfile.ZIP_DEFLATED
             archive.write(path, path.relative_to(output), compress_type=mode)
-    notes = change_notes(version) + '\n' + install_notes(version).decode() + f'\nSource commit: {revision}\nFiles: {len(files)}\n'
     (output / 'RELEASE_NOTES.md').write_text(notes)
-    (output / 'release-manifest.json').write_text(json.dumps({key: result[key] for key in ('version', 'tag', 'edition', 'source_revision', 'includes')}, indent=2) + '\n')
+    (output / 'release-manifest.json').write_text(json.dumps(result, indent=2) + '\n')
     attached = [zip_path.name, 'RELEASE_NOTES.md', 'release-manifest.json']
     (output / 'SHA256SUMS.txt').write_text(''.join(sha((output / name).read_bytes()) + '  ' + name + '\n' for name in attached))
     return {'archive': str(zip_path), 'files': len(files), 'bytes': zip_path.stat().st_size, 'tag': result['tag']}

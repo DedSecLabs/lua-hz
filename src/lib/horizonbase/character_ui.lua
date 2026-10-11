@@ -4,12 +4,14 @@ function M.new(im,ui,server)
 end
 function M:draw()
     local im=self.im;self.ui:theme()
-    local w,h=getScreenResolution();local S=math.min(self.ui.scale,(w-24)/780,(h-24)/540)
+    local panelWidth=require('horizonbase.logic').menuWidth
+    local contentWidth=panelWidth-206
+    local w,h=getScreenResolution();local S=math.min(self.ui.scale,(w-24)/panelWidth,(h-24)/540)
     local c=self.server.character
     im.GetIO().FontGlobalScale=S*15/(im.FontBaseSize or 15)
     local overlay=self.ui.overlay;local sample=overlay and overlay.game.sample or {}
     local Live=require 'horizonbase.character_live'
-    im.SetNextWindowSize(im.ImVec2(780*S,540*S),im.Cond.Always)
+    im.SetNextWindowSize(im.ImVec2(panelWidth*S,540*S),im.Cond.Always)
     im.SetNextWindowPos(im.ImVec2(w/2,h/2),im.Cond.Always,im.ImVec2(.5,.5))
     im.Begin('##LuaHZCharacter',self.open,im.WindowFlags.NoTitleBar+im.WindowFlags.NoCollapse+
         im.WindowFlags.NoResize+im.WindowFlags.NoScrollbar+im.WindowFlags.NoScrollWithMouse)
@@ -17,7 +19,7 @@ function M:draw()
     im.SetCursorPos(im.ImVec2(22*S,18*S))
     self.ui:title('Character Status',im.ImVec4(1,.62,0,1))
     im.SetCursorPos(im.ImVec2(22*S,46*S));im.TextUnformatted(c.name or self.server.characterName or 'Your character')
-    im.SetCursorPos(im.ImVec2(745*S,10*S))
+    im.SetCursorPos(im.ImVec2((panelWidth-35)*S,10*S))
     local p=im.GetCursorScreenPos()
     if im.InvisibleButton('##closeCharacter',im.ImVec2(25*S,25*S))then self.open[0]=false end
     local icon=self.ui.overlay and self.ui.overlay:texture('ui-v0212/x.png')
@@ -47,19 +49,20 @@ function M:draw()
         else self.notice='Refresh requires Horizon gameplay and a 10-second request gap.' end
     end
     local tabs={'Character','Work','Finances','Health','Inventory'}
-    dl:AddLine(im.ImVec2(origin.x+184*S,origin.y+121*S),im.ImVec2(origin.x+758*S,origin.y+121*S),im.U32(.20,.21,.24,1),S)
+    local tabStep=contentWidth/#tabs;local tabWidth=tabStep-6
+    dl:AddLine(im.ImVec2(origin.x+184*S,origin.y+121*S),im.ImVec2(origin.x+(panelWidth-22)*S,origin.y+121*S),im.U32(.20,.21,.24,1),S)
     for i,label in ipairs(tabs)do
-        im.SetCursorPos(im.ImVec2((184+(i-1)*116)*S,90*S))
+        im.SetCursorPos(im.ImVec2((184+(i-1)*tabStep)*S,90*S))
         local row=im.GetCursorScreenPos()
-        if im.InvisibleButton(label..'##characterTab'..i,im.ImVec2(110*S,30*S))then self.tab=i end
+        if im.InvisibleButton(label..'##characterTab'..i,im.ImVec2(tabWidth*S,30*S))then self.tab=i end
         local selected=self.tab==i
         local color=selected and im.U32(1,.62,0,1) or im.IsItemHovered() and im.U32(1,1,1,1) or im.U32(.64,.66,.70,1)
         local text=im.CalcTextSize(label)
-        dl:AddText(im.ImVec2(row.x+(110*S-text.x)/2,row.y+(30*S-text.y)/2),color,label)
-        if selected then dl:AddLine(im.ImVec2(row.x,row.y+31*S),im.ImVec2(row.x+110*S,row.y+31*S),color,3*S)end
+        dl:AddText(im.ImVec2(row.x+(tabWidth*S-text.x)/2,row.y+(30*S-text.y)/2),color,label)
+        if selected then dl:AddLine(im.ImVec2(row.x,row.y+31*S),im.ImVec2(row.x+tabWidth*S,row.y+31*S),color,3*S)end
     end
     im.SetCursorPos(im.ImVec2(184*S,134*S))
-    im.BeginChild('##characterFields'..self.tab,im.ImVec2(574*S,341*S),false)
+    im.BeginChild('##characterFields'..self.tab,im.ImVec2(contentWidth*S,341*S),false)
     local ok,err=pcall(function()
         if not c.updatedAt then
             im.TextWrapped((c.pending or self.server.statsRequested) and 'Requesting character stats...' or
@@ -72,6 +75,13 @@ function M:draw()
             im.TextDisabled(label);im.SameLine()
             im.SetCursorScreenPos(im.ImVec2(pos.x+164*S,pos.y))
             im.TextWrapped(Live.value(label,sample) or c.fields[label] or 'Not received')
+            if label=='Respect points' then
+                local nextPos=im.GetCursorScreenPos()
+                im.TextDisabled('Until next level');im.SameLine()
+                im.SetCursorScreenPos(im.ImVec2(nextPos.x+164*S,nextPos.y))
+                local respect=self.server.info and self.server.info.respect
+                im.TextWrapped(respect and (respect.remaining..' respect points') or 'Not received')
+            end
         end
     end)
     im.EndChild()

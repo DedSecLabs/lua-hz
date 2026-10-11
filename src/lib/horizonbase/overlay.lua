@@ -177,17 +177,29 @@ function M:updateNative(active)
     elseif self.nativeHidden then self:restoreNative() end
 end
 
+function M:hudGeometry(w,h)
+    local s=self.game.sample
+    return logic.hudLayout(w,h,self.config.hud,264,hudStyle.playerWidth),
+        self.config.settings.stamina and not s.vehicle and (s.running or (s.stamina or 1)<.995),
+        self.config.settings.oxygen and s.underwater
+end
+function M:energyPanelLayout(w,h)
+    local layout=self:hudGeometry(w,h)
+    return require('horizonbase.dashboard').layout(w,h,layout.scale,'energy'),layout.scale
+end
+function M:lowerHudBounds(w,h)
+    if not self.game.sample.ready then return {}end
+    local layout,stamina,oxygen=self:hudGeometry(w,h)
+    return require('horizonbase.dashboard').bounds(self.config.settings,self.game.sample,layout.scale,w,h,stamina,oxygen)
+end
 function M:hud()
     local s=self.game.sample;local im=self.im;local dl=im.GetBackgroundDrawList()
     if not s.ready then self:restoreNative();return end
     -- Keep the vanilla radar; the custom panel replaces health, weapon, money and wanted indicators.
     self:updateNative(true)
     local w,h=getScreenResolution()
-    local staminaShown=self.config.settings.stamina and not s.vehicle and (s.running or s.stamina<.995)
-    local oxygenShown=self.config.settings.oxygen and s.swimming and s.swimState>=3
+    local layout,staminaShown,oxygenShown=self:hudGeometry(w,h)
     local innerWidth=hudStyle.playerWidth-2*hudStyle.padding
-    local baseHeight=264
-    local layout=logic.hudLayout(w,h,self.config.hud,baseHeight,hudStyle.playerWidth)
     local scale=layout.scale;self.hudScale=scale
     local x,y=layout.x+hudStyle.padding*scale,layout.y+hudStyle.padding*scale
     local right=x+innerWidth*scale

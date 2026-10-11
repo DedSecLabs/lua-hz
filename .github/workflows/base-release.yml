@@ -76,6 +76,6 @@ jobs:
             exit 0
           fi
           gh release create "$tag" ./*.zip SHA256SUMS.txt RELEASE_NOTES.md release-manifest.json \
-            --prerelease --latest=false --target "$SOURCE_REVISION" \
+            --draft --prerelease --latest=false --target "$SOURCE_REVISION" \
             --title "LuaHZ $version — base player preview (Linux/Wine)" --notes-file RELEASE_NOTES.md
           gh release view "$tag" --json url --jq .url >> "$GITHUB_STEP_SUMMARY"

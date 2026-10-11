@@ -42,8 +42,31 @@ class WindowsBaseInstallTests(unittest.TestCase):
         self.settings.parent.mkdir()
         self.settings.write_bytes(b'personal setting')
 
-    def run_script(self, path):
-        return subprocess.run([PWSH, '-NoProfile', '-File', str(path), str(self.game)], capture_output=True, text=True)
+    def run_script(self, path, upgrade=False):
+        args = [PWSH, '-NoProfile', '-File', str(path), str(self.game)] + (['-Upgrade'] if upgrade else [])
+        return subprocess.run(args, capture_output=True, text=True)
+
+    def test_upgrade_and_recovery_preserve_saved_preferences(self):
+        self.assertEqual(self.run_script(self.bundle / 'install.ps1').returncode, 0)
+        entry = self.game / 'moonloader/HorizonBase.lua';entry.write_bytes(b'previous build')
+        places = self.settings.parent / 'luahz-locations.json';places.write_bytes(b'saved place')
+        result = self.run_script(self.bundle / 'install.ps1', upgrade=True)
+        self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+        self.assertEqual(entry.read_bytes(), b'entry')
+        self.assertEqual(self.settings.read_bytes(), b'personal setting')
+        self.assertEqual(places.read_bytes(), b'saved place')
+        backup = max((self.game / 'LuaHZ-backups').iterdir(), key=lambda p: p.stat().st_mtime_ns)
+        self.assertEqual(self.run_script(backup / 'restore.ps1').returncode, 0)
+        self.assertEqual(entry.read_bytes(), b'previous build')
+
+    def test_config_payload_is_refused_before_writing(self):
+        name = 'moonloader/config/player.ini'
+        p = self.bundle / 'payload' / name;p.parent.mkdir(parents=True);p.write_bytes(b'overwrite')
+        with (self.bundle / 'FILES.sha256').open('a') as f:
+            f.write(hashlib.sha256(b'overwrite').hexdigest() + '  ' + name + '\n')
+        self.assertNotEqual(self.run_script(self.bundle / 'install.ps1').returncode, 0)
+        self.assertFalse((self.game / 'LuaHZ-backups').exists())
+        self.assertEqual(self.settings.read_bytes(), b'personal setting')
 
     def test_install_restore_preserves_preferences_and_original_library(self):
         result = self.run_script(self.bundle / 'install.ps1')

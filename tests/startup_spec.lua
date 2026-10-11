@@ -1,6 +1,7 @@
-function sampTextdrawIsExists()return false end
+function sampTextdrawIsExists(id)return id==200 end
 function sampTextdrawGetPos()return 0,0 end
 function sampTextdrawSetPos()end
+function sampTextdrawGetString()error('Runtime must not scan native textdraw strings')end
 -- Runtime entry-point smoke test using explicit MoonLoader stubs. Does not run GTA.
 package.path='tests/?.lua;src/lib/?.lua;src/lib/?/init.lua;'..package.path
 local im=require 'fake_imgui'
@@ -22,7 +23,7 @@ function isCharPlayingAnim(_,name)return reloadPlaying and name=='Reload_Test'en
 function getCharAnimCurrentTime()return .5 end
 package.preload['horizonbase.limiter']=function()return {new=function()return {present=function()end}end}end
 local configReads=0
-local cfg=require 'horizonbase.config';cfg.read=function()configReads=configReads+1;return {modifiers={quickmap=4},custombinds={{name='Stats',command='/stats',key=83,mods=4}}} end;cfg.save=function()return true end
+local cfg=require 'horizonbase.config';cfg.read=function()configReads=configReads+1;return {modifiers={quickmap=4},custombinds={{name='Stats',command='/stats',key=83,mods=4},{name='Vehicle locks',command='/pvl',command2='/gvl',key=76,mods=4}}} end;cfg.save=function()return true end
 local Catalog=require 'horizonbase.location_catalog'
 local catalogNew=Catalog.new
 local catalog
@@ -50,10 +51,12 @@ function sampGetCurrentServerName()return 'Horizon Roleplay'end
 function sampGetPlayerIdByCharHandle()return true,17 end
 function sampGetPlayerColor()return 0xFF2641FE end
 function sampGetMaxPlayerId()return 20 end
-function sampIsPlayerConnected(id)return id==17 end
-function sampGetPlayerNickname()return 'John_Doe'end
+function sampIsPlayerConnected(id)return id==17 or id==18 end
+function sampGetPlayerNickname(id)return id==18 and 'Jane_Doe' or 'John_Doe'end
 function isPauseMenuActive()return false end
 local chat=false
+local chatText=''
+function sampGetChatInputText()return chatText end
 function sampIsChatInputActive()return chat end;function sampIsDialogActive()return false end
 PLAYER_PED=1;PLAYER_HANDLE=0
 function doesCharExist()return true end;function isCharDead()return false end
@@ -104,6 +107,9 @@ assert(consumed==1)
 for _,f in ipairs(frames)do if f.Condition()then f.draw()end end
 assert(im.stack==0)
 rawPrint('PASS F9 opens the menu and consumes the SA-MP key')
+local searchConsumed=consumed
+onWindowMessage(0x0100,73,0)
+assert(consumed==searchConsumed and frames[3].Condition() and not frames[5].Condition(),'Typing I in F9 must not open Character Status')
 onWindowMessage(0x0100,27,0);chat=true
 local before=consumed;onWindowMessage(0x0100,77,0);assert(consumed==before)
 chat=false
@@ -219,7 +225,127 @@ assert(events.onServerMessage(-1,'John Doe - (Level: 1) - (Playing hours: 7) - (
 onWindowMessage(0x0100,27,0)
 rawPrint('PASS actual incoming chat callback suppresses only owned stats; ordinary and manual responses pass through')
 
+-- Capture through real callback wrappers with an injected file sink, never the game filesystem.
+local originalOpen=io.open
+local captured,closedCapture={},0
+io.open=function(path,mode)
+    if path:find('luahz-observations',1,true) then
+        if mode=='rb' then return nil end
+        assert(mode=='wb')
+        return {write=function(_,line)captured[#captured+1]=line;return true end,
+            flush=function()return true end,close=function()closedCapture=closedCapture+1;return true end}
+    end
+    return originalOpen(path,mode)
+end
+local noExtraSend=#sent
+commands.luahzcapture('on')
+assert(#captured==1 and #sent==noExtraSend,'Enabling capture must not issue server commands')
+assert(events.onSendCommand('/families')==nil)
+for i=1,12 do assert(events.onServerMessage(-1,('* %d. Test Family'):format(i))==nil) end
+assert(#captured==14 and captured[3]:find('1. Test Family',1,true))
+assert(events.onSetCheckpoint({x=1,y=2,z=3})==nil)
+assert(captured[#captured]:find('"event":"checkpoint"',1,true))
+assert(events.onSetRaceCheckpoint(1,{x=1,y=2,z=3},{x=4,y=5,z=6},2)==nil)
+assert(captured[#captured]:find('"next_x":4',1,true))
+assert(events.onDisableRaceCheckpoint()==nil)
+assert(events.onShowDialog(10,0,'Families','test table')==nil)
+assert(events.onShowTextDraw(200,{text='V2.4.47[Z]',position={x=0,y=0}})==nil)
+assert(events.onShowTextDraw(201,{text='Horizon Roleplay',position={x=0,y=0}})==nil)
+commands.luahzversion();commands.luahzdebug()
+local observed=false
+for _,line in ipairs(logs)do if line:find('Horizon version: 2.4.47 [Z]',1,true) then observed=true end end
+assert(observed and #sent==noExtraSend)
+commands.luahzcapture('off');assert(closedCapture==1)
+local blockedRequestRows=#captured
+commands.luahzcapture('buylevel');commands.luahzcapture('gvl');commands.luahzcapture('killcheckpoint')
+assert(#captured==blockedRequestRows and #sent==noExtraSend,'Capture must never submit action commands')
+commands.luahzcapture('families')
+assert(#sent==noExtraSend,'Requested capture must send from the main loop, not its input callback')
+gameClock=22000;tick()
+assert(#sent==noExtraSend+1 and sent[#sent]=='/families','Direct capture must send exactly one selected read-only request')
+assert(captured[#captured]:find('"source":"explicit read-only capture"',1,true))
+for i=1,12 do assert(events.onServerMessage(-1,('* %d. Direct Test Family'):format(i))==nil) end
+gameClock=30001;tick();assert(closedCapture==2,'One-command capture must close automatically after its response window')
+assert(captured[#captured]:find('command window completed',1,true))
+gameClock=43000 -- Let the earlier simulated /inv request expire before testing another refresh.
+onWindowMessage(0x0100,120,0)
+im.clicks['Server##tab']=true;im.clicks['Refresh##horizon-families']=true;frames[3].draw();tick()
+assert(sent[#sent]=='/families','Server tab Refresh must send its read-only request with F9 open')
+gameClock=43050;events.onSendCommand('/families') -- Deferred native echo after sampSendChat has returned.
+assert(events.onServerMessage(-1,'Gangs:')==false)
+assert(events.onServerMessage(-1,'* 1. Quiet Test Family | Leader: Person Test | Members: 10 | Online: 1')==false)
+assert(events.onServerMessage(-1,'Interest gained: $41')==nil,'Unrelated server announcements must remain visible')
+chat=true;chatText='/families';onWindowMessage(0x0100,13,0);chat=false
+events.onSendCommand('/families')
+assert(events.onServerMessage(-1,'Gangs:')==nil,'Manual requests must remain visible')
+onWindowMessage(0x0100,27,0)
+rawPrint('PASS GUI refresh preserves quiet ownership across deferred callbacks and manual Enter restores visible commands')
+local lockStart=#sent
+gameClock=46000;down[18]=true;pressed=76;tick()
+assert(#sent==lockStart+1 and sent[#sent]=='/pvl')
+gameClock=46250;assert(events.onServerMessage(-1,'You are not near any vehicle that you own.')==false)
+pressed=nil;gameClock=47999;tick();assert(#sent==lockStart+1)
+gameClock=48000;tick();assert(#sent==lockStart+2 and sent[#sent]=='/gvl')
+gameClock=48250;events.onTextDrawSetString(2050,'~g~Test Vehicle Unlocked')
+gameClock=50000;pressed=76;tick();assert(sent[#sent]=='/pvl')
+pressed=nil;chat=true;gameClock=52000;tick();chat=false;down[18]=nil
+local groupLocks=0;for _,cmd in ipairs(sent)do if cmd=='/gvl' then groupLocks=groupLocks+1 end end
+tick();local groupLocksAfter=0;for _,cmd in ipairs(sent)do if cmd=='/gvl' then groupLocksAfter=groupLocksAfter+1 end end
+assert(groupLocksAfter==groupLocks,'Typing must cancel the delayed step without resuming it')
+rawPrint('PASS actual lock hotkey waits for explicit failure before fallback, recognizes success and cancels on typing')
+gameClock=56000;down[18]=true;pressed=76;tick();pressed=nil
+assert(sent[#sent]=='/pvl')
+assert(events.onServerMessage(-1,'You are not near any vehicle that you own.')==false)
+gameClock=58000;tick();assert(sent[#sent]=='/gvl')
+local quietLockLogs=#logs
+assert(events.onServerMessage(-1,'You are not near any vehicle that your family owns.')==false)
+assert(#logs==quietLockLogs and frames[4].Condition(),'Owned final lock error must use the toast without chat spam')
+assert(events.onServerMessage(-1,'You are not near any vehicle that your family owns.')==nil,'Unowned/manual errors must remain visible')
+down[18]=nil
+rawPrint('PASS actual owned neither-nearby lock failure becomes a toast while normal server errors remain visible')
+commands.luahzcapture('help');gameClock=65000;tick()
+assert(sent[#sent]=='/help')
+assert(events.onServerMessage(-1,'*** GENERAL *** /families /members /info')==nil,'Diagnostic help capture must not hide its response')
+gameClock=73001;tick();assert(closedCapture==3)
+commands.autofind('')
+chat=true;local actionConsumed=consumed;onWindowMessage(0x0100,85,0)
+assert(consumed==actionConsumed and not frames[7].Condition());chat=false
+onWindowMessage(0x0100,85,0);assert(frames[7].Condition() and not frames[3].Condition())
+onWindowMessage(0x0100,85,0x40000000);assert(frames[7].Condition(),'Held U must not toggle repeatedly')
+local beforeAction=#sent;im.clicks['Clear navigation##quickAction']=true;frames[7].draw()
+assert(#sent==beforeAction and not frames[7].Condition(),'GUI actions send from the main loop after closing the panel')
+gameClock=75000;tick();assert(sent[#sent]=='/killcheckpoint')
+local clearCount=0;for _,command in ipairs(sent)do if command=='/killcheckpoint' then clearCount=clearCount+1 end end
+tick();local clearCountAfter=0;for _,command in ipairs(sent)do if command=='/killcheckpoint' then clearCountAfter=clearCountAfter+1 end end
+assert(clearCountAfter==clearCount,'Pending acknowledgment must not resend the action')
+assert(events.onServerMessage(-1,'All current checkpoints, trackers and accepted fares have been reset.')==false)
+onWindowMessage(0x0100,85,0);im.clicks['Find player##quickAction']=true;frames[7].draw()
+actionConsumed=consumed;onWindowMessage(0x0100,73,0);onWindowMessage(0x0100,85,0)
+assert(consumed==actionConsumed and frames[7].Condition() and not frames[5].Condition(),'Typing I or U in the selector must not open/close panels')
+im.clicks['Jane_Doe (18)##quickTarget18']=true;frames[7].draw()
+local oldNickname=sampGetPlayerNickname
+function sampGetPlayerNickname(id)return id==18 and 'Changed_Player' or oldNickname(id)end
+gameClock=76500;local findCount=0;for _,cmd in ipairs(sent)do if cmd=='/find 18' then findCount=findCount+1 end end;tick()
+local findCountAfter=0;for _,cmd in ipairs(sent)do if cmd=='/find 18' then findCountAfter=findCountAfter+1 end end
+assert(findCountAfter==findCount,'A changed target must be rejected after selection and before sending')
+sampGetPlayerNickname=oldNickname
+onWindowMessage(0x0100,85,0);im.clicks['Find player##quickAction']=true;frames[7].draw()
+im.clicks['Jane_Doe (18)##quickTarget18']=true;frames[7].draw();gameClock=78000;tick();assert(sent[#sent]=='/find 18')
+onWindowMessage(0x0100,85,0);im.clicks['Stop finding##quickAction']=true;frames[7].draw();tick()
+onWindowMessage(0x0100,85,0);im.clicks['Track my vehicle##quickAction']=true;frames[7].draw();gameClock=79500;tick();assert(sent[#sent]=='/trackcar')
+onWindowMessage(0x0100,85,0);im.clicks['Stop vehicle tracking##quickAction']=true;frames[7].draw();tick()
+onWindowMessage(0x0100,85,0);im.clicks['Lock / unlock vehicle##quickAction']=true;frames[7].draw();gameClock=81000;tick();assert(sent[#sent]=='/pvl')
+events.onTextDrawSetString(2050,'~g~Test Vehicle Unlocked')
+onWindowMessage(0x0100,85,0);onWindowMessage(0x0100,27,0);assert(not frames[7].Condition())
+assert(frames[7].LockPlayer and not frames[7].HideCursor)
+rawPrint('PASS actual U panel, repeat/typing guards, deferred one-shot clear, target revalidation, finding, vehicle tracking and Stop controls')
+noExtraSend=#sent
+commands.luahzcapture('families');assert(#sent==noExtraSend,'A queued capture must remain unsent before the main loop')
+rawPrint('PASS runtime capture preserves chat/dialog/checkpoint/textdraw callbacks and observes version without extra commands')
+
 gamestate=5;tick();assert(nativeHud==true);assert(not frames[1].Condition(),'Disconnect must hide the player HUD again')
+assert(closedCapture==4,'Disconnect must close a live capture file')
+io.open=originalOpen
 if catalog then
     assert(catalog.address==nil)
     local loaded=catalogNew(arg[1]);loaded:bind()
@@ -233,8 +359,12 @@ onWindowMessage(0x0100,120,0);onD3DPresent();assert(#sent==outsideSent and consu
 for _,frame in ipairs(frames)do assert(not frame.Condition(),'No UI frame may activate on a foreign server')end
 endpoint='213.32.6.232';serverPort=7778;tick();assert(next(commands)==nil)
 onWindowMessage(0x0008,0,0) -- remember focus changes while LuaHZ is inactive
-serverPort=7777;tick();assert(commands.luahz and #frames==6,'Re-entering HZ must reuse frame subscriptions')
+serverPort=7777;tick();assert(commands.luahz and #frames==7,'Re-entering HZ must reuse frame subscriptions')
 assert(not frames[1].Condition(),'A new HZ session must wait for a fresh login')
+local afterDisconnect=#captured
+commands.luahzcapture('on');assert(#captured==afterDisconnect,'Capture requires login and never automatically resumes')
+commands.luahzversion()
+assert(logs[#logs]:find('unknown',1,true),'Reconnect must clear the observed version')
 local staleCommand=commands.autofind
 local staleEvent=events.onServerMessage
 assert(staleEvent(-1,'Welcome to Horizon Roleplay, John Doe.')==nil)

@@ -54,6 +54,15 @@
       "sha256": "a08923479000cec366967fb8259e0920b7aa18859722c7dda1415726bed4774f",
       "source": "https://github.com/cleolibrary/CLEO4/releases/tag/v4.4.4",
       "bundled": false
+    },
+    "SilentPatchSA.asi": {
+      "version": "SilentPatchSA 1.1 Build 34.1",
+      "sha256": "908e1d12e36ba809a8ce584be0bd29239349968259a5de593f9b0cc71dbb352b",
+      "source": "https://github.com/CookiePLMonster/SilentPatch/releases/tag/1.1-BUILD34.1-SA",
+      "bundled": false,
+      "download": "https://github.com/CookiePLMonster/SilentPatch/releases/download/1.1-BUILD34.1-SA/SilentPatchSA.zip",
+      "archive_sha256": "0837bbdc0548a4a952f924adefd2bb6eacc866407f153844fe1f56995668c42c",
+      "purpose": "Original GTA CdStreamSync missed-wakeup deadlock fix; local owner stability/menu confirmation on Linux/Wine"
     }
   },
   "runtime_lua_files": {
@@ -161,5 +170,15 @@
   "link_review": {
     "date": "2026-10-09",
     "notes": "Pinned GitHub release pages, HZ landing page, MoonLoader author/archive and SAMPFUNCS author page checked on 2026-10-09. The SAMPFUNCS attachment returns HTML; its binary and HZ installer still require manual byte verification."
+  },
+  "silentpatch_configuration": {
+    "file": "SilentPatchSA.ini",
+    "options": {
+      "EnableScriptFixes": 0,
+      "SkipIntroSplashes": 0,
+      "SunSizeHack": 0,
+      "UseDesktopRefreshRate": 0
+    },
+    "reference": "docs/INSTALLATION.md#silentpatch-configuration"
   }
 }

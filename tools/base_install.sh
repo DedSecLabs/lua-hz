@@ -1,11 +1,29 @@
 #!/usr/bin/env bash
 set -euo pipefail
 root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
-game=$(cd -- "${1:?Usage: bash install.sh /path/to/clean/GTA}" && pwd)
+game=$(cd -- "${1:?Usage: bash install.sh /path/to/GTA [--upgrade]}" && pwd)
+mode=${2:-}
+[[ $# -le 2 && ( -z "$mode" || "$mode" == '--upgrade' ) ]] || { echo 'Usage: bash install.sh /path/to/GTA [--upgrade]' >&2; exit 1; }
 if pgrep -ix 'gta_sa.exe|samp.exe' >/dev/null; then echo 'Close GTA and SA-MP first.' >&2; exit 1; fi
-if [[ -e "$game/moonloader/HorizonBase.lua" || -e "$game/moonloader/lib/horizonbase" || -e "$game/moonloader/resource/horizonbase" || -e "$game/LuaHZLoading.asi" ]]; then
-    echo 'Use a separate clean game copy; LuaHZ files already exist here.' >&2; exit 1
+if [[ "$mode" == '--upgrade' ]]; then
+    [[ -f "$game/moonloader/HorizonBase.lua" && -d "$game/moonloader/lib/horizonbase" ]] || { echo 'No existing LuaHZ installation to upgrade.' >&2; exit 1; }
+elif [[ -e "$game/moonloader/HorizonBase.lua" || -e "$game/moonloader/lib/horizonbase" || -e "$game/moonloader/resource/horizonbase" || -e "$game/LuaHZLoading.asi" ]]; then
+    echo 'LuaHZ already exists. Use --upgrade to back it up and update it.' >&2; exit 1
 fi
+# Validate the write list before hashing or creating any target directories.
+declare -A seen=()
+count=0
+while read -r hash path; do
+    [[ "$hash" =~ ^[[:xdigit:]]{64}$ && -n "$path" && "$path" != *\\* && "$path" != /* && "/$path/" != *'/../'* && "/$path/" != *'/./'* && "$path" != *'//'* ]] || { echo 'Invalid payload hash/path.' >&2; exit 1; }
+    case "$path" in
+        moonloader/HorizonBase.lua|moonloader/lib/horizonbase/*|moonloader/resource/horizonbase/*|moonloader/lib/samp/*|LuaHZLoading.asi) ;;
+        *) echo "Unowned payload path refused: $path" >&2; exit 1 ;;
+    esac
+    [[ -z ${seen[${path,,}]:-} ]] || { echo "Duplicate payload path: $path" >&2; exit 1; }
+    seen[${path,,}]=1
+    count=$((count+1))
+done < "$root/FILES.sha256"
+[[ $count -gt 0 ]] || { echo 'Empty payload hash list.' >&2; exit 1; }
 (cd "$root/payload" && sha256sum --check "$root/FILES.sha256")
 (cd "$game" && sha256sum --check "$root/PREREQUISITES.sha256")
 for path in moonloader/lib/moonloader.lua moonloader/lib/vkeys.lua moonloader/lib/windows/message.lua moonloader/lib/mimgui/init.lua moonloader/lib/mimgui/cimguidx9.dll; do
@@ -48,4 +66,4 @@ done < "$root/FILES.sha256"
 (cd "$game" && sha256sum --check "$root/FILES.sha256")
 trap - ERR
 echo "Installed. Recovery: bash '$backup/restore.sh' '$game'"
-echo 'Launch Horizon from SA-MP in this game copy. F9: settings; I: stats; X: cruise.'
+echo 'Preferences and saved locations preserved. F9: settings; I: character; M: map; U: Quick Actions; X: cruise.'

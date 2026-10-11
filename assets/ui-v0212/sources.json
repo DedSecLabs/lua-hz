@@ -9,5 +9,10 @@
   "scroll-text": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/scroll-text.svg",
   "x": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/x.svg",
   "check": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/check.svg",
-  "triangle-alert": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/triangle-alert.svg"
+  "triangle-alert": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/triangle-alert.svg",
+  "server": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/server.svg",
+  "map-pin-off": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/map-pin-off.svg",
+  "lock-keyhole": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/lock-keyhole.svg",
+  "radar": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/radar.svg",
+  "search": "https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/search.svg"
 }

@@ -2,50 +2,69 @@ local config = require 'horizonbase.config'
 local logic = require 'horizonbase.logic'
 local keys = require 'horizonbase.keys'
 local M = {}; M.__index = M
-local tabs = {'HUD', 'Quickmap', 'Automation', 'Keybinds', 'Performance', 'Commands', 'Settings', 'Changelog'}
-local tabIcons={'monitor','map','bot','keyboard','gauge','terminal','settings','scroll-text'}
+local tabs = {'HUD', 'Quickmap', 'Automation', 'Keybinds', 'Performance', 'Commands', 'Settings', 'Changelog', 'Server'}
+local tabIcons={'monitor','map','bot','keyboard','gauge','terminal','settings','scroll-text','server'}
 
 function M.new(imgui, prefs, save, notify)
     local self = setmetatable({im=imgui, prefs=prefs, save=save, notify=notify,
         open=imgui.new.bool(false), tab=1, controls={}, capture=nil, scale=1, scaleDragging=false, previewMap=false}, M)
+    self.commandPage=1;self.keybindPage=1;self.helpSearch=imgui.new.char[65]('')
+    self.horizonPage=imgui.new.int(0)
+    self.horizonSearch={families=imgui.new.char[65](''),members=imgui.new.char[65]('')}
     self:refreshControls()
     self:clearDraft()
     return self
 end
 
 function M:clearDraft()
-    self.draft={name=self.im.new.char[65](''),command=self.im.new.char[145](''),key=0,mods=0}
+    self.draft={name=self.im.new.char[65](''),command=self.im.new.char[145](''),command2=self.im.new.char[145](''),key=0,mods=0}
     self.editIndex=nil;self.bindError=nil
 end
 
-function M:customCommands()
+function M:customCommands(combos)
     local im=self.im;local S=self.scale
-    self:section('Custom command keybinds','Name, key or combo, and /command.')
+    if combos then im.TextWrapped('One shortcut for a two-command sequence or vehicle-lock fallback.')
+    else self:section('Custom commands','One shortcut runs one command.')end
     for i,binding in ipairs(self.prefs.custombinds) do
-        im.TextUnformatted(binding.name);im.TextDisabled(binding.command)
-        local active=self.capture and self.capture.custom==i
-        if im.Button((active and '[ Press combo ]' or self:keyName(binding.key,binding.mods))..'##customkey'..i,im.ImVec2(210*S,28*S)) then
-            self.capture={custom=i}
+        if (binding.command2~=nil)==(combos==true) then
+            im.TextUnformatted(binding.name);im.TextDisabled(binding.command)
+            if binding.command2 then
+                local smart=require('horizonbase.vehicle_locks').pair(binding.command,binding.command2)
+                im.TextDisabled((smart and 'Fallback: ' or 'Then ')..binding.command2)
+            end
+            local active=self.capture and self.capture.custom==i
+            if im.Button((active and '[ Press combo ]' or self:keyName(binding.key,binding.mods))..'##customkey'..i,im.ImVec2(210*S,28*S)) then
+                self.capture={custom=i}
+            end
+            im.SameLine()
+            if im.Button('Edit##custom'..i,im.ImVec2(72*S,28*S)) then
+                self:clearDraft();self.editIndex=i
+                im.StrCopy(self.draft.name,binding.name);im.StrCopy(self.draft.command,binding.command)
+                im.StrCopy(self.draft.command2,binding.command2 or '')
+                self.draft.key=binding.key;self.draft.mods=binding.mods or 0;self.capture=nil
+            end
+            im.SameLine()
+            if im.Button('Remove##custom'..i,im.ImVec2(72*S,28*S)) then
+                table.remove(self.prefs.custombinds,i);self:clearDraft();self.capture=nil;self.save();break
+            end
+            im.Spacing()
         end
-        im.SameLine()
-        if im.Button('Edit##custom'..i,im.ImVec2(72*S,28*S)) then
-            self:clearDraft();self.editIndex=i
-            im.StrCopy(self.draft.name,binding.name);im.StrCopy(self.draft.command,binding.command)
-            self.draft.key=binding.key;self.draft.mods=binding.mods or 0;self.capture=nil
-        end
-        im.SameLine()
-        if im.Button('Remove##custom'..i,im.ImVec2(72*S,28*S)) then
-            table.remove(self.prefs.custombinds,i);self:clearDraft();self.capture=nil;self.save();break
-        end
-        im.Spacing()
     end
     im.Separator()
-    self:title(self.editIndex and 'Edit keybind' or 'New keybind')
+    self:title(self.editIndex and (combos and 'Edit combo' or 'Edit keybind') or (combos and 'New combo' or 'New keybind'))
+    if combos and not self.editIndex and im.SmallButton('Vehicle locks preset')then
+        self:clearDraft();im.StrCopy(self.draft.name,'Vehicle locks')
+        im.StrCopy(self.draft.command,'/pvl');im.StrCopy(self.draft.command2,'/gvl')
+    end
     im.PushItemWidth(self:availableWidth())
-    im.TextDisabled('Name (example: Player stats)')
+    im.TextDisabled(combos and 'Name (example: Vehicle locks)' or 'Name (example: Player stats)')
     im.InputText('##customname',self.draft.name,65)
-    im.TextDisabled('Game command (example: /stats)')
+    im.TextDisabled(combos and 'First command' or 'Game command (example: /stats)')
     im.InputText('##customcommand',self.draft.command,145)
+    if combos then
+        im.TextDisabled('Second command')
+        im.InputText('##customcommand2',self.draft.command2,145)
+    end
     im.PopItemWidth()
     local active=self.capture and self.capture.draft
     if im.Button((active and '[ Press combo ]' or self:keyName(self.draft.key,self.draft.mods))..'##draftkey',im.ImVec2(210*S,28*S)) then
@@ -54,9 +73,9 @@ function M:customCommands()
     im.SameLine()
     if im.Button('Save keybind') then
         local ffi=require 'ffi'
-        local binding=config.binding({name=ffi.string(self.draft.name),command=ffi.string(self.draft.command),key=self.draft.key,mods=self.draft.mods},#self.prefs.custombinds+1)
+        local binding=config.binding({name=ffi.string(self.draft.name),command=ffi.string(self.draft.command),command2=combos and ffi.string(self.draft.command2) or nil,key=self.draft.key,mods=self.draft.mods},#self.prefs.custombinds+1)
         local conflict=config.keyConflict(self.prefs,self.draft.key,self.editIndex,self.draft.mods)
-        if not binding then self.bindError='Enter a command beginning with / (maximum 144 characters).'
+        if not binding or combos and not binding.command2 then self.bindError=combos and 'Enter two commands beginning with / (maximum 144 characters each).' or 'Enter a command beginning with / (maximum 144 characters).'
         elseif self.draft.key==0 then self.bindError='Assign a key before adding the keybind.'
         elseif conflict then self.bindError='This key is already assigned to '..conflict..'.'
         elseif not self.editIndex and #self.prefs.custombinds>=20 then self.bindError='You can save up to 20 custom keybinds.'
@@ -68,7 +87,10 @@ function M:customCommands()
     if self.editIndex then im.SameLine();if im.SmallButton('Cancel edit') then self.capture=nil;self:clearDraft() end end
     if self.bindError then im.TextWrapped(self.bindError) end
     im.TextDisabled('Hold Ctrl, Alt, Shift or Win, then press a key.')
-    im.TextDisabled('Saved commands run once per press while playing.')
+    if combos then
+        im.TextWrapped('Typing, menus or leaving gameplay cancel the second command.')
+        im.TextWrapped('Vehicle locks stops after success and tries the other vehicle type only after a not-nearby reply. No confirmed reply means no fallback.')
+    else im.TextDisabled('Commands run once per press while playing.')end
 end
 
 function M:keyName(code,mods)
@@ -108,7 +130,7 @@ end
 function M:theme()
     local im=self.im
     local width,height=getScreenResolution()
-    self.scale=logic.interfaceScale(width,height,self.prefs.interface.scale)
+    self.scale=logic.interfaceScale(width,height,self.prefs.interface.scale,logic.menuWidth)
     local S=self.scale
     im.GetIO().FontGlobalScale=S*15/(im.FontBaseSize or 15)
     local style=im.GetStyle()
@@ -301,16 +323,7 @@ function M:content()
         im.Spacing();self:section('Detective')
         self:toggle('autofind','cohort','Autofind Cohort','Also check who target was last seen with')
     elseif self.tab==4 then
-        self:customCommands();im.Spacing()
-        self:section('Hotkeys','Hold modifiers, then a key; Del unsets.','keybinds')
-        self:bind('keybinds','settingsPanel','Settings Panel')
-        self:bind('keybinds','quickmap','Quickmap')
-        self:bind('keybinds','characterStatus','Character Status')
-        self:bind('keybinds','siren','Toggle Siren')
-        self:bind('keybinds','reload','Reload animation')
-        im.Spacing();self:section('Cruise Control','Adjust speed with +/- when active','cruisecontrol')
-        self:bind('cruisecontrol','toggleKey','Toggle')
-        for i=1,3 do self:bind('cruisecontrol','preset'..i..'Key','Preset '..i..' (mph)','preset'..i..'Speed') end
+        require('horizonbase.keybinds_ui').draw(self)
     elseif self.tab==5 then
         self:section('FPS Limiter','Limit FPS per situation, or leave as MAX for no extra cap','fps')
         for _,row in ipairs({{'onfoot','On Foot'},{'invehicle','Driving'},{'swimming','Swimming'},{'inboat','In Boat'}}) do
@@ -327,38 +340,7 @@ function M:content()
             im.PopItemWidth();im.SetCursorScreenPos(im.ImVec2(pos.x,pos.y+40*S))
         end
     elseif self.tab==6 then
-        self:section('LuaHZ commands')
-        im.TextWrapped('These commands control LuaHZ. Use /help in chat for Horizon server commands.')
-        im.Spacing()
-        local groups={
-            {'Settings',{{'/luahz','Open settings (also '..self:keyName(self.prefs.keybinds.settingsPanel,self.prefs.modifiers.settingsPanel)..')'},
-                {'/togs','Show which auto-accept options are enabled'},
-                {'/luahzstatus','Open Character Status (also '..self:keyName(self.prefs.keybinds.characterStatus,self.prefs.modifiers.characterStatus)..')'}}},
-            {'Tracking',{{'/autofind [id/name]','Start periodic /find requests; use /autofind alone to stop. Horizon requires the detective job.'},
-                {'/autotrackcar','Toggle periodic /trackcar requests for the vehicle you select.'}}},
-            {'Auto-Accept',{{'/togrepair','Enable or disable accepting repair offers'},
-                {'/togtaxi','Enable or disable accepting taxi calls'},
-                {'/toglawyer','Enable or disable accepting defense offers'},
-                {'/togwhore','Enable or disable accepting sex offers'},
-                {'/togdrugs','Enable or disable accepting drug offers'}}},
-            {'HUD',{{'/togstamina','Show or hide the stamina bar'},
-                {'/togoxygen','Show or hide the oxygen bar'},
-                {'/lvdb <0-2>','Dashboard style: 0 = Off, 1 = Full Dashboard, 2 = Minimal'}}},
-            {'Troubleshooting',{{'/luahzdebug','Write the current HUD, map and component details to moonloader.log'},
-                {'/luahzreload','Save settings and reload LuaHZ'}}},
-        }
-        for _,group in ipairs(groups) do
-            self:section(group[1])
-            for _,row in ipairs(group[2]) do
-                im.TextColored(im.ImVec4(1,.62,0,1),row[1]);im.TextWrapped(row[2]);im.Spacing()
-            end
-            if group[1]=='Auto-Accept' then
-                im.TextDisabled('Set offer price limits in Automation.');im.Spacing()
-            end
-        end
-        self:section('Horizon command help')
-        im.TextColored(im.ImVec4(1,.62,0,1),'/help')
-        im.TextWrapped('Lists Horizon commands and help categories, including /carhelp, /jobhelp and /businesshelp.')
+        require('horizonbase.commands_ui').draw(self)
     elseif self.tab==7 then
         self:section('Interface','Automatic display scaling plus your preferred size','interface')
         self:slider('interface','scale','UI size',80,200,'%d%%')
@@ -368,9 +350,72 @@ function M:content()
         self:slider('hud','x','Horizontal position',0,100,'%d%%')
         self:slider('hud','y','Vertical position',0,100,'%d%%')
         im.TextDisabled('0% = left/top. 100% = right/bottom.')
-    else
+    elseif self.tab==8 then
         self:section('Changelog')
-        im.TextUnformatted('LuaHZ 0.2.39')
+        im.TextUnformatted('LuaHZ 0.3.0-rc.1')
+        im.BulletText('Release candidate: Quick Actions, Server pages, smart locks and unified HUD notices')
+        im.BulletText('Backed-up upgrades preserve preferences and saved locations')
+        im.Spacing()
+        im.TextUnformatted('LuaHZ 0.2.54')
+        im.BulletText('Quick Actions status rows and player-selector controls share consistent margins')
+        im.BulletText('Find, Back and Refresh have equal heights; Refresh uses a secondary style')
+        im.Spacing()
+        im.TextUnformatted('LuaHZ 0.2.53')
+        im.BulletText('Quick Actions opens with U: clear navigation, smart locks, vehicle tracking and find player')
+        im.BulletText('Confirmed navigation clearing stops local tracking and queued requests without removing saved places')
+        im.Spacing()
+        im.TextUnformatted('LuaHZ 0.2.52')
+        im.BulletText('Stamina and oxygen panels are 15% wider and have right-aligned labels')
+        im.BulletText('Notifications match their width, height and right edge at every HUD size')
+        im.Spacing()
+        im.TextUnformatted('LuaHZ 0.2.51')
+        im.BulletText('All notifications share a larger card, text and icon style')
+        im.BulletText('Notifications sit above visible stamina, oxygen and vehicle panels')
+        im.Spacing()
+        im.TextUnformatted('LuaHZ 0.2.50')
+        im.BulletText('Vehicle locks shows one notice when neither vehicle type is nearby')
+        im.BulletText('Repeated lock notices refresh instead of stacking in chat')
+        im.Spacing()
+        im.TextUnformatted('LuaHZ 0.2.49')
+        im.BulletText('Vehicle locks stops on success and tries the other scope only after a not-nearby reply')
+        im.BulletText('Keybinds separates normal shortcuts from two-command combos')
+        im.Spacing()
+        im.TextUnformatted('LuaHZ 0.2.48')
+        im.BulletText('Vehicle locks preset sends personal and group lock commands from one shortcut')
+        im.BulletText('Custom keybinds can run two commands, with a two-second gap and gameplay cancellation')
+        im.BulletText('Commands has separate server help and LuaHZ references; server help supports search and Refresh')
+        im.Spacing()
+        im.TextUnformatted('LuaHZ 0.2.47')
+        im.BulletText('Members Refresh stays quiet when the outgoing command callback is delayed')
+        im.BulletText('Server Refresh buttons no longer show technical source-command labels')
+        im.Spacing()
+        im.TextUnformatted('LuaHZ 0.2.46')
+        im.BulletText('Both menus share a wider layout; the Family column has more space')
+        im.BulletText('Server tab content omits repeated section headings')
+        im.Spacing()
+        im.TextUnformatted('LuaHZ 0.2.45')
+        im.BulletText('Server Refresh quietly collects its own recognized response rows')
+        im.BulletText('Server section uses Lucide server icon and underlined information tabs')
+        im.BulletText('F9 matches Character Status width; successful refresh clears its notice')
+        im.Spacing()
+        im.TextUnformatted('LuaHZ 0.2.44')
+        im.BulletText('Horizon pages show searchable families and members, rules, server settings and community links')
+        im.BulletText('Manual /buylevel replies can show remaining respect in Character Status')
+        im.Spacing()
+        im.TextUnformatted('LuaHZ 0.2.43')
+        im.BulletText('Direct read-only command capture arms recording before the command is sent')
+        im.BulletText('Capture files record their stop reason and direct captures stop automatically')
+        im.Spacing()
+        im.TextUnformatted('LuaHZ 0.2.42')
+        im.BulletText('Server version observation uses received events without scanning native textdraw strings')
+        im.Spacing()
+        im.TextUnformatted('LuaHZ 0.2.41')
+        im.BulletText('Horizon page shows the observed server version and compatibility status')
+        im.BulletText('Optional local capture helps investigate complete server command responses')
+        im.Spacing()
+        im.TextUnformatted('LuaHZ 0.2.40')
+        im.BulletText('Oxygen bar shows in submerged vehicles, above the vehicle dashboard')
+        im.Spacing();im.TextUnformatted('LuaHZ 0.2.39')
         im.BulletText('A cut-off Job 2 is filled from the job commands in /help')
         im.Spacing();im.TextUnformatted('LuaHZ 0.2.38')
         im.BulletText('Oxygen bar hides on foot so the stamina bar can show while running')
@@ -471,22 +516,19 @@ function M:content()
         im.BulletText('Live map opacity preview')
         im.Spacing()
         im.TextWrapped('Initial editable reconstruction of the LunaHZ 0.14.4 feature baseline.')
-        im.BulletText('HUD, quickmap and vehicle dashboard')
-        im.BulletText('Hotkeys, cruise control and context FPS caps')
-        im.BulletText('Horizon offer acceptance and detective tracking')
-        im.BulletText('Font fallback and component error isolation')
-        im.Spacing();im.TextWrapped('Settings save automatically. This development build is ready for in-game behavior checks.')
+    elseif self.tab==9 then
+        require('horizonbase.information_ui').draw(self)
     end
 end
 
 function M:draw()
     local im=self.im
     local w,h=getScreenResolution()
-    local nextScale=logic.interfaceScale(w,h,self.prefs.interface.scale)
+    local nextScale=logic.interfaceScale(w,h,self.prefs.interface.scale,logic.menuWidth)
     local layoutChanged=not self.scaleDragging and math.abs(nextScale-self.scale)>.001
     if layoutChanged then self:theme() end
     local S=self.scale
-    im.SetNextWindowSize(im.ImVec2(660*S,540*S),im.Cond.Always)
+    im.SetNextWindowSize(im.ImVec2(logic.menuWidth*S,540*S),im.Cond.Always)
     im.SetNextWindowPos(im.ImVec2(w/2,h/2),layoutChanged and im.Cond.Always or im.Cond.FirstUseEver,im.ImVec2(.5,.5))
     im.Begin('##LuaHZSettings',self.open,im.WindowFlags.NoTitleBar + im.WindowFlags.NoCollapse + im.WindowFlags.NoResize + im.WindowFlags.NoScrollbar + im.WindowFlags.NoScrollWithMouse)
     im.SetWindowFontScale(1)
@@ -499,10 +541,12 @@ function M:draw()
     local lineHeight=im.GetFontSize()
     local headingY=40*S-(2*lineHeight+3*S)/2
     im.SetCursorPos(im.ImVec2(headingX,headingY));im.TextColored(im.ImVec4(1,.62,0,1),'LuaHZ')
-    im.SetCursorPos(im.ImVec2(headingX,headingY+lineHeight+3*S));im.TextDisabled('0.2.39')
-    for i,label in ipairs(tabs) do
-        if i<8 then im.SetCursorPos(im.ImVec2(12*S,(94+(i-1)*42)*S))
-        else im.SetCursorPos(im.ImVec2(12*S,size.y-97*S)) end
+    im.SetCursorPos(im.ImVec2(headingX,headingY+lineHeight+3*S));im.TextDisabled('0.3.0-rc.1')
+    local sidebarOrder={1,2,3,4,5,6,9,7,8}
+    local rowStep=math.min(42,(size.y/S-94-65-34)/(#tabs-1))
+    for slot,i in ipairs(sidebarOrder) do
+        local label=tabs[i]
+        im.SetCursorPos(im.ImVec2(12*S,(94+(slot-1)*rowStep)*S))
         local row=im.GetCursorScreenPos()
         if im.InvisibleButton(label..'##tab',im.ImVec2(163*S,34*S)) then self.tab=i;self.capture=nil;self.previewMap=false;self.scaleDragging=false end
         local selected=i==self.tab
@@ -526,7 +570,9 @@ function M:draw()
     if closeIcon then dl:AddImage(closeIcon,im.ImVec2(closePos.x+3*S,closePos.y+3*S),im.ImVec2(closePos.x+22*S,closePos.y+22*S),im.ImVec2(0,0),im.ImVec2(1,1),closeColor) end
     im.SetCursorPos(im.ImVec2(209*S,50*S))
     self.contentWidth=size.x-231*S-im.GetStyle().ScrollbarSize
-    im.BeginChild('##page'..self.tab,im.ImVec2(size.x-231*S,size.y-72*S),false)
+    local pageId='##page'..self.tab..(self.tab==9 and '-'..self.horizonPage[0] or '')
+    local pageFlags=self.tab==9 and (im.WindowFlags.NoScrollbar+im.WindowFlags.NoScrollWithMouse) or 0
+    im.BeginChild(pageId,im.ImVec2(size.x-231*S,size.y-72*S),false,pageFlags)
     im.SetWindowFontScale(1)
     local ok,err=pcall(self.content,self)
     im.EndChild();im.End()

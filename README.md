@@ -42,9 +42,10 @@ Install these **in order**, with GTA and SA-MP closed. Use the named **32-bit (x
 |---|---|
 | **1. SA-MP 0.3.7 R5** — [Download](https://hzgaming.net/fullpage.php?id=download). Choose `R5-2-MP`. | Run the installer and select your **GTA folder**. `samp.exe` and `samp.dll` should sit beside `gta_sa.exe`. |
 | **2. CLEO 4.4.4 + ASI loader** — [Download](https://github.com/cleolibrary/CLEO4/releases/download/v4.4.4/CLEO4.zip) | Follow the ZIP's README. Use its supplied **Silent's ASI Loader 1.2** (`vorbisFile.dll` and `vorbisHooked.dll`) in your **GTA folder**. |
-| **3. MoonLoader 0.26.5-beta** — [Download](https://blast.hk/moonloader/download.php?archive) | Extract the runtime into your **GTA folder**. Keep `MoonLoader.asi`, the supplied DLLs, and the complete `moonloader/lib` folder. |
-| **4. SAMPFUNCS 5.7.1 rel.25, R5 build** — [Download](https://www.blast.hk/attachments/255877/) | Put `SAMPFUNCS.asi` in your **GTA folder**. Use the **R5** build. |
-| **5. mimgui 1.7.0** — [Download](https://github.com/THE-FYP/mimgui/releases/download/v1.7.0/mimgui-v1.7.0.zip) | Merge its library into **`moonloader/lib`**. `moonloader/lib/mimgui/init.lua` and `mimgui/cimguidx9.dll` should exist. |
+| **3. SilentPatchSA 1.1 Build 34.1** — [Official release](https://github.com/CookiePLMonster/SilentPatch/releases/tag/1.1-BUILD34.1-SA) | Download `SilentPatchSA.zip`. Put `SilentPatchSA.asi` and `SilentPatchSA.ini` beside `gta_sa.exe`. Fixes the game's intermittent streaming freeze. Use the [tested configuration](docs/INSTALLATION.md#silentpatch-configuration). |
+| **4. MoonLoader 0.26.5-beta** — [Download](https://blast.hk/moonloader/download.php?archive) | Extract the runtime into your **GTA folder**. Keep `MoonLoader.asi`, the supplied DLLs, and the complete `moonloader/lib` folder. |
+| **5. SAMPFUNCS 5.7.1 rel.25, R5 build** — [Download](https://www.blast.hk/attachments/255877/) | Put `SAMPFUNCS.asi` in your **GTA folder**. Use the **R5** build. |
+| **6. mimgui 1.7.0** — [Download](https://github.com/THE-FYP/mimgui/releases/download/v1.7.0/mimgui-v1.7.0.zip) | Merge its library into **`moonloader/lib`**. `moonloader/lib/mimgui/init.lua` and `mimgui/cimguidx9.dll` should exist. |
 
 On **Linux/Wine**, install the prerequisites inside the **same Wine prefix** as this game copy. If Windows asks for missing DirectX or Visual C++ files, use Microsoft's [DirectX June 2010 package](https://www.microsoft.com/en-us/download/details.aspx?id=8109) and [Visual C++ x86 runtime](https://aka.ms/vc14/vc_redist.x86.exe).
 
@@ -68,15 +69,20 @@ Add `samp.hzgaming.net:7777` in the SA-MP browser and connect. A LuaHZ notice ap
 
 ## Features
 
+> Development preview: the new Server pages, command combos, Quick Actions and updated HUD shown below belong to **0.3.0-rc.1**, currently undergoing packaged-build QA. The public download above is still **0.2.39**.
+
 | Area | What LuaHZ adds |
 |---|---|
-| HUD | Player information, stamina and oxygen, vehicle speed and health |
+| HUD | Player information, labeled stamina and oxygen, vehicle speed and health, and matching notices |
 | Quickmap | Saved Horizon locations and a configurable map |
 | Character Status | Skin portrait, live player information, and tabbed server statistics |
-| Controls | Editable shortcuts, custom command bindings, and cruise control |
+| Controls | Editable shortcuts, separate normal bindings and command combos, smart vehicle locking, and cruise control |
 | Performance | FPS limits for different game contexts |
-| Horizon helpers | Ordinary server commands, offer handling, and tracking tools |
-| Visuals | Special game loading artwork, high quality fonts, game map, radar map and map blips |
+| Quick Actions | Clear navigation, lock a nearby personal or family vehicle, track your vehicle, and find a player |
+| Server | Searchable families and online members, rules, server settings, useful links and version observations |
+| Commands | Separate Horizon server help and LuaHZ command references |
+| Horizon helpers | Offer handling and tracking tools using ordinary server commands |
+| Visuals | Custom loading artwork, HUD fonts, and high-resolution map and radar graphics |
 
 ## Controls
 
@@ -85,38 +91,148 @@ Add `samp.hzgaming.net:7777` in the SA-MP browser and connect. A LuaHZ notice ap
 | **F9** or `/luahz` | Open settings |
 | **M** | Open Quickmap |
 | **I** | Open Character Status |
+| **U** or `/luahzactions` | Open Quick Actions |
 | **X** | Toggle cruise control at your current speed |
 | **Numpad + / −** or **= / −** | Raise or lower the cruise target by 1 mph |
 | **Numpad 1 / 2 / 3** | Cruise at **50 / 80 / 120 mph** |
 
-> Change shortcuts and preset speeds in **Settings → Hotkeys**. Cruise works while you drive a road vehicle. Brake, or press **X** again, to cancel.
+> Change shortcuts and preset speeds in **F9 → Keybinds → Normal keybinds**. Cruise works while you drive a road vehicle. Brake, or press **X** again, to cancel.
 
-### Settings: Press F9 or type `/luahz`.
-<img src="docs/images/settings_blog_776_canvas.png" alt="LuaHZ settings window open on the HUD tab"><br>
+Screenshots below were captured in development build **0.2.54**.
 
-### Keybinds: Custom keybinds for your needs.
-<img src="docs/images/keybinds_blog_776_canvas.png" alt="Custom keybinds for your needs"><br>
+### Settings
 
-### Character Status: Skin portrait and tabbed server statistics.
-<img src="docs/images/character_status_blog_776_canvas.png" alt="Character Status window with skin portrait and statistics">
+Configure the HUD and interface with F9.
 
-### Map: Quickmap with saved locations. Press `M`, or `Escape`, to close it.
-<img src="docs/images/quickmap.jpg" alt="The game map with saved locations. Press `M`, or `Escape`, to close it" width="720"><br>
+<img src="docs/images/gallery-v03/settings-hud.png" alt="Settings" width="720"><br>
 
-### Map: High quality game map and map blips with saved locations.
-<img src="docs/images/sa-mp-057.png" alt="High quality game map and map blips with and saved locations" width="720"><br>
+### Keybinds
 
-### Map: High quality radar map and map blips.
-<img src="docs/images/minimap_776_canvas.png" alt="High quality radar map and map blips"><br>
+Normal shortcuts and command combos have separate tabs. Smart vehicle locking tries the other vehicle type only after a recognized “not nearby” response.
 
-### HUD: Vehicle name, speed, and health.
-<img src="docs/images/vehicle_hud_blog_776_canvas.png" alt="Vehicle name, speed, and health"><br>
+<img src="docs/images/gallery-v03/normal-keybinds.png" alt="Keybinds" width="720"><br>
 
-### HUD: Player stamina status.
-<img src="docs/images/running_hud_blog_776_canvas.png" alt="Player stamina status"><br>
+### Quick Actions
 
-### HUD: Player oxygen status.
-<img src="docs/images/swimming_hud_blog_776_canvas.png" alt="Vehicle dashboard showing speed and health"><br>
+Press U to clear navigation, lock a vehicle, track your vehicle or find a player. Clearing navigation also resets trackers and accepted fares.
+
+<img src="docs/images/gallery-v03/quick-actions.png" alt="Quick Actions" width="720"><br>
+
+### Find player
+
+Select an online name or ID. The server checks detective-job access.
+
+<img src="docs/images/gallery-v03/find-player.png" alt="Find player" width="720"><br>
+
+### Server: Families
+
+Search the complete family list, including entries that scroll out of game chat.
+
+<img src="docs/images/gallery-v03/server-families.png" alt="Server: Families" width="720"><br>
+
+### Server: Members
+
+Browse online family members with their rank numbers and names.
+
+<img src="docs/images/gallery-v03/server-members.png" alt="Server: Members" width="720"><br>
+
+### Commands
+
+Browse server help in one tab and LuaHZ commands in another.
+
+<img src="docs/images/gallery-v03/server-commands.png" alt="Commands" width="720"><br>
+
+### Character Status
+
+Press I for Character, Work, Finances, Health and Inventory tabs.
+
+<img src="docs/images/gallery-v03/character.png" alt="Character Status" width="720"><br>
+
+### Maps
+
+Quickmap with saved locations. Press **M** or **Escape** to close it.
+
+<img src="docs/images/quickmap.jpg" alt="Quickmap with saved locations" width="720"><br>
+
+High-resolution game map and map blips with saved locations.
+
+<img src="docs/images/sa-mp-057.png" alt="Game map and map blips with saved locations" width="720"><br>
+
+High-resolution radar map and map blips.
+
+<img src="docs/images/minimap_776_canvas.png" alt="Radar map and map blips"><br>
+
+### Vehicle HUD
+
+Vehicle name, speed and health.
+
+<img src="docs/images/gallery-v03/vehicle-driving.png" alt="Vehicle dashboard showing speed and health"><br>
+
+### Stamina and oxygen
+
+Labeled bars share the same width as LuaHZ notices. Notices stack above active HUD panels.
+
+<img src="docs/images/gallery-v03/stamina.png" alt="Labeled stamina bar"><br>
+<img src="docs/images/gallery-v03/oxygen.png" alt="Labeled oxygen bar"><br>
+
+<details>
+<summary>More menu screenshots</summary>
+
+**Server rules**
+
+<img src="docs/images/gallery-v03/server-rules.png" alt="Server rules" width="720"><br>
+
+**Server settings snapshot**
+
+<img src="docs/images/gallery-v03/server-settings.png" alt="Server settings snapshot" width="720"><br>
+
+**Server links**
+
+<img src="docs/images/gallery-v03/server-links.png" alt="Server links" width="720"><br>
+
+**Server status**
+
+<img src="docs/images/gallery-v03/server-status.png" alt="Server status" width="720"><br>
+
+**LuaHZ command reference**
+
+<img src="docs/images/gallery-v03/mod-commands.png" alt="LuaHZ command reference" width="720"><br>
+
+**Quickmap settings**
+
+<img src="docs/images/gallery-v03/settings-quickmap.png" alt="Quickmap settings" width="720"><br>
+
+**Automation**
+
+<img src="docs/images/gallery-v03/automation.png" alt="Automation" width="720"><br>
+
+**Performance**
+
+<img src="docs/images/gallery-v03/performance.png" alt="Performance" width="720"><br>
+
+**Interface settings**
+
+<img src="docs/images/gallery-v03/interface-settings.png" alt="Interface settings" width="720"><br>
+
+**Character work**
+
+<img src="docs/images/gallery-v03/character-work.png" alt="Character work" width="720"><br>
+
+**Character finances**
+
+<img src="docs/images/gallery-v03/character-finances.png" alt="Character finances" width="720"><br>
+
+**Character health**
+
+<img src="docs/images/gallery-v03/character-health.png" alt="Character health" width="720"><br>
+
+**Character inventory**
+
+<img src="docs/images/gallery-v03/character-inventory.png" alt="Character inventory" width="720"><br>
+
+</details>
+
+Server settings are a snapshot; they are separate from LuaHZ preferences. Version observations are informational and do not automatically disable features.
 
 ## Other servers
 On any other server, LuaHZ menus, HUD, and custom visuals stay inactive. Original game and plugin files remain stock on disk.

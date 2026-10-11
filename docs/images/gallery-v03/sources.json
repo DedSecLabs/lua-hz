@@ -1,0 +1,456 @@
+{
+  "method": "Native-resolution crops; alpha masks only. Source RGB preserved exactly; 1px game-blended outer edges excluded. No text or version badge edits.",
+  "captured_build": "0.2.54",
+  "images": [
+    {
+      "file": "docs/images/gallery-v03/settings-hud.png",
+      "source": "Screenshot From 2026-10-11 15-04-42.png",
+      "source_sha256": "e39d155cbd813a65c43eab025430bb154de9c203946c6eb270c5c966095c082f",
+      "crop": [
+        11,
+        10,
+        1089,
+        656
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/settings-quickmap.png",
+      "source": "Screenshot From 2026-10-11 15-04-45.png",
+      "source_sha256": "7dde9b6158ae7c195c26a7eee744e8e86c52118fdf99b88153175e4caa301074",
+      "crop": [
+        11,
+        10,
+        1089,
+        656
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/automation.png",
+      "source": "Screenshot From 2026-10-11 15-04-50.png",
+      "source_sha256": "c2a94386763d8fc95af2a07d0a1947d65ec581ab10f8166f5b539e9ef9deb70c",
+      "crop": [
+        11,
+        10,
+        1089,
+        656
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/normal-keybinds.png",
+      "source": "Screenshot From 2026-10-11 15-04-53.png",
+      "source_sha256": "7e49b66325481254dcb55ab8f148f599560b58512b69ac8807e5d56a9a773bca",
+      "crop": [
+        11,
+        10,
+        1089,
+        656
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/performance.png",
+      "source": "Screenshot From 2026-10-11 15-04-56.png",
+      "source_sha256": "b06b3e9400bdfee872086c71bd36d2be3dc099d1074d84a5aeffccde8841dc29",
+      "crop": [
+        11,
+        10,
+        1089,
+        656
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/server-commands.png",
+      "source": "Screenshot From 2026-10-11 15-05-03.png",
+      "source_sha256": "7abd054d6cc96bd8436717f12614db0ff0e277b60f3f368a680b60af06dcb31f",
+      "crop": [
+        11,
+        10,
+        1089,
+        656
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/mod-commands.png",
+      "source": "Screenshot From 2026-10-11 15-05-06.png",
+      "source_sha256": "bac4003526fd51d083aca7e32e4a430959291a0ccb9f27d9e0b5ca3893751d9d",
+      "crop": [
+        11,
+        10,
+        1089,
+        656
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/server-families.png",
+      "source": "Screenshot From 2026-10-11 15-05-22.png",
+      "source_sha256": "b559b0161fd0b1d727362005d4d49b215f30b940737f39efc9adf6e75d40307c",
+      "crop": [
+        11,
+        10,
+        1089,
+        656
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/server-members.png",
+      "source": "Screenshot From 2026-10-11 15-05-38.png",
+      "source_sha256": "dd0f574607b41e980ff8adb3866376868ef794f77bec5be4a0b400318cfcf226",
+      "crop": [
+        11,
+        10,
+        1089,
+        656
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/server-rules.png",
+      "source": "Screenshot From 2026-10-11 15-05-43.png",
+      "source_sha256": "f0ec0e47b2da37c932090c888d0cefa8fe1ca7c84173e6d404c6506bec0f6770",
+      "crop": [
+        11,
+        10,
+        1089,
+        656
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/server-settings.png",
+      "source": "Screenshot From 2026-10-11 15-05-47.png",
+      "source_sha256": "631035ae1b7001f0f29728d371fcb243853ce3dd3f648049b92b8603905f2d5a",
+      "crop": [
+        11,
+        10,
+        1089,
+        656
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/server-links.png",
+      "source": "Screenshot From 2026-10-11 15-05-55.png",
+      "source_sha256": "673f590bb61619a315aeee7974046256cf922ab0995d32faabd0ffaea3a0461b",
+      "crop": [
+        11,
+        10,
+        1089,
+        656
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/server-status.png",
+      "source": "Screenshot From 2026-10-11 15-06-00.png",
+      "source_sha256": "b13164c264d863def1696a96456068098b813df51af3efb82f83c2611824860d",
+      "crop": [
+        11,
+        10,
+        1089,
+        656
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/interface-settings.png",
+      "source": "Screenshot From 2026-10-11 15-06-03.png",
+      "source_sha256": "d44eebdaa4adfd17a19006d7854a752c84ab2d870a2d58ba9721d5a119e5922c",
+      "crop": [
+        11,
+        10,
+        1089,
+        656
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/changelog.png",
+      "source": "Screenshot From 2026-10-11 15-06-07.png",
+      "source_sha256": "275523913dd1b4aaec3dd26718992d364832fb091f467954624472f4891ca2d4",
+      "crop": [
+        11,
+        10,
+        1089,
+        656
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/character.png",
+      "source": "Screenshot From 2026-10-11 15-06-20.png",
+      "source_sha256": "fcd34bea8aa5108ecc8098af36cce2c10fdcaada23dbe7ac27ca3bb36ee66e75",
+      "crop": [
+        12,
+        12,
+        1090,
+        658
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/character-work.png",
+      "source": "Screenshot From 2026-10-11 15-06-24.png",
+      "source_sha256": "c2fcf34e1e9e9b9edd462863dcc59a2967432ecab8d5293ed30a7e01c2572e6c",
+      "crop": [
+        12,
+        12,
+        1090,
+        658
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/character-finances.png",
+      "source": "Screenshot From 2026-10-11 15-06-26.png",
+      "source_sha256": "53f15b9473b912267a9e7e3c25c58b12dea7ab9e712931f12d9b6abc13c9894b",
+      "crop": [
+        12,
+        12,
+        1090,
+        658
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/character-health.png",
+      "source": "Screenshot From 2026-10-11 15-06-27.png",
+      "source_sha256": "075312c12e9aab084f72c5d10d00f53bfa0b7eaa04b0019fdbdfe5104d10a93e",
+      "crop": [
+        12,
+        12,
+        1090,
+        658
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/character-inventory.png",
+      "source": "Screenshot From 2026-10-11 15-06-29.png",
+      "source_sha256": "10625c3bc0173ed5a59029db7fdb4b43999ecc2137b74c3b17bf05e91e5dd3a5",
+      "crop": [
+        12,
+        12,
+        1090,
+        658
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v03/quick-actions.png",
+      "source": "Screenshot From 2026-10-11 15-06-38.png",
+      "source_sha256": "83cb829fd6433c889eb3020f077b1e78a7f581ff267daaa5c4564f4764ccdca2",
+      "crop": [
+        19,
+        20,
+        737,
+        498
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        744,
+        504
+      ],
+      "group": "quick-actions"
+    },
+    {
+      "file": "docs/images/gallery-v03/find-player.png",
+      "source": "Screenshot From 2026-10-11 15-06-52.png",
+      "source_sha256": "0cac9925f3faba3264444db1bd44711f67aa03c9987e11eeb30a9c6079730eca",
+      "crop": [
+        19,
+        20,
+        737,
+        498
+      ],
+      "radius": 17,
+      "padding": 13,
+      "size": [
+        744,
+        504
+      ],
+      "group": "quick-actions"
+    },
+    {
+      "file": "docs/images/gallery-v03/stamina.png",
+      "source": "Screenshot From 2026-10-11 15-09-11.png",
+      "source_sha256": "e409f55a89313103d16cd6bd103eb0deef4022d49ce19804c41346125470ec0c",
+      "crop": [
+        23,
+        23,
+        389,
+        103
+      ],
+      "radius": 9,
+      "padding": 13,
+      "size": [
+        392,
+        106
+      ],
+      "group": "energy"
+    },
+    {
+      "file": "docs/images/gallery-v03/vehicle-driving.png",
+      "source": "Screenshot From 2026-10-11 15-09-26.png",
+      "source_sha256": "83f39f6b2be7dec20a509d3c7ab65e29e8c722d9b1e8ba15282b8c6d7634cad6",
+      "crop": [
+        16,
+        19,
+        334,
+        215
+      ],
+      "radius": 9,
+      "padding": 13,
+      "size": [
+        344,
+        222
+      ],
+      "group": "vehicle"
+    },
+    {
+      "file": "docs/images/gallery-v03/oxygen.png",
+      "source": "Screenshot From 2026-10-11 15-10-00.png",
+      "source_sha256": "7fd0f802205d906438fbe2ad8ddc17d2154b141178dbfa051d96b46cbdffbffb",
+      "crop": [
+        16,
+        21,
+        382,
+        101
+      ],
+      "radius": 9,
+      "padding": 13,
+      "size": [
+        392,
+        106
+      ],
+      "group": "energy"
+    }
+  ]
+}

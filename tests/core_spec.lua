@@ -144,6 +144,82 @@ local function fixture()
     local function update() server:update(function(command) sent[#sent+1]=command end,function() end) end
     return server,c,sent,function(n) time=n end,update
 end
+test('Two-command binding waits between steps and rejects overlapping presses',function()
+    local s,c,sent,clock=fixture();s.loginSeen=true
+    local binding={name='Two commands',command='/first',command2='/second',key=76}
+    local function update(eligible)s:update(function(cmd)sent[#sent+1]=cmd end,function()end,false,false,eligible)end
+    eq(s:requestSequence(binding),true);eq(#sent,0);eq(s:requestSequence(binding),false)
+    binding.command2='/stats' -- The running sequence owns an immutable command snapshot.
+    update(true);eq(sent[1],'/first');clock(1999);update(true);eq(#sent,1)
+    clock(2000);update(true);eq(sent[2],'/second');eq(s.commandSequence,nil)
+    eq(s:requestSequence(binding),false);clock(4000);eq(s:requestSequence(binding),true)
+    s:reset();eq(s.commandSequence,nil);eq(s.sequenceNextAt,nil)
+end)
+test('Vehicle locks stops on positive feedback and falls back only on its scope-specific nearby failure',function()
+    for _,first in ipairs({'/pvl','/pvlock','/gvl'})do
+        local second=first=='/gvl' and '/pvl' or '/gvl'
+        local primaryError=first=='/gvl' and 'You are not near any vehicle that your family owns.' or 'You are not near any vehicle that you own.'
+        local fallbackError=first=='/gvl' and 'You are not near any vehicle that you own.' or 'You are not near any vehicle that your family owns.'
+        for _,state in ipairs({'Locked','Unlocked','fallback'})do
+            local s,c,sent,clock=fixture();s.loginSeen=true
+            local function update()s:update(function(cmd)sent[#sent+1]=cmd end,function()end,false,false,true)end
+            eq(s:requestSequence({command=first,command2=second}),true);update();eq(sent[1],first)
+            clock(250)
+            if state=='fallback' then
+                eq(s:onMessage(fallbackError),false,'Unrelated scope errors are not owned')
+                eq(s:onMessage(primaryError),true)
+                clock(1999);update();eq(#sent,1);clock(2000);update();eq(sent[2],second)
+                clock(2250);s:onTextdraw(2050,'~g~Test Vehicle Unlocked')
+            else s:onTextdraw(2050,'~g~Test Vehicle '..state)end
+            eq(s.commandSequence,nil);clock(5000);update();eq(#sent,state=='fallback' and 2 or 1)
+        end
+    end
+end)
+test('Ambiguous, timed out, late and failed lock replies never cause speculative toggles',function()
+    local s,c,sent,clock=fixture();s.loginSeen=true
+    local function update()s:update(function(cmd)sent[#sent+1]=cmd end,function()end,false,false,true)end
+    eq(s:onMessage('You are not near any vehicle that you own.'),false)
+    eq(s:requestSequence({command='/pvl',command2='/gvl'}),true);update()
+    s:onTextdraw(20,'Vehicle locked');s:onMessage('You cannot use this command yet.')
+    clock(3000);update();eq(s.commandSequence,nil);eq(#sent,1)
+    eq(s:onMessage('You are not near any vehicle that you own.'),false);clock(5000);update();eq(#sent,1)
+    eq(s:requestSequence({command='/pvl',command2='/gvl'}),true);update();clock(5250)
+    eq(s:onMessage('You are not near any vehicle that you own.'),true);clock(7000);update();eq(#sent,3)
+    eq(s:onMessage('You are not near any vehicle that your family owns.'),true);eq(s.commandSequence,nil)
+    eq(s:onMessage('You are not near any vehicle that your family owns.'),false,'Manual/unowned nearby errors must remain visible')
+end)
+test('Only an owned two-scope lock failure produces the player notice',function()
+    local now=0;local sent,notices={},{}
+    local s=Server.new(Config.copy(Config.defaults),function()error('Expected the action notice callback')end,function()return now end,nil,function(text)notices[#notices+1]=text end)
+    s.ready=true;s.horizon=true;s.loginSeen=true
+    assert(s:requestSequence({command='/pvl',command2='/gvl'}))
+    local function update()s:update(function(cmd)sent[#sent+1]=cmd end,function()end,false,false,true)end
+    update();now=250;eq(s:onMessage('You are not near any vehicle that you own.'),true)
+    now=2000;update();eq(#sent,2);now=2250
+    eq(s:onMessage('You are not near any vehicle that your family owns.'),true)
+    eq(#notices,1);eq(notices[1],'No personal or group vehicle nearby.')
+    eq(s:onMessage('You are not near any vehicle that your family owns.'),false);eq(#notices,1)
+    now=5000;update();eq(#sent,2)
+end)
+test('Blocked, manual, expired and foreign contexts cancel unsent sequence steps',function()
+    for _,reason in ipairs({'blocked','manual','foreign','dead','expired'})do
+        local s,c,sent,clock=fixture();s.loginSeen=true
+        eq(s:requestSequence({command='/pvl',command2='/gvl'}),true)
+        local function update(eligible)s:update(function(cmd)sent[#sent+1]=cmd end,function()end,false,false,eligible)end
+        update(true);eq(#sent,1)
+        if reason=='manual' then s:noteManualCommand('/members')
+        elseif reason=='foreign' then s.horizon=false
+        elseif reason=='dead' then s.ready=false end
+        clock(reason=='expired' and 5000 or 1200);update(reason~='blocked');eq(#sent,1);eq(s.commandSequence,nil)
+        s.horizon=true;s.ready=true;clock(6000);update(true);eq(#sent,1)
+    end
+end)
+test('A failed sequence send cancels the remainder instead of retrying a toggle',function()
+    local s=fixture();s.loginSeen=true
+    eq(s:requestSequence({command='/pvl',command2='/gvl'}),true)
+    assert(not pcall(function()s:update(function()error('send failure')end,function()end,false,false,true)end))
+    eq(s.commandSequence,nil)
+end)
 test('Offer acceptance waits, deduplicates and obeys Horizon context',function()
     local s,c,sent,clock,update=fixture();c.togs.repair=true
     s:onMessage('John wants to repair your car for $1, (type /accept repair)')
@@ -241,4 +317,46 @@ test('Vehicle lock state is observed from the existing getter',function()
     _G.getCarDoorLockStatus=function()return nil end
     eq(Game.call('getCarDoorLockStatus',-1,99),-1)
     _G.getCarDoorLockStatus=old
+end)
+
+test('Submerged vehicle occupants do not need a swimming task to show oxygen',function()
+    local names={'PLAYER_PED','doesCharExist','isSampAvailable','sampGetGamestate','isCharDead',
+        'getCharCoordinates','getCharPointer','isCharSwimming','getCharSwimState',
+        'isCharInAnyCar','storeCarCharIsInNoSave','doesVehicleExist','getDriverOfCar',
+        'getCarModel','isCarInWater','getWaterHeightAtCoords'}
+    local previous={};for _,name in ipairs(names)do previous[name]=_G[name]end
+    local oldMemory=package.loaded.memory;package.loaded.memory={}
+    local wet,swimming,swimState,inCar,exists,model,z=true,false,0,true,true,593,-5
+    _G.PLAYER_PED=1
+    _G.doesCharExist=function()return true end;_G.isSampAvailable=function()return true end
+    _G.sampGetGamestate=function()return 3 end;_G.isCharDead=function()return false end
+    _G.getCharPointer=function()return 0 end
+    _G.getCharCoordinates=function()return 100,200,z end
+    _G.isCharSwimming=function()return swimming end;_G.getCharSwimState=function()return swimState end
+    _G.isCharInAnyCar=function()return inCar end;_G.storeCarCharIsInNoSave=function()return 99 end
+    _G.doesVehicleExist=function()return exists end
+    _G.getDriverOfCar=function()return 1 end;_G.getCarModel=function()return model end
+    _G.isCarInWater=function(car)eq(car,99);return wet end
+    _G.getWaterHeightAtCoords=function(x,y,ignoreWaves)eq(x,100);eq(y,200);eq(ignoreWaves,false);return 0 end
+    local g=Game.new(Config.copy(Config.defaults),function()end)
+    eq(g:refresh().underwater,true);eq(g.sample.swimming,false);eq(g.sample.driver,true)
+    _G.getDriverOfCar=function()return 2 end
+    eq(g:refresh().underwater,true);eq(g.sample.driver,false)
+    for _,vehicleModel in ipairs({411,487,593,430})do
+        model=vehicleModel;z=-5;eq(g:refresh().underwater,true)
+        z=2;eq(g:refresh().underwater,false)
+    end
+    z=-5;wet=false;eq(g:refresh().underwater,false)
+    wet=true;exists=false;eq(g:refresh().underwater,false)
+    exists=true;_G.getWaterHeightAtCoords=nil;eq(g:refresh().underwater,false)
+    _G.getWaterHeightAtCoords=function()error('getter unavailable')end;eq(g:refresh().underwater,false)
+    _G.getWaterHeightAtCoords=function()return 0/0 end;eq(g:refresh().underwater,false)
+    _G.getWaterHeightAtCoords=function()return true,0 end;eq(g:refresh().underwater,true)
+    _G.isCarInWater=nil;eq(g:refresh().underwater,false)
+    inCar=false;swimming=true;swimState=3;eq(g:refresh().underwater,true)
+    swimState=2;eq(g:refresh().underwater,false)
+    swimming=false;eq(g:refresh().underwater,false)
+    _G.sampGetGamestate=function()return 5 end;eq(g:refresh().underwater,false)
+    package.loaded.memory=oldMemory
+    for _,name in ipairs(names)do _G[name]=previous[name]end
 end)

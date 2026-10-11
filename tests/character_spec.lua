@@ -159,6 +159,7 @@ c:beginHelp(true)
 assert(c:ingestHelp('*** JOB *** /fix /tunecar /nos /hyd /repair /mechduty'))
 assert(c:ingestHelp('*** JOB *** /find /cohort'))
 assert(not c:ingestHelp('Advertisement: hello'))
+assert(not c:ingestHelp('*** Person Test from your family has disconnected (leaving).'))
 clock=clock+750;c:update()
 assert(c.fields['Job 2']=='Mechanic' and c.fields.Job=='Detective [lvl: 5]')
 c.fields.Job='None [lvl: 0]';c.fields['Job 2']='None [lvl: 0]'

@@ -36,8 +36,52 @@ class BaseInstallTests(unittest.TestCase):
         self.settings = self.game / 'moonloader/config/player.ini'
         self.settings.parent.mkdir(); self.settings.write_bytes(b'personal setting')
 
-    def run_script(self, path, env=None):
-        return subprocess.run(['bash', str(path), str(self.game)], capture_output=True, text=True, env=env)
+    def run_script(self, path, env=None, upgrade=False):
+        args = ['bash', str(path), str(self.game)] + (['--upgrade'] if upgrade else [])
+        return subprocess.run(args, capture_output=True, text=True, env=env)
+
+    def test_upgrade_and_recovery_preserve_settings_saved_locations_and_unrelated_files(self):
+        self.assertEqual(self.run_script(self.bundle / 'install.sh').returncode, 0)
+        entry = self.game / 'moonloader/HorizonBase.lua'
+        entry.write_bytes(b'previous release entry')
+        places = self.settings.parent / 'luahz-locations.json'
+        places.write_bytes(b'{"saved": ["home"]}')
+        unrelated = self.game / 'moonloader/another-mod.lua'
+        unrelated.write_bytes(b'unrelated mod')
+        result = self.run_script(self.bundle / 'install.sh', upgrade=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(entry.read_bytes(), b'entry')
+        self.assertEqual(self.settings.read_bytes(), b'personal setting')
+        self.assertEqual(places.read_bytes(), b'{"saved": ["home"]}')
+        self.assertEqual(unrelated.read_bytes(), b'unrelated mod')
+        backup = max((self.game / 'LuaHZ-backups').iterdir(), key=lambda p: p.stat().st_mtime_ns)
+        self.assertEqual(self.run_script(backup / 'restore.sh').returncode, 0)
+        self.assertEqual(entry.read_bytes(), b'previous release entry')
+        self.assertEqual(places.read_bytes(), b'{"saved": ["home"]}')
+
+    def test_failed_upgrade_restores_previous_build(self):
+        self.assertEqual(self.run_script(self.bundle / 'install.sh').returncode, 0)
+        entry = self.game / 'moonloader/HorizonBase.lua'
+        entry.write_bytes(b'previous build')
+        mock = self.root / 'bin'; mock.mkdir()
+        cp = shutil.which('cp')
+        (mock / 'cp').write_text('#!/bin/sh\ncase "$*" in *payload/moonloader/lib/samp/events.lua*) exit 71;; esac\nexec ' + cp + ' "$@"\n')
+        (mock / 'cp').chmod(0o755)
+        env = {**os.environ, 'PATH': str(mock) + ':' + os.environ['PATH']}
+        self.assertNotEqual(self.run_script(self.bundle / 'install.sh', env, upgrade=True).returncode, 0)
+        self.assertEqual(entry.read_bytes(), b'previous build')
+        self.assertEqual(self.settings.read_bytes(), b'personal setting')
+
+    def test_upgrade_requires_existing_install_and_refuses_config_payload(self):
+        self.assertNotEqual(self.run_script(self.bundle / 'install.sh', upgrade=True).returncode, 0)
+        self.assertFalse((self.game / 'LuaHZ-backups').exists())
+        name = 'moonloader/config/player.ini'
+        p = self.bundle / 'payload' / name;p.parent.mkdir(parents=True);p.write_bytes(b'overwrite')
+        with (self.bundle / 'FILES.sha256').open('a') as f:
+            f.write(hashlib.sha256(b'overwrite').hexdigest() + '  ' + name + '\n')
+        self.assertNotEqual(self.run_script(self.bundle / 'install.sh').returncode, 0)
+        self.assertFalse((self.game / 'LuaHZ-backups').exists())
+        self.assertEqual(self.settings.read_bytes(), b'personal setting')
 
     def test_install_restore_preserves_preferences_and_original_library(self):
         result = self.run_script(self.bundle / 'install.sh')
@@ -50,6 +94,18 @@ class BaseInstallTests(unittest.TestCase):
         self.assertEqual((self.game / 'moonloader/lib/samp/events.lua').read_bytes(), b'original')
         self.assertFalse((self.game / 'moonloader/HorizonBase.lua').exists())
         self.assertEqual(self.settings.read_bytes(), b'personal setting')
+        self.assertEqual(self.run_script(self.bundle / 'install.sh').returncode, 0)
+
+    def test_required_streaming_fix_is_checked_before_any_game_write(self):
+        checks = self.bundle / 'PREREQUISITES.sha256'
+        data = b'fixture SilentPatch ASI'
+        checks.write_text(checks.read_text() + hashlib.sha256(data).hexdigest() + '  SilentPatchSA.asi\n')
+        self.assertNotEqual(self.run_script(self.bundle / 'install.sh').returncode, 0)
+        self.assertFalse((self.game / 'LuaHZ-backups').exists())
+        (self.game / 'SilentPatchSA.asi').write_bytes(b'wrong build')
+        self.assertNotEqual(self.run_script(self.bundle / 'install.sh').returncode, 0)
+        self.assertFalse((self.game / 'LuaHZ-backups').exists())
+        (self.game / 'SilentPatchSA.asi').write_bytes(data)
         self.assertEqual(self.run_script(self.bundle / 'install.sh').returncode, 0)
 
     def test_tampered_payload_and_symlink_refused_before_writing(self):

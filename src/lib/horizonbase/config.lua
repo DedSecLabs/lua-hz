@@ -7,13 +7,13 @@ M.defaults = {
     togs = {repair = false, lawyer = false, whore = false, drugs = false, taxi = false,
             repairMax = 1, lawyerMax = 200, whoreMax = 1, drugsMax = 1},
     autofind = {cohort = false},
-    keybinds = {settingsPanel = 120, quickmap = 77, siren = 74, reload = 82, characterStatus = 73},
+    keybinds = {settingsPanel = 120, quickmap = 77, siren = 74, reload = 82, characterStatus = 73,quickActions=85},
     cruisecontrol = {toggleKey = 88, preset1Key = 97, preset2Key = 98, preset3Key = 99,
                      preset1Speed = 50, preset2Speed = 80, preset3Speed = 120},
     fps = {onfoot = 0, invehicle = 0, swimming = 0, inboat = 0},
     interface = {scale = 100},
     hud = {scale = 100, x = 100, y = 5},
-    modifiers = {settingsPanel=0, quickmap=0, siren=0, reload=0, characterStatus=0, toggleKey=0, preset1Key=0, preset2Key=0, preset3Key=0},
+    modifiers = {settingsPanel=0, quickmap=0, siren=0, reload=0, characterStatus=0,quickActions=0, toggleKey=0, preset1Key=0, preset2Key=0, preset3Key=0},
     custombinds = {},
 }
 
@@ -34,11 +34,16 @@ function M.binding(raw,index)
     if type(raw)~='table' then return nil end
     local command=M.command(raw.command)
     if not command then return nil end
+    local command2
+    if raw.command2~=nil and raw.command2~='' then
+        command2=M.command(raw.command2)
+        if not command2 then return nil end
+    end
     local name=type(raw.name)=='string' and raw.name:gsub('[%c]',''):match('^%s*(.-)%s*$') or ''
     local key=tonumber(raw.key) or 0
     if key~=key or math.abs(key)==math.huge then key=0 end
     return {name=(name~='' and name or 'Command '..index):sub(1,64),command=command,
-        key=math.floor(math.max(0,math.min(255,key))), mods=M.modifier(raw.mods)}
+        key=math.floor(math.max(0,math.min(255,key))), mods=M.modifier(raw.mods),command2=command2}
 end
 
 function M.keyConflict(prefs,key,exceptIndex,mods,exceptSection,exceptKey)
@@ -74,7 +79,7 @@ function M.parse(text)
             local k, v = line:match('^%s*([^=]+)%s*=%s*(.-)%s*$')
             if k then
                 k = k:gsub('%s+$', '')
-                if section:match('^custombind%d+$') and (k=='name' or k=='command') then
+                if section:match('^custombind%d+$') and (k=='name' or k=='command' or k=='command2') then
                     -- Names such as "123" are text, not numeric preference values.
                 elseif v == 'true' then v = true elseif v == 'false' then v = false
                 else v = tonumber(v) or v end
@@ -129,6 +134,19 @@ function M.validate(raw)
         end
         if conflict then out.keybinds.characterStatus=0 end
     end
+    if raw and not (raw.keybinds and raw.keybinds.quickActions~=nil) then
+        local conflict=false
+        for _,section in ipairs({'keybinds','cruisecontrol'})do
+            for key,value in pairs(raw[section] or {})do
+                if (section=='keybinds' or key:match('Key$')) and value==85 and ((raw.modifiers or {})[key]or 0)==0 then conflict=true end
+            end
+        end
+        for i=1,20 do
+            local item=(raw.custombinds and raw.custombinds[i]) or raw['custombind'..i]
+            if type(item)=='table' and tonumber(item.key)==85 and M.modifier(item.mods)==0 then conflict=true end
+        end
+        if conflict then out.keybinds.quickActions=0 end
+    end
     for i=1,20 do
         local item=raw and ((raw.custombinds and raw.custombinds[i]) or raw['custombind'..i])
         local binding=M.binding(item,i)
@@ -159,6 +177,7 @@ function M.serialize(config)
         lines[#lines+1]='key='..binding.key
         lines[#lines+1]='mods='..(binding.mods or 0)
         lines[#lines+1]='command='..binding.command
+        if binding.command2 then lines[#lines+1]='command2='..binding.command2 end
         lines[#lines+1]=''
     end
     return table.concat(lines, '\n')

@@ -1,43 +1,66 @@
 # Releases and player downloads
 
-Players will download a named player ZIP from [GitHub Releases](https://github.com/DedSecLabs/luahz/releases), install the separately linked prerequisites, and follow the package's installation guide. They will not need to clone the repository or compile code. GitHub's automatic **Source code (zip)** and **Source code (tar.gz)** downloads remain developer source.
+The latest published player download is [LuaHZ 0.2.39](https://github.com/DedSecLabs/luahz/releases/tag/v0.2.39-player). The next feature milestone is **0.3.0**; **0.3.0-rc.1** is the candidate being prepared and tested. A candidate is not a completed release, and offline checks do not establish gameplay QA.
 
-## Available packaging today
+## Player candidate workflow
 
-The separate **Base player prerelease** workflow builds LuaHZ-0.2.35-base.zip and publishes a new testing prerelease after source/installer checks. It includes the Lua feature modules, maintained UI icons/logo and verified MIT SAMP.Lua files, with a Linux/Wine shell installer and guarded recovery. It excludes native graphics helpers, HD assets, portrait previews and Quickmap backgrounds. The owner passed a Linux/Wine clean-install test of the published 0.2.35 base ZIP on 2026-10-09. That test is recorded in STATUS.md. The Linux player release workflow packages `player-resources/` into `LuaHZ-<version>-player.zip` and publishes tag `v<version>-player`. Windows uses the same archive by copying `moonloader` and `LuaHZLoading.asi` into the GTA folder. A later run replaces that tag's ZIP, checksums, and notes so the file inside the download matches the release page. See [base installation](BASE_INSTALL.md) for the earlier small preview. The base preview is left unchanged on reruns. Prerequisite binaries remain separate.
+`tools/package_player.py` builds `LuaHZ-<version>-player.zip` from a clean checked Git revision, maintained source/UI assets and the explicit `player-resources/` directory. Prerequisite software stays separate. The archive includes install and restore scripts for Linux/Wine and PowerShell, installation instructions, release notes and a complete payload hash list. Preferences, saved places, account data and logs are never packaged.
 
-This minimal edition is built by tools/package_base.py. The developer-preview packager's full-visual player mode remains disabled; its policy below is separate from the base edition.
+`.github/workflows/player-release.yml` verifies source/recovery checks and package checksums, then saves an Actions artifact. On main it prepares a **draft prerelease**, never an automatic public release. A published tag is left unchanged. A draft can be refreshed, which invalidates earlier QA for its replaced bytes; test the exact final archive before publication. Branch runs build artifacts without creating a release.
 
-The **Draft release** workflow builds a **developer preview**, not the complete player mod. It contains audited source, licensed UI assets, the logo and our compiled x86 native helpers. External texture/font/portrait/loading resources and prerequisites are absent. `START-HERE.md` inside the ZIP explains these limits and points contributors to the development guide. The helpers cannot reproduce the approved visual build without their matching external resources.
+New player tags use `v<version>`, such as `v0.3.0-rc.1` and `v0.3.0`. The archive retains the `-player.zip` edition suffix. Historical tags such as `v0.2.39-player` remain unchanged. Changes are compared with the previous stable player tag, excluding RC, base and source-preview tags.
 
-The download is named `LuaHZ-0.2.35-developer-preview.zip`. `release-manifest.json` records the source commit and every payload hash; `SHA256SUMS.txt` covers the ZIP, manifest and release notes.
-
-## Automated draft workflow
-
-1. Open **Actions → Draft release → Run workflow**, choose **main**, and run it. A change to the packaging tool, release policy or workflow on main also runs it automatically.
-2. Actions checks the Lua/Python/C source, builds both native helpers, exports eligible source and assembles the preview.
-3. Actions verifies checksums, saves a 30-day build artifact, then creates or updates a **draft prerelease** with tag `v0.2.35-source-preview` at the exact tested commit.
-4. Review its notes and four attached assets (ZIP, checksums, manifest and notes file) on the Releases page while signed in. A draft is visible to repository members with the necessary access; players see it only after publication.
-
-Pull requests build and verify artifacts with read-only repository permissions. They cannot create releases. Only the separate main-branch draft job receives write permission. The workflow never publishes a release automatically. If the version is already published, it reports that the release is unchanged and finishes successfully; verified build artifacts remain available on the run. Use a new version for another release. A rerun can replace the assets of an existing draft; earlier build artifacts remain available during their retention period.
-
-The version in `manifests/release.json` must match `src/HorizonBase.lua` and `tools/deploy.py`. Bump those together for a new mod version. Native loading builds always use the paired resource fingerprint in `manifests/dependencies.json`.
+1. Freeze the feature batch, record pending QA, and synchronize the version in `manifests/release.json`, `src/HorizonBase.lua`, `tools/deploy.py`, the runtime notice and F9 version label. Keep the historical F9 changelog.
+2. Write player-facing changes in `docs/releases/<major.minor.patch>.md`. RCs and the final milestone share that change interval; verify claims against the shipped code and the previous public release.
+3. Run `tools/check.py`, source export and fresh-clone verification. Validate shell and PowerShell installer upgrades/recovery, and check the generated release notes and ZIP contents. Native Windows gameplay QA remains a separate report even when PowerShell fixtures pass on Linux.
+4. Commit the actual release inputs before packaging. The packager rejects a dirty working tree or a revision other than HEAD; its recorded revision must represent the payload.
+5. Build to a new directory and verify `SHA256SUMS.txt`. Test upgrade from the previously published archive, preserving settings, saved locations, unrelated mods and rollback.
+6. Install the exact candidate with the game/browser closed. The owner launches it and confirms changed behavior. Keep the archive hash and deployment receipt with that result.
+7. After owner QA, prepare the final version as a new archive/commit. Even a version-only rebuild is a different archive: install it and obtain the owner's final smoke-test result before publishing. Changed public bytes always require a new version.
+8. Publish intentionally. Review the four attachments, final notes and tag revision. Update the README and give the owner forum section replacements only after the release/image URLs exist. The owner edits the forum post.
 
 ## Local packaging
 
-First run the checks and both native build commands in [development](DEVELOPMENT.md), then:
-
 ```sh
-python3 tools/package_release.py --output dist/release \
-  --native-dir build/native --revision "$(git rev-parse HEAD)"
-cd dist/release
+python3 tools/package_player.py --output dist/player-030-rc1 \
+  --revision "$(git rev-parse HEAD)" \
+  --resources player-resources --asi player-resources/LuaHZLoading.asi
+cd dist/player-030-rc1
 sha256sum --check SHA256SUMS.txt
 ```
 
-Use a new output directory for another local build; existing output is preserved. The packager uses the audited source exporter plus the two explicitly named original native builds. It never imports the installed game, private `.local` resources, branding experiments or `LuaHZ-local-QA.zip`.
+Never use the installed game, private resource experiments or a local QA ZIP as a public packaging input. Do not overwrite an earlier output directory. Retain the previous published archives, tags and checksums.
 
-## Player release
+## Upgrade and recovery
 
-`LuaHZ-0.2.39-player.zip` is the published player download. `tools/package_player.py` builds it from `player-resources/`, and `.github/workflows/player-release.yml` publishes tag `v0.2.39-player`. The release notes list commits since the previous player tag, then the install steps, then the full compare link. When that tag already exists, the workflow replaces the ZIP so `INSTALL.md` inside it stays current. The developer-preview packager still refuses its own player mode; that switch does not affect this download. A Windows play report is the remaining check. Prerequisites remain separate. GitHub Packages is unused because these downloads are ZIP release assets.
+First installation uses `install.sh <game>` or `install.ps1 <game>`. Existing LuaHZ installations require explicit `--upgrade` or `-Upgrade`. Both paths verify prerequisite/payload hashes before writing, reject unowned or linked destinations, back up overwritten files, verify the installed payload and roll back failed writes. Files under `moonloader/config` are not payload targets.
 
-GitHub references: [releases](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases), [draft/prerelease CLI](https://cli.github.com/manual/gh_release_create), [workflow artifacts](https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts).
+The installer prints a recovery command for its new `LuaHZ-backups` directory. Recovery refuses files modified after installation. Obsolete resource groups are left untouched; recovery restores the previous overwritten payload and removes newly added files. Native helpers/resources require GTA and the SA-MP browser to be closed. Install the separately required SilentPatchSA 1.1 Build 34.1 before upgrading from 0.2.39.
+
+## Required player release presentation
+
+The GitHub title is `LuaHZ <version> — player release`. Do not repeat it as a heading in the release body. The generated body, attached `RELEASE_NOTES.md` and notes inside the ZIP use this order:
+
+1. **Mod Changes**: what players will notice since the previous published player release. Include intervening local versions; use the F9 changelog as the baseline, not commit subjects. If no behavior changed, say so.
+2. **What's Changed**: source commit subjects in the exact previous-stable-tag-to-packaged-revision interval, followed by the **Full Changelog** compare link.
+3. **Installation**: contents, separately installed prerequisites, game-folder definition, first installation, upgrade/recovery and useful controls. State the actual platform QA limits.
+4. Footer: linked **Source commit** and actual payload **Files** count, both derived from the package.
+
+Immediately before the footer, include:
+
+> Download `LuaHZ-<version>-player.zip` to install the mod. The “Source code” archives are for developers.
+
+Upload exactly these four release assets:
+
+- `LuaHZ-<version>-player.zip`
+- `release-manifest.json` with the source revision and complete payload hashes
+- `RELEASE_NOTES.md`
+- `SHA256SUMS.txt`
+
+Verify section order, absence of a repeated release title, change interval, agreement with F9, installation steps, revision/file count and all four assets before publication.
+
+## Earlier preview editions
+
+The published 0.2.35 base preview remains unchanged. Its separate workflow now creates drafts for new versions. `tools/package_base.py` excludes native graphics helpers and full visual assets; it is not the complete player edition. Its Linux/Wine clean-install owner test is recorded in STATUS.md.
+
+`tools/package_release.py` and `release.yml` create source/developer previews with audited source and compiled x86 native helpers. They exclude the external texture/font/portrait/loading packs and prerequisites, so they cannot reproduce the approved player visuals. The developer packager deliberately refuses its own full-player mode; `package_player.py` is the separate complete archive path. See [development](DEVELOPMENT.md) and [assets](ASSETS.md).

@@ -137,7 +137,7 @@ function M:ingestHelp(text)
     if not self.helpPending or self.now()>self.helpPending then return false end
     local clean=logic.strip(text)
     -- Only the server's *** category lines belong to /help. Nearby chat stays on the normal path.
-    if clean:find('***',1,true)==nil then return false end
+    if not require('horizonbase.server_help').row(text) then return false end
     self.helpText=self.helpText..'\n'..clean
     self.helpLast=self.now()
     return self.helpQuiet==true
