@@ -45,18 +45,18 @@ local actions={}
 local panel=require('horizonbase.actions_ui').new(im,ui,s,function(kind,arg)actions[#actions+1]={kind=kind,arg=arg};return true end,function()return {{id=10,name='Player_Test'}}end)
 panel.open[0]=true;im.clicks['Clear navigation##quickAction']=true;panel:draw()
 assert(not panel.open[0] and actions[1].kind=='clear' and im.stack==0)
-panel.open[0]=true;im.clicks['Lock / unlock vehicle##quickAction']=true;panel:draw();assert(actions[2].kind=='lock')
-panel.open[0]=true;im.clicks['Track my vehicle##quickAction']=true;panel:draw();assert(actions[3].kind=='track')
+panel.open[0]=true;im.clicks['Lock / unlock vehicle##quickAction']=true;im.clicks['Track my vehicle##quickAction']=true;panel:draw();assert(#actions==1,'Quick Actions must contain no vehicle controls')
+im.clicks['Lock / unlock vehicle##quickAction']=nil;im.clicks['Track my vehicle##quickAction']=nil
 panel.open[0]=true;im.clicks['Find player##quickAction']=true;panel:draw()
-assert(panel.findMode and #actions==3,'Find opens a selector without sending a command')
+assert(panel.findMode and #actions==1,'Find opens a selector without sending a command')
 im.clicks['Player_Test (10)##quickTarget10']=true;panel:draw()
-assert(actions[4].kind=='find' and actions[4].arg.id==10 and actions[4].arg.name=='Player_Test')
+assert(actions[2].kind=='find' and actions[2].arg.id==10 and actions[2].arg.name=='Player_Test')
 panel:reset();assert(not panel.open[0] and not panel.findMode and #panel.targets==0)
 panel.open[0]=true;panel.findMode=true;panel.targets={{id=10,name='Player_Test'}}
 panel.perform=function()error('Injected action callback failure')end
 im.clicks['Player_Test (10)##quickTarget10']=true
 assert(not pcall(panel.draw,panel) and im.stack==0,'Selector errors must close both the child and window')
-print('PASS four-action grid, deferred find selector, stable target selection, reset and balanced error cleanup')
+print('PASS character-action grid, deferred find selector, stable target selection, reset and balanced error cleanup')
 -- Native ImGui resets the next text row to WindowPadding.x (zero in this theme).
 local oldText,oldDisabled,oldButton=im.TextUnformatted,im.TextDisabled,im.Button
 local status,buttons={},{}
@@ -69,7 +69,7 @@ im.Button=function(label,size)
     return oldButton(label,size)
 end
 s.checkpoint=nil;panel:reset();panel.open[0]=true;panel:draw()
-assert(status['No checkpoint received'].x==status['Player finding is off'].x and status['Player finding is off'].x==status['Vehicle tracking is off'].x,'Status rows must keep one explicit left margin despite native cursor reset')
+assert(status['No checkpoint received'].x==status['Player finding is off'].x and not status['Vehicle tracking is off'],'Status rows must keep one explicit left margin despite native cursor reset')
 panel.findMode=true;panel:draw()
 local find,back,refresh=buttons['Find##submitTarget'],buttons['Back##actions'],buttons['Refresh##quickPlayers']
 assert(find.y==back.y and back.y==refresh.y and find.height==back.height and back.height==refresh.height,'Find/Back/Refresh must share a baseline and height')

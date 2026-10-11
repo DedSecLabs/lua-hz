@@ -83,6 +83,15 @@ function M.draw(o,dl,s,scale,w,h,staminaShown,oxygenShown)
     local barY=y+(vehicle and(full and 122 or 88)or 54)*scale
     local value=logic.clamp((s.vehicleHealth or 0)/1000,0,1)
     o:bar(dl,x+16*scale,barY,(width-32)*scale,16*scale,value,red,nil,im.U32(.16,.16,.18,1))
+    local current=o.game.vehicleInfo and o.game.vehicleInfo.current
+    if current and current.handle==s.vehicle and current.id==s.networkVehicleId and (current.ownership=='personal' or current.ownership=='family') then
+        local name=current.ownership=='personal' and 'key' or 'users'
+        local tint=current.ownership=='personal' and gold or blue
+        local iy=y+(full and 159 or 108)*scale;local size=(full and 24 or 14)*scale
+        local tex=o:texture('vehicle-v040/'..name..'.png')
+        if tex then dl:AddImage(tex,im.ImVec2(x+16*scale,iy),im.ImVec2(x+16*scale+size,iy+size),im.ImVec2(0,0),im.ImVec2(1,1),tint)end
+        dl:AddTextFontPtr(im.GetFont(),(full and 14 or 13)*scale,im.ImVec2(x+(full and 46 or 35)*scale,iy+(full and 4 or 0)*scale),tint,current.ownership=='personal' and 'Personal' or 'Family')
+    end
     if full then
         local hp=tostring(math.floor(value*100))
         local hpSize=32;local hpW=o.bitmap:width(hp,hpSize,'pricedown')*scale

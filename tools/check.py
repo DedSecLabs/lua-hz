@@ -20,7 +20,7 @@ for path in sorted(Path('src').rglob('*.lua')):
     code='local f,e=loadfile('+json.dumps(str(path))+');assert(f,e)'
     subprocess.run([str(lj),'-e',code],check=True)
 print('PASS LuaJIT syntax for all source files',flush=True)
-for test in ['server_gate_spec.lua','bootstrap_spec.lua','native_visuals_spec.lua','core_spec.lua','resource_loading_spec.lua','reload_guard_spec.lua','character_spec.lua','native_locations_spec.lua','keys_spec.lua','server_hud_spec.lua','observations_spec.lua','server_info_spec.lua','quick_actions_spec.lua','bitmap_font_spec.lua','hud_layout_spec.lua','map_icons_spec.lua','gang_zones_spec.lua','ui_spec.lua','startup_spec.lua','font_spec.lua']:
+for test in ['server_gate_spec.lua','bootstrap_spec.lua','native_visuals_spec.lua','core_spec.lua','resource_loading_spec.lua','reload_guard_spec.lua','character_spec.lua','native_locations_spec.lua','keys_spec.lua','server_hud_spec.lua','observations_spec.lua','server_info_spec.lua','quick_actions_spec.lua','vehicle_spec.lua','bitmap_font_spec.lua','hud_layout_spec.lua','map_icons_spec.lua','gang_zones_spec.lua','ui_spec.lua','startup_spec.lua','font_spec.lua']:
     if test=='startup_spec.lua':
         with tempfile.TemporaryDirectory(prefix='luahz-startup-tests-') as directory:
             subprocess.run([str(lj),'tests/'+test,directory],check=True)

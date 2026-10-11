@@ -129,6 +129,24 @@ for _,mode in ipairs({1,2})do
     end
 end
 print('PASS larger vehicle icons and bright locked/unlocked/unknown labels sharing the dashboard background')
+local originalTexture=o.texture
+o.texture=function(self,path)if path:find('vehicle-v040/',1,true)then return 5 end;return originalTexture(self,path)end
+sample.networkVehicleId=20
+for _,mode in ipairs({1,2})do
+    prefs.settings.vdb=mode
+    for _,owner in ipairs({'personal','family'})do
+        game.vehicleInfo={current={handle=sample.vehicle,id=20,ownership=owner}}
+        texts={};images={};Dashboard.draw(o,dl,sample,1,1920,1080,false,false)
+        local badge
+        for _,row in ipairs(texts)do if row.text==(owner=='personal' and 'Personal' or 'Family')then badge=row end end
+        local box=Dashboard.layout(1920,1080,1,mode==1 and 'full' or 'minimal')
+        assert(badge and badge.pos.y+badge.size<=box.y+box.height,'Ownership label must fit both dashboard modes')
+        game.vehicleInfo.current.id=21;texts={};Dashboard.draw(o,dl,sample,1,1920,1080,false,false)
+        for _,row in ipairs(texts)do assert(row.text~='Personal' and row.text~='Family','Stale vehicle identity must not retain a badge')end
+    end
+end
+o.texture=originalTexture;game.vehicleInfo=nil
+print('PASS personal/family dashboard badges and stale-identity suppression in full/minimal modes')
 local originalText=o.nativeText
 local calls={};local paths={}
 o.nativeText=function(_,draw,pos,color,value,size)calls[#calls+1]={value=value,pos=pos,size=size}end

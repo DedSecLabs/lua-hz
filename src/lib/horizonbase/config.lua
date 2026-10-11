@@ -7,13 +7,13 @@ M.defaults = {
     togs = {repair = false, lawyer = false, whore = false, drugs = false, taxi = false,
             repairMax = 1, lawyerMax = 200, whoreMax = 1, drugsMax = 1},
     autofind = {cohort = false},
-    keybinds = {settingsPanel = 120, quickmap = 77, siren = 74, reload = 82, characterStatus = 73,quickActions=85},
+    keybinds = {settingsPanel = 120, quickmap = 77, siren = 74, reload = 82, characterStatus = 73,quickActions=85,vehicleMenu=75},
     cruisecontrol = {toggleKey = 88, preset1Key = 97, preset2Key = 98, preset3Key = 99,
                      preset1Speed = 50, preset2Speed = 80, preset3Speed = 120},
     fps = {onfoot = 0, invehicle = 0, swimming = 0, inboat = 0},
     interface = {scale = 100},
     hud = {scale = 100, x = 100, y = 5},
-    modifiers = {settingsPanel=0, quickmap=0, siren=0, reload=0, characterStatus=0,quickActions=0, toggleKey=0, preset1Key=0, preset2Key=0, preset3Key=0},
+    modifiers = {settingsPanel=0, quickmap=0, siren=0, reload=0, characterStatus=0,quickActions=0,vehicleMenu=0, toggleKey=0, preset1Key=0, preset2Key=0, preset3Key=0},
     custombinds = {},
 }
 
@@ -146,6 +146,19 @@ function M.validate(raw)
             if type(item)=='table' and tonumber(item.key)==85 and M.modifier(item.mods)==0 then conflict=true end
         end
         if conflict then out.keybinds.quickActions=0 end
+    end
+    if raw and not (raw.keybinds and raw.keybinds.vehicleMenu~=nil) then
+        local conflict=false
+        for _,section in ipairs({'keybinds','cruisecontrol'})do
+            for key,value in pairs(raw[section] or {})do
+                if (section=='keybinds' or key:match('Key$')) and value==75 and ((raw.modifiers or {})[key]or 0)==0 then conflict=true end
+            end
+        end
+        for i=1,20 do
+            local item=(raw.custombinds and raw.custombinds[i]) or raw['custombind'..i]
+            if type(item)=='table' and tonumber(item.key)==75 and M.modifier(item.mods)==0 then conflict=true end
+        end
+        if conflict then out.keybinds.vehicleMenu=0 end
     end
     for i=1,20 do
         local item=raw and ((raw.custombinds and raw.custombinds[i]) or raw['custombind'..i])

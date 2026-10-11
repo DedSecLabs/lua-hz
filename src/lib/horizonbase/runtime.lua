@@ -42,6 +42,11 @@ local function guard(component,fn,...)
         if (component=='HUD' or component=='Native HUD') and app.overlay then app.overlay:restoreNative() end
         if component=='Menu' and app.ui then app.ui.open[0]=false;app.ui.capture=nil end
         if component=='Character Status' and app.status then app.status.open[0]=false end
+        if component=='Vehicle' then
+            if app.vehicleUI then app.vehicleUI:reset()end
+            if app.vehicle then app.vehicle:reset()end
+            app.quickRequest=nil
+        end
         if component=='Quick Actions' then
             if app.actions then app.actions:reset()end
             app.quickRequest=nil
@@ -62,6 +67,8 @@ app.server=Server.new(prefs,notify,getGameTimer,app.catalog,function(text,kind,k
     else notify(text)end
 end)
 app.observations=require('horizonbase.observations').new(getGameTimer,notify)
+app.vehicle=require('horizonbase.vehicle').new(getGameTimer,function(...)if sessionActive()then app.server.actionNotify(...)end end)
+app.game.vehicleInfo=app.vehicle
 local captureSerial=0
 local function captureAction(action)
     local o=app.observations
@@ -124,6 +131,7 @@ if ok then
     app.ui.overlay=app.overlay
     app.status=require('horizonbase.character_ui').new(im,app.ui,app.server)
     app.actions=require('horizonbase.actions_ui').new(im,app.ui,app.server,function(kind,arg)return queueQuickAction(kind,arg)end,function()return onlinePlayers()end)
+    app.vehicleUI=require('horizonbase.vehicle_ui').new(im,app.ui,app.vehicle,app.server,function(kind,arg)return queueQuickAction(kind,arg)end)
     app.toast.overlay=app.overlay
     app.toast.hudVisible=function()
         return sessionActive() and app.server.loginSeen and app.game.sample.ready and app.focused and not isPauseMenuActive()
@@ -141,8 +149,8 @@ if ok then
             not app.overlay.mapOpen and not app.ui:isMapPreview()
     end,function()
         local hudReady=guard('HUD',function() app.overlay:hud() end)
-        if hudReady and app.toast:announce('0.3.2',app.faults,app.interfaceReady) then
-            notify('0.3.2 loaded. Settings: /luahz or '..app.ui:keyName(prefs.keybinds.settingsPanel,prefs.modifiers.settingsPanel))
+        if hudReady and app.toast:announce('0.4.0-rc.1',app.faults,app.interfaceReady) then
+            notify('0.4.0-rc.1 loaded. Settings: /luahz or '..app.ui:keyName(prefs.keybinds.settingsPanel,prefs.modifiers.settingsPanel))
         end
     end)
     app.hudFrame.HideCursor=true;app.hudFrame.LockPlayer=false
@@ -174,6 +182,10 @@ if ok then
         return sessionActive() and app.server.loginSeen and app.game.sample.ready and app.game.sample.alive and app.focused and app.actions.open[0] and not isPauseMenuActive()
     end,function()guard('Quick Actions',function()app.actions:draw()end)end)
     app.actionsFrame.HideCursor=false;app.actionsFrame.LockPlayer=true
+    app.vehicleFrame=im.OnFrame(function()
+        return sessionActive() and app.server.loginSeen and app.game.sample.ready and app.game.sample.alive and app.focused and app.vehicleUI.open[0] and not isPauseMenuActive()
+    end,function()guard('Vehicle',function()app.vehicleUI:draw()end)end)
+    app.vehicleFrame.HideCursor=false;app.vehicleFrame.LockPlayer=true
 else
     app.faults.Menu=tostring(im)
 end
@@ -183,6 +195,7 @@ local function isTyping()
 end
 local function blocked(allowMap)
     return not app.focused or isPauseMenuActive() or isTyping() or not app.game.sample.alive or
+        app.vehicleUI and app.vehicleUI.open[0] or
         app.actions and app.actions.open[0] or
         app.status and app.status.open[0] or
         app.ui and (app.ui.open[0] or app.ui.capture or getGameTimer()<(app.ui.ignoreKeysUntil or 0)) or
@@ -191,6 +204,7 @@ end
 local function toggleMenu()
     if not app.ui or app.faults.Menu then notify('Settings UI unavailable. Use /hbdebug for the recorded error.');return end
     if app.status then app.status.open[0]=false end
+    if app.vehicleUI then app.vehicleUI:reset()end
     if app.actions then app.actions:reset()end
     app.overlay.mapOpen=false;app.ui.open[0]=not app.ui.open[0];app.ui.capture=nil
 end
@@ -198,6 +212,7 @@ end
 local function toggleStatus()
     if not app.status or app.faults['Character Status'] then notify('Character Status UI unavailable. Use /luahzdebug.');return end
     app.ui.open[0]=false;app.ui.capture=nil;app.overlay.mapOpen=false
+    if app.vehicleUI then app.vehicleUI:reset()end
     if app.actions then app.actions:reset()end
     app.status.open[0]=not app.status.open[0]
     if app.status.open[0] and not app.server.character.updatedAt then app.server:requestStats() end
@@ -205,13 +220,30 @@ end
 local function toggleActions()
     if not app.actions or app.faults['Quick Actions'] or not app.server.loginSeen or not app.game.sample.ready or not app.game.sample.alive then return end
     local opening=not app.actions.open[0];app.actions:reset();app.actions.open[0]=opening
+    if app.vehicleUI then app.vehicleUI:reset()end
+    if app.status then app.status.open[0]=false end
+    if app.ui then app.ui.open[0]=false;app.ui.capture=nil end
+    if app.overlay then app.overlay.mapOpen=false end
     app.server:cancelSequence()
+end
+
+local function toggleVehicle()
+    if not app.vehicleUI or app.faults.Vehicle or not app.server.loginSeen or not app.game.sample.ready or not app.game.sample.alive or not app.focused or isPauseMenuActive() then return end
+    local opening=not app.vehicleUI.open[0];app.vehicleUI:reset();app.vehicleUI.open[0]=opening
+    if opening then app.vehicleUI.page=app.vehicle.current and 1 or 2 end
+    if app.actions then app.actions:reset()end
+    if app.status then app.status.open[0]=false end
+    if app.ui then app.ui.open[0]=false;app.ui.capture=nil end
+    if app.overlay then app.overlay.mapOpen=false end
+    app.quickRequest=nil;app.server:cancelSequence()
 end
 
 local function window(msg,key,lparam)
     if not sessionActive() then return end
     if msg==0x0008 or msg==0x001C and key==0 then
         app.focused=false;app.game:cleanup()
+        if app.vehicleUI then app.vehicleUI:reset()end
+        app.vehicle.pending=nil
         app.server:cancelSequence()
         if app.actions then app.actions:reset()end
         app.quickRequest=nil
@@ -230,23 +262,26 @@ local function window(msg,key,lparam)
         consumeWindowMessage(true,true,true);return
     end
     if key==27 and mods==0 then
-        if app.actions and app.actions.open[0] then app.actions:reset();consumeWindowMessage(true,true,true)
+        if app.vehicleUI and app.vehicleUI.open[0] then app.vehicleUI:reset();consumeWindowMessage(true,true,true)
+        elseif app.actions and app.actions.open[0] then app.actions:reset();consumeWindowMessage(true,true,true)
         elseif app.status and app.status.open[0] then app.status.open[0]=false;consumeWindowMessage(true,true,true)
         elseif app.ui and app.ui.open[0] then app.ui.open[0]=false;consumeWindowMessage(true,true,true)
         elseif app.overlay and app.overlay.mapOpen then app.overlay.mapOpen=false;consumeWindowMessage(true,true,true) end
         return
     end
     if key==13 and app.focused and not Game.call('isPauseMenuActive',false) and Game.call('sampIsChatInputActive',false) then
-        app.quickRequest=nil
+        app.quickRequest=nil;app.vehicle.pending=nil
         guard('Server',function()app.server:noteManualCommand(Game.call('sampGetChatInputText',''))end)
     end
     if isTyping() or isPauseMenuActive() or not app.focused then return end
     if Keys.matches(prefs.keybinds.settingsPanel,prefs.modifiers.settingsPanel,key,mods) then toggleMenu();consumeWindowMessage(true,true,true)
-    elseif app.actions and app.ui and app.overlay and app.server.loginSeen and app.game.sample.ready and app.game.sample.alive and Keys.matches(prefs.keybinds.quickActions,prefs.modifiers.quickActions,key,mods) and not app.ui.open[0] and not(app.status and app.status.open[0]) and not app.overlay.mapOpen then
+    elseif app.vehicleUI and app.ui and app.overlay and app.server.loginSeen and app.game.sample.ready and app.game.sample.alive and Keys.matches(prefs.keybinds.vehicleMenu,prefs.modifiers.vehicleMenu,key,mods) and not app.ui.open[0] and not(app.status and app.status.open[0]) and not(app.actions and app.actions.open[0]) and not app.overlay.mapOpen then
+        toggleVehicle();consumeWindowMessage(true,true,true)
+    elseif not(app.vehicleUI and app.vehicleUI.open[0]) and app.actions and app.ui and app.overlay and app.server.loginSeen and app.game.sample.ready and app.game.sample.alive and Keys.matches(prefs.keybinds.quickActions,prefs.modifiers.quickActions,key,mods) and not app.ui.open[0] and not(app.status and app.status.open[0]) and not app.overlay.mapOpen then
         if not (app.actions and app.actions.open[0] and app.actions.findMode) then toggleActions();consumeWindowMessage(true,true,true)end
-    elseif app.status and app.game.sample.alive and not (app.ui and app.ui.open[0]) and not(app.actions and app.actions.open[0]) and Keys.matches(prefs.keybinds.characterStatus,prefs.modifiers.characterStatus,key,mods) then
+    elseif not(app.vehicleUI and app.vehicleUI.open[0]) and app.status and app.game.sample.alive and not (app.ui and app.ui.open[0]) and not(app.actions and app.actions.open[0]) and Keys.matches(prefs.keybinds.characterStatus,prefs.modifiers.characterStatus,key,mods) then
         toggleStatus();consumeWindowMessage(true,true,true)
-    elseif app.overlay and not (app.status and app.status.open[0]) and not(app.actions and app.actions.open[0]) and Keys.matches(prefs.keybinds.quickmap,prefs.modifiers.quickmap,key,mods) and not app.ui.open[0] then
+    elseif not(app.vehicleUI and app.vehicleUI.open[0]) and app.overlay and not (app.status and app.status.open[0]) and not(app.actions and app.actions.open[0]) and Keys.matches(prefs.keybinds.quickmap,prefs.modifiers.quickmap,key,mods) and not app.ui.open[0] then
         app.overlay.mapOpen=not app.overlay.mapOpen;consumeWindowMessage(true,true,true)
     end
 end
@@ -277,6 +312,7 @@ local function hotkeys()
                 app.server:cancelSequence()
                 app.server:onOutgoing(binding.command,false)
                 guard('Observations',function()app.observations:onOutgoing(binding.command,'keybind')end)
+                guard('Vehicle',function()app.vehicle:onOutgoing(binding.command)end)
                 sampSendChat(binding.command)
             end
             app.commandBindDue=getGameTimer()+300
@@ -319,20 +355,41 @@ end
 queueQuickAction=function(kind,arg)
     if not sessionActive() or not app.server.loginSeen or not app.server.ready or not app.focused or isTyping() or isPauseMenuActive()then return false,'Actions require active Horizon gameplay.'end
     if app.quickRequest then return false,'Another action is queued.'end
-    if not ({clear=true,lock=true,track=true,find=true,stopFind=true})[kind]then return false,'Unknown action.'end
+    if not ({clear=true,lock=true,track=true,storage=true,vehicleControl=true,find=true,stopFind=true})[kind]then return false,'Unknown action.'end
     if app.server.clearNavigation and kind~='stopFind' and not(kind=='track' and app.server.track.active)then return false,'Navigation clear is awaiting confirmation.'end
-    app.quickRequest={kind=kind,arg=arg,expires=getGameTimer()+3000}
+    if kind=='vehicleControl' then
+        if not require('horizonbase.vehicle').command(arg) or not app.vehicle.current or not app.vehicle.current.driver then return false,'Enter a vehicle as driver.'end
+        if app.vehicle.pending then return false,'A vehicle change is awaiting confirmation.'end
+    end
+    app.quickRequest={kind=kind,arg=arg,vehicleEpoch=(kind=='vehicleControl' or kind=='lock') and app.vehicle:token() or nil,expires=getGameTimer()+3000}
     return true
 end
 local function executeQuickAction()
     local request=app.quickRequest;if not request then return end
+    if (request.kind=='vehicleControl' or request.kind=='storage') and getGameTimer()-app.server.lastSend<1200 and getGameTimer()<request.expires and not blocked()then return end
     app.quickRequest=nil
-    if getGameTimer()>=request.expires or blocked() or not app.server.ready or not app.server.loginSeen then
+    if not sessionActive() or getGameTimer()>=request.expires or blocked() or not app.server.ready or not app.server.loginSeen then
         app.server.actionNotify('Action canceled before sending.','error','quick-actions');return
     end
     local ok=true;local errorText
     if request.kind=='clear' then ok=app.server:requestClearNavigation()
-    elseif request.kind=='lock' then ok=app.server:requestSequence({command='/pvl',command2='/gvl'})
+    elseif request.kind=='lock' then
+        if request.vehicleEpoch~=app.vehicle:token() then
+            app.server.actionNotify('Vehicle changed before sending. Action canceled.','error','vehicle-controls');return
+        end
+        local family=app.vehicle.current and app.vehicle.current.ownership=='family'
+        ok=app.server:requestSequence({command=family and '/gvl' or '/pvl',command2=family and '/pvl' or '/gvl'})
+    elseif request.kind=='storage' or request.kind=='vehicleControl' then
+        local command='/vstorage'
+        if request.kind=='vehicleControl' then
+            if request.vehicleEpoch~=app.vehicle:token() or not app.vehicle.current or not app.vehicle.current.driver then
+                app.server.actionNotify('Vehicle changed before sending. Action canceled.','error','vehicle-controls');return
+            end
+            command=require('horizonbase.vehicle').command(request.arg)
+        end
+        app.server:cancelSequence();app.server:onOutgoing(command,false)
+        app.observations:onOutgoing(command,'vehicle menu');app.vehicle:onOutgoing(command,request.kind=='vehicleControl')
+        sampSendChat(command);app.server.lastSend=getGameTimer();app.server.lastAction=command
     elseif request.kind=='track' then ok=app.server:toggleTrack(true)
     elseif request.kind=='stopFind' then app.server:stopFind();app.server.actionNotify('Player finding stopped.','info','quick-actions')
     elseif request.kind=='find' then
@@ -391,6 +448,7 @@ local function registerCommands()
     register('luahz',toggleMenu)
     register('luahzstatus',toggleStatus)
     register('luahzactions',toggleActions)
+    register('luahzvehicle',toggleVehicle)
     register('hbdebug',diagnostics)
     register('hbreload',function() app.reloadRequested=true end)
     register('luahzdebug',diagnostics)
@@ -454,11 +512,13 @@ local function hookEvents()
     function events.onStopAudioStream() audioTrace('server stop') end
     function events.onServerMessage(_,text)
         guard('Observations',function()app.observations:event('chat',{text=text})end)
+        guard('Vehicle',function()app.vehicle:onMessage(text,app.server.characterName)end)
         local success,hide=guard('Server',function() return app.server:onMessage(text) end)
         if success and hide then return false end
     end
     function events.onSendCommand(command)
         guard('Observations',function()app.observations:onOutgoing(command)end)
+        guard('Vehicle',function()app.vehicle:onOutgoing(command)end)
         guard('Server',function() app.server:onOutgoing(command) end)
     end
     function events.onApplyPlayerAnimation(playerId,animLib,animName)
@@ -468,6 +528,7 @@ local function hookEvents()
         guard('Game',function()app.game.reloadGuard:onClear(playerId)end)
     end
     function events.onShowDialog(id,style,title,_,_,text)
+        if app.vehicleUI then app.vehicleUI:reset()end
         guard('Observations',function()app.observations:dialog(id,style,title,text)end)
         local success,hide=guard('Server',function() return app.server:onDialog(id,title,text,style) end)
         if success and hide then return false end
@@ -528,7 +589,8 @@ local function hookEvents()
     end
     function events.onGamemodeRestart()
         app.captureRequest=nil
-        app.observations:reset()
+        app.observations:reset();app.vehicle:reset()
+        if app.vehicleUI then app.vehicleUI:reset()end
         app.server:reset();app.server.horizon=true;app.game:cleanup()
         app.game.sample={ready=false,alive=false}
         if app.ui then app.ui.open[0]=false;app.ui.capture=nil;app.ui.previewMap=false end
@@ -558,6 +620,8 @@ local function hookEvents()
 end
 
 local function closePanels()
+    if app.vehicleUI then app.vehicleUI:reset()end
+    if app.vehicle then app.vehicle.pending=nil end
     if app.ui then
         app.ui.open[0]=false;app.ui.capture=nil;app.ui.previewMap=false;app.ui.infoNotice=nil
         if app.ui.horizonSearch then for _,buffer in pairs(app.ui.horizonSearch)do app.im.StrCopy(buffer,'')end end
@@ -586,6 +650,7 @@ local function stop()
     pcall(function()app.game:cleanup()end)
     pcall(function()app.server:reset()end)
     pcall(function()app.observations:reset()end)
+    pcall(function()app.vehicle:reset()end)
     app.game.sample={ready=false,alive=false};app.game.ammoHistory={};app.game.lastAmmo=nil
     app.game.maxStamina=0;app.game.maxBreath=0
     app.audioHistory={};app.wasReady=false;app.commandBindDue=nil;app.saveDue=nil
@@ -607,7 +672,7 @@ local function start()
         local ok,limiter=pcall(function()return require('horizonbase.limiter').new()end)
         if ok then app.limiter=limiter else app.faults.Limiter=tostring(limiter) end
     end
-    print('[LuaHZ] 0.3.2 authorized endpoint 213.32.6.232:7777; waiting for login.')
+    print('[LuaHZ] 0.4.0-rc.1 authorized endpoint 213.32.6.232:7777; waiting for login.')
 end
 
 local function tick()
@@ -621,6 +686,8 @@ local function tick()
             app.game:refresh();app.game.reloadGuard:update(app.game.sample,app.focused)
             hotkeys();app.game:drive(blocked(true))
         end)
+        guard('Vehicle',function()app.vehicle:update(app.game.sample,app.focused and not isPauseMenuActive())end)
+        if app.vehicleUI and (not app.game.sample.ready or not app.game.sample.alive)then app.vehicleUI:reset();app.quickRequest=nil end
         if app.observations.active and app.observations.mode=='vehicles' then
             guard('Observations',function()
                 local s=app.game.sample
@@ -633,7 +700,8 @@ local function tick()
         if not app.game.sample.ready then
             if app.wasReady and Game.call('sampGetGamestate',5)~=3 then
                 app.server:reset();app.server.horizon=true
-                app.observations:reset()
+                app.observations:reset();app.vehicle:reset()
+                if app.vehicleUI then app.vehicleUI:reset()end
                 if app.ui then app.ui.open[0]=false;app.ui.capture=nil end
         if app.status then app.status.open[0]=false end
                 if app.overlay then app.overlay.mapOpen=false end
@@ -695,9 +763,9 @@ local function tick()
             end
             sampSendChat(command)
         end,sampSendDialogResponse,not (app.observations.single and app.observations.window) and not isTyping() and not isPauseMenuActive() and
-            not (app.ui and app.ui.open[0]) and not (app.actions and app.actions.open[0]) and not (app.overlay and app.overlay.mapOpen),
+            not (app.ui and app.ui.open[0]) and not (app.actions and app.actions.open[0]) and not(app.vehicleUI and app.vehicleUI.open[0]) and not (app.overlay and app.overlay.mapOpen),
             app.server.loginSeen and app.focused and not isTyping() and not isPauseMenuActive() and
-            not (app.overlay and app.overlay.mapOpen) and not (app.status and app.status.open[0]) and not(app.actions and app.actions.open[0]),
+            not (app.overlay and app.overlay.mapOpen) and not (app.status and app.status.open[0]) and not(app.actions and app.actions.open[0]) and not(app.vehicleUI and app.vehicleUI.open[0]),
             app.server.loginSeen and not blocked()) end)
         if app.ui then
             if app.ui.checkRequested then app.ui.checkRequested=false;diagnostics() end

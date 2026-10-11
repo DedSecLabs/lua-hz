@@ -100,6 +100,8 @@ function M:refresh()
         local car = call('storeCarCharIsInNoSave', 0, ped)
         if car ~= 0 and call('doesVehicleExist', false, car) then
             s.vehicle = car
+            local id=call('sampGetVehicleIdByCarHandle',-1,car)
+            if id>=0 and id<=1999 and id==math.floor(id)then s.networkVehicleId=id end
             s.driver = call('getDriverOfCar', -1, car) == ped
             s.model = call('getCarModel', 0, car)
             s.boat = boatModels[s.model] or false

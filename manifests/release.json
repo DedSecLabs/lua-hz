@@ -1,10 +1,11 @@
 {
   "schema_version": 1,
-  "version": "0.3.2",
+  "version": "0.4.0-rc.1",
   "package_kind": "developer-preview",
   "player_installable": false,
   "player_release_blockers": [
     "This developer preview excludes the full visual resource packs; use the separate complete player ZIP.",
-    "Native Windows gameplay QA has not been recorded."
+    "Native Windows gameplay QA has not been recorded.",
+    "New vehicle icons are local QA inputs; upstream collection/license review and public resource staging are pending."
   ]
 }

@@ -52,3 +52,8 @@ The existing public forum header aliases (`luahz-hzheader.png` and its small var
 ## Dashboard lock visibility — local 0.3.1
 
 The dashboard-v031 group preserves the previous run, swimming, unlocked-door and health icons byte-for-byte. The closed-door icon is re-rendered from the matching [Pictogrammers Material Design SVG](https://github.com/Templarian/MaterialDesign/blob/master/svg/car-door-lock.svg) with explicit white fill at 128×128, retaining its vector geometry and transparent background. The old black bitmap and dashboard-v0221 group are preserved. Runtime tint supplies the bright state colors; no raster painting or generative image edit is used. The upstream Pictogrammers license and full Apache 2.0 text accompany the new group. Local source bytes, render script and hashes are recorded under ignored .local/vehicle-capture-assets. New owner-supplied vehicle SVGs remain separate until the controls build selects them.
+
+
+## Vehicle menu — local 0.4.0-rc.1
+
+Eight owner-provided SVGs are rendered to 128×128 white-alpha PNGs under ignored .local/prepared-hud/vehicle-v040 for local QA: engine, lights, window, hood, trunk, key, users and garage. Source filename/hash and owner AllSVGIcons attribution are retained privately in .local/vehicle-capture-assets/vehicle-icon-provenance.json; originals stay untouched. Existing maintained Lucide close/radar and dashboard lock assets are reused. This group is not yet in public player-resources; verify each icon’s upstream collection/license before public packaging. Staging includes it locally; source exports omit it.

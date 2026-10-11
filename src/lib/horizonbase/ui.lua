@@ -352,6 +352,11 @@ function M:content()
         im.TextDisabled('0% = left/top. 100% = right/bottom.')
     elseif self.tab==8 then
         self:section('Changelog')
+        im.TextUnformatted('LuaHZ 0.4.0-rc.1 — local test')
+        im.BulletText('Dedicated K Vehicle menu: controls, storage and tracking')
+        im.BulletText('Personal/Family dashboard badges use confirmed entry messages')
+        im.BulletText('U Quick Actions now focuses on character actions')
+        im.Spacing()
         im.TextUnformatted('LuaHZ 0.3.2 — local test')
         im.BulletText('Lock icons share the dashboard background; state labels are easier to read')
         im.Spacing()
@@ -548,7 +553,7 @@ function M:draw()
     local lineHeight=im.GetFontSize()
     local headingY=40*S-(2*lineHeight+3*S)/2
     im.SetCursorPos(im.ImVec2(headingX,headingY));im.TextColored(im.ImVec4(1,.62,0,1),'LuaHZ')
-    im.SetCursorPos(im.ImVec2(headingX,headingY+lineHeight+3*S));im.TextDisabled('0.3.2')
+    im.SetCursorPos(im.ImVec2(headingX,headingY+lineHeight+3*S));im.TextDisabled('0.4.0-rc.1')
     local sidebarOrder={1,2,3,4,5,6,9,7,8}
     local rowStep=math.min(42,(size.y/S-94-65-34)/(#tabs-1))
     for slot,i in ipairs(sidebarOrder) do

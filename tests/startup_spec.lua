@@ -332,13 +332,38 @@ sampGetPlayerNickname=oldNickname
 onWindowMessage(0x0100,85,0);im.clicks['Find player##quickAction']=true;frames[7].draw()
 im.clicks['Jane_Doe (18)##quickTarget18']=true;frames[7].draw();gameClock=78000;tick();assert(sent[#sent]=='/find 18')
 onWindowMessage(0x0100,85,0);im.clicks['Stop finding##quickAction']=true;frames[7].draw();tick()
-onWindowMessage(0x0100,85,0);im.clicks['Track my vehicle##quickAction']=true;frames[7].draw();gameClock=79500;tick();assert(sent[#sent]=='/trackcar')
-onWindowMessage(0x0100,85,0);im.clicks['Stop vehicle tracking##quickAction']=true;frames[7].draw();tick()
-onWindowMessage(0x0100,85,0);im.clicks['Lock / unlock vehicle##quickAction']=true;frames[7].draw();gameClock=81000;tick();assert(sent[#sent]=='/pvl')
+onWindowMessage(0x0100,75,0);im.clicks['Track my vehicle##vehicleAction']=true;frames[8].draw();gameClock=79500;tick();assert(sent[#sent]=='/trackcar')
+onWindowMessage(0x0100,75,0);im.clicks['Stop tracking##vehicleAction']=true;frames[8].draw();tick()
+onWindowMessage(0x0100,75,0);im.clicks['Controls##vehicleTab1']=true;im.clicks['Lock / unlock##vehicleAction']=true;frames[8].draw();gameClock=81000;tick();assert(sent[#sent]=='/pvl')
 events.onTextDrawSetString(2050,'~g~Test Vehicle Unlocked')
 onWindowMessage(0x0100,85,0);onWindowMessage(0x0100,27,0);assert(not frames[7].Condition())
 assert(frames[7].LockPlayer and not frames[7].HideCursor)
-rawPrint('PASS actual U panel, repeat/typing guards, deferred one-shot clear, target revalidation, finding, vehicle tracking and Stop controls')
+rawPrint('PASS character U panel and separate K storage/tracking/locking actions')
+local parkedCar=2
+function isCharInAnyCar()return parkedCar~=nil end
+function storeCarCharIsInNoSave()return parkedCar or 0 end
+function doesVehicleExist()return parkedCar~=nil end
+function sampGetVehicleIdByCarHandle()return true,40 end
+function getCarModel()return 401 end
+function getNameOfVehicleModel()return 'TEST'end
+function getGxtText()return 'Test Car'end
+function getCarHealth()return 1000 end
+function getCarDoorLockStatus()return 0 end
+gameClock=83000;tick();events.onServerMessage(-1,'You are the owner of this Test Car.')
+local vehicleBefore=#sent
+chat=true;onWindowMessage(0x0100,75,0);assert(not frames[8].Condition());chat=false
+onWindowMessage(0x0100,75,0);assert(frames[8].Condition() and not frames[7].Condition())
+onWindowMessage(0x0100,75,0x40000000);assert(frames[8].Condition())
+im.clicks['Engine##vehicleAction']=true;frames[8].draw();assert(not frames[8].Condition() and #sent==vehicleBefore)
+gameClock=84500;tick();assert(sent[#sent]=='/car engine' and #sent==vehicleBefore+1)
+events.onServerMessage(-1,'Vehicle engine turned off.')
+onWindowMessage(0x0100,75,0);im.clicks['Hood##vehicleAction']=true;frames[8].draw()
+parkedCar=3;gameClock=86000;tick();assert(#sent==vehicleBefore+1,'Changed vehicle must cancel an unsent control')
+onWindowMessage(0x0100,75,0);onWindowMessage(0x0008,0,0);assert(not frames[8].Condition())
+onWindowMessage(0x0007,0,0);onWindowMessage(0x0100,75,0);onWindowMessage(0x0100,27,0);assert(not frames[8].Condition())
+onWindowMessage(0x0100,75,0);im.clicks['My vehicles##vehicleTab2']=true;im.clicks['Vehicle storage##vehicleAction']=true;frames[8].draw();gameClock=88000;tick();assert(sent[#sent]=='/vstorage')
+parkedCar=nil;tick()
+rawPrint('PASS K repeat/typing/escape/focus guards, deferred control send, identity revalidation and storage while on foot')
 local vehicleSendCount=#sent
 commands.luahzcapture('vstorage');assert(#sent==vehicleSendCount,'Capture cannot request a storage action')
 commands.luahzcapture('vehicles');tick();assert(#sent==vehicleSendCount,'Vehicle capture only observes user actions')
@@ -377,7 +402,7 @@ onWindowMessage(0x0100,120,0);onD3DPresent();assert(#sent==outsideSent and consu
 for _,frame in ipairs(frames)do assert(not frame.Condition(),'No UI frame may activate on a foreign server')end
 endpoint='213.32.6.232';serverPort=7778;tick();assert(next(commands)==nil)
 onWindowMessage(0x0008,0,0) -- remember focus changes while LuaHZ is inactive
-serverPort=7777;tick();assert(commands.luahz and #frames==7,'Re-entering HZ must reuse frame subscriptions')
+serverPort=7777;tick();assert(commands.luahz and #frames==8,'Re-entering HZ must reuse frame subscriptions')
 assert(not frames[1].Condition(),'A new HZ session must wait for a fresh login')
 local afterDisconnect=#captured
 commands.luahzcapture('on');assert(#captured==afterDisconnect,'Capture requires login and never automatically resumes')

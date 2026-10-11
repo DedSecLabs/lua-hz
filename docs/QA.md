@@ -191,3 +191,14 @@ The next two owner captures ended normally on user stop and supplied personal wi
 
 
 On 2026-10-11 the owner replied “Looks good now” to the 0.3.2 Locked/Unlocked dashboard review. The shared-background presentation and readable state labels are accepted on Linux/Wine. This confirmation does not establish untested storage actions, family control behavior or native Windows gameplay.
+
+
+## Local 0.4.0-rc.1 Vehicle menu
+
+Confirm candidate version and normal login/movement/F9/I/M. K or `/luahzvehicle` opens the Vehicle UI on foot; My vehicles contains storage and tracking. U contains only Clear navigation and Find player. Escape, repeated hotkeys, typing, focus loss, death and disconnect must close/cancel appropriately without leaving controls locked. If K was already assigned, migration must preserve that binding and leave Vehicle menu unset; choose its shortcut in F9 normal keybinds.
+
+Enter a personal vehicle and a family vehicle freshly (not merely reload while already inside). Confirm the dashboard and K ownership labels agree with the received entry message. Exit/change vehicles and check no stale ownership or control states carry over. Unknown ownership remains unspecified. Controls require the driver seat; engine/lights/window/hood/trunk are deliberate ordinary server toggles, and locks use the confirmed family order when available or the existing bounded fallback. The server may deny some commands on family vehicles. Labels begin unknown; only matching replies update a last-confirmed state, with no inferred success from the click itself. Roleplay/ordinary chat remain visible.
+
+On foot, use Vehicle storage and deliberately select/cancel the native server menu. A spawned row may store the vehicle; no storage action is automated. Track a spawned vehicle, wait for one periodic refresh, then Stop tracking. Stored or Empty rows must not cause repeated requests. Confirm clear navigation under U still resets local finding/tracking only after the server acknowledgement.
+
+Offline fixtures cover identity/epoch changes, early/late/conflicting ownership messages, wrong actors and reply parts, duplicate command echoes, state expiry, source-input cancellation, disabled controls, frame-stack cleanup, viewport fit, K collision migration, real runtime dispatch/input guards and GPS list/dialog ownership. Owner gameplay/visual QA remains pending.

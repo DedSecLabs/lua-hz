@@ -251,8 +251,22 @@ function M:onDialog(id, title, text, style)
     if self.horizon then self.character:ingest(text,self.characterName) end
     local t = self.track
     if not t.pendingDialog then return false end
+    local lower=logic.strip(title or ''):lower()
+    if lower:match('^vehicle storage') or style==1 or style==3 or
+        lower:find('password',1,true) or lower:find('login',1,true) or lower:find('register',1,true) then
+        self:stopTrack();return false
+    end
+    if t.refresh and t.selection and title~=t.selection.title then
+        self:stopTrack();self.notify('Vehicle tracker stopped because the server opened a different dialog. Select the vehicle again.')
+        return false
+    end
     local rows={}
     for row in ((text or '')..'\n'):gmatch('(.-)\r?\n') do rows[#rows+1]=row end
+    -- The captured GPS list starts with a blank line, but native item 0 is
+    -- the first vehicle. Retain actual Empty slots while removing framing.
+    if lower=='vehicle gps tracking' and style==2 then
+        while rows[1] and logic.strip(rows[1])=='' do table.remove(rows,1) end
+    end
     if style==5 then table.remove(rows,1) end
     -- Only replay an explicit prior user choice in the same /trackcar dialog.
     if t.refresh and t.selection and title == t.selection.title then
@@ -286,8 +300,12 @@ function M:onDialogResponse(id, button, list, input)
     if t.dialog and t.dialog.id == id then
         if button == 1 then
             local row=logic.strip(t.dialog.rows[list+1] or input or '')
-            t.selection = {title = t.dialog.title, list = list, input = input or '',
-                number=row:match('[Vv]ehicle%s*#(%d+)'),label=row:match('^[^\t]+')}
+            if row=='' or row:lower()=='empty' or row:lower():find('(stored)',1,true)then
+                self:stopTrack()
+            else
+                t.selection = {title = t.dialog.title, list = list, input = input or '',
+                    number=row:match('[Vv]ehicle%s*#(%d+)'),label=row:match('^[^\t]+')}
+            end
         else t.active = false end
         t.dialog = nil
     end

@@ -25,9 +25,10 @@ function M:tile(label,hint,icon,x,y,width,S,action)
 end
 function M:draw()
     local im=self.im;self.ui:theme()
-    local w,h=getScreenResolution();local S=math.min(self.ui.scale,(w-24)/600,(h-24)/400)
+    local height=self.findMode and 400 or 280
+    local w,h=getScreenResolution();local S=math.min(self.ui.scale,(w-24)/600,(h-24)/height)
     im.GetIO().FontGlobalScale=S*15/(im.FontBaseSize or 15)
-    im.SetNextWindowSize(im.ImVec2(600*S,400*S),im.Cond.Always)
+    im.SetNextWindowSize(im.ImVec2(600*S,height*S),im.Cond.Always)
     im.SetNextWindowPos(im.ImVec2(w/2,h/2),im.Cond.Always,im.ImVec2(.5,.5))
     im.Begin('##LuaHZActions',self.open,im.WindowFlags.NoTitleBar+im.WindowFlags.NoCollapse+im.WindowFlags.NoResize+im.WindowFlags.NoScrollbar)
     local ok,err=pcall(function()
@@ -73,17 +74,13 @@ function M:draw()
             im.TextUnformatted(server.clearNavigation and 'Clearing navigation...' or server.checkpoint and 'Checkpoint active' or 'No checkpoint received')
             im.SetCursorPos(im.ImVec2(22*S,76*S))
             im.TextDisabled(server.find.active and (server.find.paused and 'Waiting for ' or 'Finding ')..server.find.name or 'Player finding is off')
-            im.SetCursorPos(im.ImVec2(22*S,96*S))
-            im.TextDisabled(server.track.active and 'Vehicle tracking is on' or 'Vehicle tracking is off')
-            self:tile('Clear navigation','Also resets trackers and fares','map-pin-off',22,126,272,S,function()self:submit('clear')end)
-            self:tile('Lock / unlock vehicle','Personal or group vehicle','lock-keyhole',306,126,272,S,function()self:submit('lock')end)
-            self:tile(server.track.active and 'Stop vehicle tracking' or 'Track my vehicle',server.track.active and 'Stops periodic vehicle updates' or 'Choose your vehicle when prompted','radar',22,220,272,S,function()self:submit('track')end)
-            self:tile(server.find.active and 'Stop finding' or 'Find player',server.find.active and server.find.name or 'Select an online name or ID','search',306,220,272,S,function()
+            self:tile('Clear navigation','Also resets trackers and fares','map-pin-off',22,108,272,S,function()self:submit('clear')end)
+            self:tile(server.find.active and 'Stop finding' or 'Find player',server.find.active and server.find.name or 'Select an online name or ID','search',306,108,272,S,function()
                 if server.find.active then self:submit('stopFind')
                 else self.findMode=true;self.notice=nil;self.targets=self.players()end
             end)
         end
-        im.SetCursorPos(im.ImVec2(22*S,340*S))
+        im.SetCursorPos(im.ImVec2(22*S,(height==400 and 340 or 226)*S))
         if self.notice then im.TextWrapped(self.notice)else im.TextDisabled('Escape closes this panel.')end
     end)
     im.End();if not ok then error(err)end
