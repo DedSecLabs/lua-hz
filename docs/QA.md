@@ -180,3 +180,11 @@ Confirm 0.3.1 at login, normal movement and F9/I/M/U. In full and minimal dashbo
 Start `/luahzcapture vehicles` after login. Enter a personal vehicle, exit, then enter a family vehicle. Use the lock shortcut while seated to observe native lock changes. Run `/car engine`, `/car lights`, `/car window`, `/car hood` and `/car trunk` manually; use each twice when permitted to capture both states. Outside a vehicle with its trunk open, `/trunkbalance` captures the response. Use `/vstorage` and `/trackcar` menus manually for a vehicle you intend to spawn/track. Menu selection metadata omits input text and starts a bounded follow-up response window, with a 60-second selection deadline. Stop with `/luahzcapture off` before switching focus. Split into several short files if needed.
 
 Capture never submits vehicle actions. Do not test selling, deleting, parking or purchases for this discovery step. Replies remain visible; captured windows can overlap unrelated traffic and do not prove vehicle ownership or response completeness. Check focus/disconnect cancellation and foreign-server inactivity. Local JSONL files stay private.
+
+
+## Local 0.3.2 dashboard correction
+
+The owner rejected the lock indicator’s separate square. Check that the indicator now shares the main dashboard background, with bright 44-unit icons and 15-unit state text fitting above the health bar. Full/minimal modes and notification/oxygen stacking should retain their accepted geometry. This is a Lua-only correction; resource bytes and capture focus/time limits are unchanged. The four 0.3.1 captures show both ownership types plus personal engine/lights replies; repeat only window/hood/trunk and storage/tracking flows, keeping the game focused until `/luahzcapture off`.
+
+
+The next two owner captures ended normally on user stop and supplied personal window/hood/trunk replies, the storage list and cancellation, and a tracking list selection plus location/checkpoint reply. No further discovery capture is requested for this stage. On 2026-10-11 the closed-game full suite passed and four exact 0.3.2 Lua sources were installed with 715 protected files preserved; owner visual review of the no-square lock indicator remains pending. Storage spawn/store actions and family control behavior are still unverified.

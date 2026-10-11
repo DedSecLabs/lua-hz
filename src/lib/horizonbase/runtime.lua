@@ -141,8 +141,8 @@ if ok then
             not app.overlay.mapOpen and not app.ui:isMapPreview()
     end,function()
         local hudReady=guard('HUD',function() app.overlay:hud() end)
-        if hudReady and app.toast:announce('0.3.1',app.faults,app.interfaceReady) then
-            notify('0.3.1 loaded. Settings: /luahz or '..app.ui:keyName(prefs.keybinds.settingsPanel,prefs.modifiers.settingsPanel))
+        if hudReady and app.toast:announce('0.3.2',app.faults,app.interfaceReady) then
+            notify('0.3.2 loaded. Settings: /luahz or '..app.ui:keyName(prefs.keybinds.settingsPanel,prefs.modifiers.settingsPanel))
         end
     end)
     app.hudFrame.HideCursor=true;app.hudFrame.LockPlayer=false
@@ -607,7 +607,7 @@ local function start()
         local ok,limiter=pcall(function()return require('horizonbase.limiter').new()end)
         if ok then app.limiter=limiter else app.faults.Limiter=tostring(limiter) end
     end
-    print('[LuaHZ] 0.3.1 authorized endpoint 213.32.6.232:7777; waiting for login.')
+    print('[LuaHZ] 0.3.2 authorized endpoint 213.32.6.232:7777; waiting for login.')
 end
 
 local function tick()

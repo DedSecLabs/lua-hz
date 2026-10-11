@@ -77,9 +77,8 @@ function M.draw(o,dl,s,scale,w,h,staminaShown,oxygenShown)
         -- Unknown native state stays neutral instead of implying an unlocked car.
         local label=s.locked==true and 'Locked' or s.locked==false and 'Unlocked' or 'Unknown'
         local tint=s.locked==true and im.U32(1,.68,.24,1) or s.locked==false and im.U32(.45,.80,1,1) or im.U32(.85,.87,.90,1)
-        dl:AddRectFilled(im.ImVec2(x+12*scale,numY-2*scale),im.ImVec2(x+108*scale,numY+66*scale),im.U32(.10,.11,.13,.96))
         icon(s.locked==false and 'car-door-lock-open' or 'car-door-lock',x+18*scale,numY+2*scale,tint,44)
-        dl:AddTextFontPtr(im.GetFont(),13*scale,im.ImVec2(x+18*scale,numY+49*scale),tint,label)
+        dl:AddTextFontPtr(im.GetFont(),15*scale,im.ImVec2(x+18*scale,numY+49*scale),tint,label)
     end
     local barY=y+(vehicle and(full and 122 or 88)or 54)*scale
     local value=logic.clamp((s.vehicleHealth or 0)/1000,0,1)
