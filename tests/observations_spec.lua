@@ -5,8 +5,8 @@ local function fixture()
     local rows,notices={},{}
     local o=Observations.new(function()return now end,function(s)notices[#notices+1]=s end)
     local closed=0
-    local function start()
-        assert(o:start(function(line)rows[#rows+1]=line;return true end,function()closed=closed+1;return true end,'private-test.jsonl'))
+    local function start(mode)
+        assert(o:start(function(line)rows[#rows+1]=line;return true end,function()closed=closed+1;return true end,'private-test.jsonl',mode))
     end
     return o,rows,start,function()return closed end,notices
 end
@@ -87,3 +87,43 @@ o:update(function()error('Native scanning must never run')end)
 assert(not o.observedVersion,'Update must not recover a version through native scanning')
 o:observeTextdraw(1,'HZ:RP v2.4.47(z)');assert(o.observedVersion=='2.4.47 [Z]')
 print('PASS contextual event-only version parsing, ambiguity and session reset without native scans')
+
+now=0;o,rows,start,closed=fixture();start('vehicles')
+o:vehicleContext({vehicle=false});local count=#rows
+o:vehicleContext({vehicle=false});assert(#rows==count,'Vehicle context must not pollute capture every frame')
+o:event('chat',{text='Unrelated family conversation'});assert(#rows==count)
+o:event('chat',{text='You are the owner of this Test Car.'})
+assert(rows[#rows]:find('"ownership":"personal"',1,true) and rows[#rows]:find('"association_unverified":true',1,true))
+o:vehicleContext({vehicle=7,networkId=42,model=401,driver=false,vehicleName='Test Car',lockState=1})
+o:event('chat',{text='{FFFFFF}You are in the family that owns this Test Van.'})
+assert(rows[#rows]:find('"ownership":"family"',1,true) and rows[#rows]:find('"driver":false',1,true))
+assert(rows[#rows]:find('"network_vehicle_id":42',1,true))
+assert(not Observations.ownership('Player Test: You are the owner of this Test Car.'))
+assert(not Observations.requestCommand('vstorage') and not Observations.requestCommand('car engine'))
+assert(Observations.requestCommand('carhelp')=='/carhelp')
+for _,command in ipairs({'/car engine','/car lights','/car window','/car hood','/car trunk','/vstorage','/trackcar 1','/trunkbalance','/pvl','/gvl','/carhelp'})do
+    now=now+300;o:onOutgoing(command);assert(o.window and o.window.command==command,command)
+    o:event('chat',{text='Candidate command result'})
+end
+for _,command in ipairs({'/car password secret','/changepass secret','/vstorage name-secret','/trackcar 1 extra','/car engine\n/changepass secret'})do
+    o:onOutgoing(command);assert(not o.window,command)
+end
+assert(not table.concat(rows):find('secret',1,true),'Rejected outgoing text must never be logged')
+o:onOutgoing('/vstorage');o:dialog(9,2,'Vehicle Storage','Test Car\nTest Van')
+now=now+8100;o:update();assert(not o.window and o.vehicleDialog)
+o:dialogResponse(9,1,1)
+assert(rows[#rows]:find('"event":"vehicle_dialog_response"',1,true) and rows[#rows]:find('"list_index":1',1,true))
+assert(o.window,'A deliberate captured selection may open its response window without sending anything')
+o:event('chat',{text='Vehicle spawned at last parking location.'})
+o:onOutgoing('/trackcar');o:dialog(10,2,'Track Vehicle','Test Car');o:onOutgoing('/help');count=#rows
+o:dialogResponse(10,1,0);assert(#rows==count and not o.window,'Intervening commands cancel dialog ownership')
+o:onOutgoing('/vstorage');o:dialog(11,2,'Vehicle Storage','Test Car');o:dialog(12,3,'Login','secret')
+count=#rows;o:dialogResponse(11,1,0);assert(#rows==count and not o.window and not o.vehicleDialog)
+o:onOutgoing('/vstorage');o:dialog(13,1,'Vehicle nickname','secret')
+assert(not o.window and not table.concat(rows):find('secret',1,true),'Vehicle input dialogs must exclude text')
+o:onOutgoing('/trackcar');o:dialog(14,2,'Track Vehicle','Test Car');now=now+60001;o:dialogResponse(14,1,0)
+assert(not o.vehicleDialog and not o.window,'Stale vehicle selections must not rearm capture')
+o:vehicleContext({vehicle=false});assert(rows[#rows]:find('"vehicle_handle":0',1,true))
+o:stop('focus lost');count=#rows;o:vehicleContext({vehicle=8});o:event('chat',{text='You are the owner of this Test Car.'})
+assert(#rows==count and closed()==1 and not o.vehicleSample and not o.vehicleDialog)
+print('PASS opt-in vehicle entry/context, exact command arguments, private input exclusion, delayed dialog choices, expiry and stop cleanup')

@@ -47,3 +47,8 @@ Canvases share 13-pixel padding within each group: F9/Character 1104×672, Quick
 The previous gallery files remain intact. `minimap_776_canvas.png`, `quickmap.jpg` and `sa-mp-057.png` are deliberately unchanged. The new directory avoids changing images already embedded in the live forum post through its main-branch URLs.
 
 The existing public forum header aliases (`luahz-hzheader.png` and its small variant) are now included in the source export's pinned branding list. Their bytes match the already committed public headers; other branding remains excluded.
+
+
+## Dashboard lock visibility — local 0.3.1
+
+The dashboard-v031 group preserves the previous run, swimming, unlocked-door and health icons byte-for-byte. The closed-door icon is re-rendered from the matching [Pictogrammers Material Design SVG](https://github.com/Templarian/MaterialDesign/blob/master/svg/car-door-lock.svg) with explicit white fill at 128×128, retaining its vector geometry and transparent background. The old black bitmap and dashboard-v0221 group are preserved. Runtime tint supplies the bright state colors; no raster painting or generative image edit is used. The upstream Pictogrammers license and full Apache 2.0 text accompany the new group. Local source bytes, render script and hashes are recorded under ignored .local/vehicle-capture-assets. New owner-supplied vehicle SVGs remain separate until the controls build selects them.

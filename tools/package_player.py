@@ -14,7 +14,7 @@ import zipfile
 from package_base import ROOT, base_payload, prerequisite_checksums, sha
 
 GROUPS = (
-    'fonts', 'sa_map', 'weaponicons', 'hud-v0218', 'dashboard-v0221',
+    'fonts', 'sa_map', 'weaponicons', 'hud-v0218', 'dashboard-v031',
     'portraits-v0222', 'ui-v0212', 'native-v0232', 'loading-v0233',
 )
 REQUIRED = (

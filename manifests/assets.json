@@ -668,5 +668,19 @@
       "public_filename": "assets/branding/luahz-logo.png"
     }
   },
-  "acquisition": "See docs/ASSETS.md; no implicit downloader or public rights claim"
+  "acquisition": "See docs/ASSETS.md; no implicit downloader or public rights claim",
+  "dashboard_v031": {
+    "closed_lock_source": "https://github.com/Templarian/MaterialDesign/blob/master/svg/car-door-lock.svg",
+    "closed_lock_license": "Apache-2.0",
+    "preparation": "White-fill SVG rendered at 128x128; other PNGs unchanged from dashboard-v0221.",
+    "files": {
+      "APACHE-LICENSE-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "run.png": "69ca41684b44bee1f92c2e84a591d3e501f6673b50fcc9f3d3ea42700a20fb5d",
+      "car-door-lock.png": "4b068223e6a0de6faedb05738199c085522674e7800d87d1a670f27ca6a0ad36",
+      "swimming-filled.png": "a5227a354567a61c0036e39656dc929b0db42eb870538c990ae316d14d500ff6",
+      "car-gear.png": "89d0792f4556bfcce7c99d01b80508ccb056bc831a6d3433d5d5927063cf1b07",
+      "car-door-lock-open.png": "1fa32166fd6b6fa0223e76bebe6bea41a209300d04a5753ec2acf8c6c8a1dbfa",
+      "PICTOGRAMMERS-LICENSE.txt": "3bae6305bcaa6d10219b999f65c342034c2d40b1c0e8567fa08605e73ccba829"
+    }
+  }
 }

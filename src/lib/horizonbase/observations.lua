@@ -1,8 +1,20 @@
 -- Read-only, bounded observations. Endpoint authorization belongs to the runtime.
 local M={};M.__index=M
 local commands={buylevel=true,pvlock=true,pvl=true,gvl=true,rules=true,families=true,
-    myguns=true,settings=true,killcheckpoint=true,members=true,info=true,help=true}
-local readOnly={families=true,rules=true,members=true,info=true,settings=true,myguns=true,help=true}
+    myguns=true,settings=true,killcheckpoint=true,members=true,info=true,help=true,carhelp=true}
+local readOnly={families=true,rules=true,members=true,info=true,settings=true,myguns=true,help=true,carhelp=true}
+local vehicleCommands={carhelp=true,vstorage=true,trackcar=true,trunkbalance=true,pvl=true,pvlock=true,gvl=true}
+local carParts={engine=true,lights=true,window=true,hood=true,trunk=true}
+local function observedCommand(command,mode)
+    local lower=command:lower()
+    local name=lower:match('^/([%w_]+)%s*$')
+    if mode~='vehicles' then return commands[name] and '/'..name or nil end
+    if vehicleCommands[name] then return '/'..name end
+    local part=lower:match('^/car%s+([a-z]+)%s*$')
+    if carParts[part] then return '/car '..part end
+    local action,slot=lower:match('^/(%a+)%s+(%d+)%s*$')
+    if (action=='trackcar' or action=='vstorage') and #slot<=4 then return '/'..action..' '..slot end
+end
 function M.requestCommand(name)
     if type(name)~='string' then return end
     name=name:lower():match('^/?([a-z]+)$')
@@ -30,6 +42,14 @@ local function encode(row)
 end
 local function clean(text)
     return (text or ''):gsub('{%x%x%x%x%x%x}',''):gsub('~[%w]~',' '):gsub('%s+',' '):match('^%s*(.-)%s*$')
+end
+function M.ownership(text)
+    if type(text)~='string' or #text>256 then return end
+    local s=clean(text)
+    local name=s:match('^You are the owner of this (.+)%.$')
+    local kind='personal'
+    if not name then name=s:match('^You are in the family that owns this (.+)%.$');kind='family' end
+    if name and #name<=64 then return kind,name end
 end
 function M.version(text)
     if type(text)~='string' or #text>256 then return end
@@ -78,12 +98,14 @@ function M:versionStatus()
     if self.observedVersion=='2.4.47 [Z]' then return 'Matches the reference version; server helpers are not fully verified.' end
     return 'Different from the reference version; compatibility needs checking.'
 end
-function M:start(write,close,path)
+function M:start(write,close,path,mode)
     if self.active then return false,'Capture is already enabled.' end
+    if mode~=nil and mode~='vehicles' then return false,'Unknown capture mode.' end
     self.write,self.close,self.path=write,close,path
     self.active=true;self.untilAt=self.now()+300000;self.window=nil;self.single=false
+    self.mode=mode or 'commands';self.vehicleSample=nil;self.vehicleDialog=nil
     self.bytes,self.records,self.requests=0,0,0;self.captureError=nil;self.lastReason=nil
-    self:record({event='capture_start',schema=1,reference='2.4.47 [Z]',
+    self:record({event='capture_start',schema=1,mode=self.mode,reference='2.4.47 [Z]',
         observed=self.versionConflict and 'conflicting' or self.observedVersion or 'unknown',
         note='Candidate events within 8 seconds of allowed commands; unrelated server traffic may overlap. Text bytes map to Unicode codepoints 0-255.'})
     return self.active,self.captureError
@@ -108,7 +130,7 @@ function M:stop(reason)
         if ok and result then self.bytes=self.bytes+#line;self.records=self.records+1
         elseif not self.captureError then self.captureError='Capture finish write failed: '..tostring(ok and err or result) end
     end
-    self.active=false;self.window=nil;self.lastReason=reason or 'stopped'
+    self.active=false;self.window=nil;self.vehicleDialog=nil;self.vehicleSample=nil;self.lastReason=reason or 'stopped'
     local close=self.close;self.close=nil;self.write=nil
     if close then
         local ok,result,err=pcall(close)
@@ -120,6 +142,7 @@ function M:stop(reason)
 end
 function M:update()
     local now=self.now()
+    if self.vehicleDialog and now>=self.vehicleDialog.untilAt then self.vehicleDialog=nil end
     if self.active then
         if now>=self.untilAt then self:stop('five-minute limit')
         elseif self.window and now>=self.window.untilAt then
@@ -132,28 +155,60 @@ end
 function M:onOutgoing(command,source)
     self:update()
     if not self.active or type(command)~='string' then return end
-    local name=command:lower():match('^/([%w_]+)%s*$')
-    if not commands[name] then
+    local observed=observedCommand(command,self.mode)
+    if not observed then
         if self.window then self:record({event='window_end',request=self.window.request,reason='other command'}) end
-        self.window=nil
+        self.window=nil;self.vehicleDialog=nil
         if self.single then self:stop('another command interrupted capture') end
         return
     end
     local now=self.now()
-    if self.window and self.window.command=='/'..name and now-self.window.started<250 then return end
+    if self.window and self.window.command==observed and now-self.window.started<250 then return end
     if self.requests>=MAX_REQUESTS then self:stop('request limit');return end
     self.requests=self.requests+1
-    self.window={request=self.requests,command='/'..name,started=now,untilAt=now+8000,count=0}
-    self:record({event='request',request=self.requests,command='/'..name,source=source or 'outgoing event'})
+    self.vehicleDialog=nil
+    self.window={request=self.requests,command=observed,started=now,untilAt=now+8000,count=0}
+    self:record({event='request',request=self.requests,command=observed,source=source or 'outgoing event'})
+end
+function M:vehicleContext(sample)
+    self:update()
+    if not self.active or self.mode~='vehicles' then return end
+    local row={event='vehicle_context',vehicle_handle=sample.vehicle or 0,
+        network_vehicle_id=sample.networkId or -1,model=sample.model or 0,
+        driver=sample.driver==true,vehicle_name=sample.vehicleName or '',lock_state=sample.lockState or -1}
+    local previous=self.vehicleSample;local changed=not previous
+    for _,key in ipairs({'vehicle_handle','network_vehicle_id','model','driver','lock_state'})do
+        if previous and previous[key]~=row[key] then changed=true end
+    end
+    self.vehicleSample=row
+    if changed then self:record(row) end
+end
+function M:contextFields(row)
+    if self.mode~='vehicles' then return end
+    for _,key in ipairs({'vehicle_handle','network_vehicle_id','model','driver','lock_state'})do
+        if self.vehicleSample then row[key]=self.vehicleSample[key]
+        elseif key=='driver' then row[key]=false
+        else row[key]=-1 end
+    end
 end
 function M:event(kind,data)
     self:update()
-    if not self.active or not self.window then return end
+    if not self.active then return end
+    if self.mode=='vehicles' and kind=='chat' then
+        local owner,name=M.ownership(data and data.text)
+        if owner then
+            local row={event='vehicle_ownership_message',ownership=owner,vehicle_name=name,
+                text=data.text,candidate=true,association_unverified=true}
+            self:contextFields(row);self:record(row);return
+        end
+    end
+    if not self.window then return end
     local w=self.window
     if w.count>=96 then
         self:record({event='window_end',request=w.request,reason='event limit'});self.window=nil;return
     end
     local row={event=kind,request=w.request,command=w.command,candidate=true}
+    self:contextFields(row)
     for key,value in pairs(data or {}) do
         if type(value)=='string' then
             local limit=key=='text' and 8192 or 256
@@ -164,10 +219,30 @@ function M:event(kind,data)
     w.count=w.count+1;self:record(row)
 end
 function M:dialog(id,style,title,text)
+    self:update();self.vehicleDialog=nil
     local lower=(title or ''):lower()
-    if style==3 or lower:find('password',1,true) or lower:find('login',1,true) or lower:find('register',1,true) then
+    if style==3 or self.mode=='vehicles' and style==1 or lower:find('password',1,true) or lower:find('login',1,true) or lower:find('register',1,true) then
         self:event('dialog_excluded',{reason='sensitive dialog'});self.window=nil;return
     end
+    local window=self.window
     self:event('dialog',{id=id,style=style,title=title or '',text=text or ''})
+    if self.active and self.mode=='vehicles' and window and self.window==window and
+        (style==2 or style==4 or style==5) and
+        (window.command:match('^/vstorage') or window.command:match('^/trackcar')) then
+        self.vehicleDialog={id=id,request=window.request,command=window.command,untilAt=self.now()+60000}
+    end
+end
+function M:dialogResponse(id,button,list)
+    self:update()
+    local dialog=self.vehicleDialog
+    if not self.active or not dialog then return end
+    self.vehicleDialog=nil
+    if id~=dialog.id or (button~=0 and button~=1) or type(list)~='number' or list~=math.floor(list) or list< -1 or list>1999 then return end
+    local row={event='vehicle_dialog_response',id=id,button=button,list_index=list,
+        request=dialog.request,command=dialog.command,candidate=true}
+    self:contextFields(row);self:record(row)
+    if self.active and button==1 then
+        self.window={request=dialog.request,command=dialog.command,started=self.now(),untilAt=self.now()+8000,count=0}
+    end
 end
 return M

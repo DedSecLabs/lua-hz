@@ -31,3 +31,8 @@ Loading/menu artwork uses server screenshots, the Horizon favicon/wordmark and G
 ## Native API facts
 
 Our native helpers are original implementations. Addresses/layout facts refer to plugin-sdk RenderWare.cpp, gta-reversed Font/Radar/TxdStore/LoadingScreen sources and imring/SAMP-API.lua v037r5/CNetGame.lua. No GTA or SAMPFUNCS binary/code is copied into a source export. The helper's Win32 imports are KERNEL32 only; game/plugin binaries stay stock on disk in the approved shared-server architecture.
+
+
+## Dashboard closed-door icon
+
+The dashboard-v031 closed-door icon is rendered from Pictogrammers Material Design `car-door-lock.svg`, using explicit white fill for runtime tinting. Upstream: https://github.com/Templarian/MaterialDesign/blob/master/svg/car-door-lock.svg. The icon is Apache 2.0; the upstream collection notice and full license accompany the resource group. Other copied dashboard PNGs retain their existing provenance.

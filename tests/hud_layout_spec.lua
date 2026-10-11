@@ -30,7 +30,7 @@ o.texture=function(_,rel)
     if rel=='hud-v0218/hud-font.png'then return 1 end
     if rel=='weaponicons/0.png'then return 2 end
     if rel=='hud-v0218/wanted-star.png'then return 3 end
-    if rel:find('dashboard%-v0221/')then return 4 end
+    if rel:find('dashboard%-v031/')then return 4 end
 end
 for _,screen in ipairs({{1920,1080},{1280,720},{640,480},{320,1080}})do
     function getScreenResolution()return screen[1],screen[2]end
@@ -62,9 +62,16 @@ for _,screen in ipairs({{1920,1080},{1280,720},{640,480},{320,1080}})do
                 end
                 assert(weapon==1 and stars==6 and tracks==(kind=='vehicle-oxygen' and 4 or 3))
                 assert(#quads==0,'Dashboard must use straight square bars, not segmented gauges')
+                local largeIcons=0
                 for _,v in ipairs(images)do
-                    if v.tex==4 then assert(math.abs(v.b.x-v.a.x-36*scale)<.01 and math.abs(v.b.y-v.a.y-36*scale)<.01,'All dashboard icons must share the larger size')end
+                    if v.tex==4 then
+                        local size=(v.b.x-v.a.x)/scale
+                        assert(math.abs(size-36)<.01 or math.abs(size-44)<.01,'Energy and vehicle icon sizes differ')
+                        assert(math.abs(v.b.y-v.a.y-size*scale)<.01)
+                        if math.abs(size-44)<.01 then largeIcons=largeIcons+1 end
+                    end
                 end
+                assert(largeIcons==(sample.vehicle and (mode==1 and 2 or 1) or 0),'All vehicle indicators must use the enlarged size')
                 local box=require('horizonbase.dashboard').layout(screen[1],screen[2],scale,sample.vehicle and(mode==2 and'minimal'or'full')or'energy',false)
                 assert(math.abs(box.x+box.width-(screen[1]-12*scale))<.01,'Dashboard must be anchored to the right edge')
                 assert(#images>80,'Actual bitmap rendering must be exercised')
@@ -106,6 +113,23 @@ sample.wanted=0;images={};rects={};quads={};o:hud()
 for _,v in ipairs(images)do assert(v.tex~=3,'Inactive wanted stars must not appear')end
 -- Observe actual dashboard text calls to verify blank digit slots and fixed units.
 local Dashboard=require 'horizonbase.dashboard'
+for _,mode in ipairs({1,2})do
+    prefs.settings.vdb=mode;sample.vehicle=1
+    for _,state in ipairs({'locked','unlocked','unknown'})do
+        if state=='locked' then sample.locked=true elseif state=='unlocked' then sample.locked=false else sample.locked=nil end
+        images={};rects={};texts={};Dashboard.draw(o,dl,sample,1,1920,1080,false,false)
+        local label=texts[1];local icon;for _,image in ipairs(images)do if image.tex==4 then icon=image;break end end
+        local plate=rects[2]
+        assert(label.text==(state=='locked' and 'Locked' or state=='unlocked' and 'Unlocked' or 'Unknown'))
+        assert(icon.b.x-icon.a.x==44 and icon.b.y-icon.a.y==44)
+        assert(icon.color[4]==1 and math.max(icon.color[1],icon.color[2],icon.color[3])>=.90,'Lock state must never turn black or transparent')
+        assert(plate.color[4]>=.9 and icon.a.x>=plate.a.x and icon.b.y<=plate.b.y,'Visible lock backing must contain the icon')
+        assert(label.pos.x>=plate.a.x and label.pos.y>=icon.b.y and label.pos.y+label.size<=plate.b.y,'Lock label must sit below its icon inside the backing')
+        local box=Dashboard.layout(1920,1080,1,mode==1 and 'full' or 'minimal')
+        assert(label.pos.y+label.size<box.y+(mode==1 and 122 or 88),'Lock label must not overlap the health bar')
+    end
+end
+print('PASS larger vehicle icons with bright locked/unlocked/unknown labels and contrasting backing')
 local originalText=o.nativeText
 local calls={};local paths={}
 o.nativeText=function(_,draw,pos,color,value,size)calls[#calls+1]={value=value,pos=pos,size=size}end
@@ -145,7 +169,7 @@ for _,oxygen in ipairs({false,true})do
     assert(label.text==(oxygen and 'Oxygen' or 'Stamina') and label.pos.y+label.size<box.y+54,'Energy label must be above the bar')
     assert(math.abs(label.pos.x+#label.text*7*label.size/15-(box.x+box.width-16))<.01,'Energy label must be right aligned')
     assert(box.width==320*1.15,'Energy panels must be 15% wider')
-    assert(paths[1]=='dashboard-v0221/'..(oxygen and 'swimming-filled' or 'run')..'.png','Requested energy artwork must be used')
+    assert(paths[1]=='dashboard-v031/'..(oxygen and 'swimming-filled' or 'run')..'.png','Requested energy artwork must be used')
 end
 o.nativeText=originalText
 -- Optional local bitmap assets may be absent in a source-only install.

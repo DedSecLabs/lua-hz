@@ -70,8 +70,8 @@ local function captureAction(action)
         notify('Capture '..(o.active and 'enabled' or 'off')..'; '..tostring(o.path or 'no capture file'));return
     end
     local command=require('horizonbase.observations').requestCommand(action)
-    if action~='on' and not command then
-        notify('Usage: /luahzcapture families|rules|members|info|settings|myguns|help, or on|off|status. Actions such as /buylevel are never sent by capture.');return
+    if action~='on' and action~='vehicles' and not command then
+        notify('Usage: /luahzcapture vehicles|on|off|status, or families|rules|members|info|settings|myguns|help|carhelp. Vehicle actions are observed only when you perform them.');return
     end
     if app.captureRequest or o.active and command then notify('Finish the current capture first, or use /luahzcapture off.');return end
     if o.active then notify('Capture is already enabled.');return end
@@ -95,12 +95,14 @@ local function captureAction(action)
         local written,errorMessage=file:write(line)
         if not written then return nil,errorMessage end
         return file:flush()
-    end,function()return file:close()end,path)
+    end,function()return file:close()end,path,action=='vehicles' and 'vehicles' or nil)
     if started then
         if command then
             app.captureRequest={command=command,expires=getGameTimer()+10000}
             o.single=true
             notify('Queued '..command..' capture. It runs once when gameplay is ready and stops after 8 seconds.')
+        elseif action=='vehicles' then
+            notify('Vehicle capture enabled for up to five minutes. Enter vehicles or use /car, /vstorage or /trackcar yourself; /luahzcapture off stops it.')
         else notify('Manual capture enabled for up to five minutes. Run a supported command; /luahzcapture off stops it.') end
         notify('Capture file: '..path)
     elseif errorText then notify(errorText) end
@@ -139,8 +141,8 @@ if ok then
             not app.overlay.mapOpen and not app.ui:isMapPreview()
     end,function()
         local hudReady=guard('HUD',function() app.overlay:hud() end)
-        if hudReady and app.toast:announce('0.3.0',app.faults,app.interfaceReady) then
-            notify('0.3.0 loaded. Settings: /luahz or '..app.ui:keyName(prefs.keybinds.settingsPanel,prefs.modifiers.settingsPanel))
+        if hudReady and app.toast:announce('0.3.1',app.faults,app.interfaceReady) then
+            notify('0.3.1 loaded. Settings: /luahz or '..app.ui:keyName(prefs.keybinds.settingsPanel,prefs.modifiers.settingsPanel))
         end
     end)
     app.hudFrame.HideCursor=true;app.hudFrame.LockPlayer=false
@@ -470,7 +472,10 @@ local function hookEvents()
         local success,hide=guard('Server',function() return app.server:onDialog(id,title,text,style) end)
         if success and hide then return false end
     end
-    function events.onSendDialogResponse(id,button,list,input) guard('Server',function() app.server:onDialogResponse(id,button,list,input) end) end
+    function events.onSendDialogResponse(id,button,list,input)
+        guard('Observations',function()app.observations:dialogResponse(id,button,list)end)
+        guard('Server',function() app.server:onDialogResponse(id,button,list,input) end)
+    end
     function events.onCreateGangZone(id,startPos,endPos,color) app.server.zones[id]={min=startPos,max=endPos,color=color} end
     function events.onGangZoneDestroy(id) app.server.zones[id]=nil end
     function events.onGangZoneFlash(id,color) if app.server.zones[id] then app.server.zones[id].flashColor=color end end
@@ -602,7 +607,7 @@ local function start()
         local ok,limiter=pcall(function()return require('horizonbase.limiter').new()end)
         if ok then app.limiter=limiter else app.faults.Limiter=tostring(limiter) end
     end
-    print('[LuaHZ] 0.3.0 authorized endpoint 213.32.6.232:7777; waiting for login.')
+    print('[LuaHZ] 0.3.1 authorized endpoint 213.32.6.232:7777; waiting for login.')
 end
 
 local function tick()
@@ -616,6 +621,14 @@ local function tick()
             app.game:refresh();app.game.reloadGuard:update(app.game.sample,app.focused)
             hotkeys();app.game:drive(blocked(true))
         end)
+        if app.observations.active and app.observations.mode=='vehicles' then
+            guard('Observations',function()
+                local s=app.game.sample
+                app.observations:vehicleContext({vehicle=s.vehicle,model=s.model,driver=s.driver,
+                    vehicleName=s.vehicleName,lockState=s.lockState,
+                    networkId=s.vehicle and Game.call('sampGetVehicleIdByCarHandle',-1,s.vehicle) or -1})
+            end)
+        end
         if app.actions and (not app.game.sample.ready or not app.game.sample.alive)then app.actions:reset();app.quickRequest=nil end
         if not app.game.sample.ready then
             if app.wasReady and Game.call('sampGetGamestate',5)~=3 then

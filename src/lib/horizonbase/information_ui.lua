@@ -43,7 +43,7 @@ function M.compatibility(ui)
     im.TextWrapped(o and o:versionStatus() or 'Version not observed; compatibility not verified.')
     im.TextWrapped('Version observations do not disable features. After a script reload, reconnect to observe the login banner again.')
     im.Spacing();ui:section('Response diagnostics')
-    im.TextWrapped('/luahzcapture families, rules, members, info, settings, myguns or help requests one read-only command and records an eight-second response window.')
+    im.TextWrapped('/luahzcapture families, rules, members, info, settings, myguns, help or carhelp requests one read-only command and records an eight-second response window.')
     if o and ui.captureAction then
         im.TextUnformatted(o.active and 'Capture enabled' or 'Capture off')
         if o.active then
@@ -57,6 +57,7 @@ function M.compatibility(ui)
         if o.lastReason then im.TextDisabled('Last capture: '..o.lastReason)end
     end
     im.TextWrapped('Manual capture observes commands you use. /buylevel can purchase a level and is never requested automatically.')
+    im.TextWrapped('/luahzcapture vehicles observes vehicle entry, /car controls, /vstorage, /trackcar and their menu choices. Perform these actions yourself; capture never sends them.')
     im.TextWrapped('/myguns currently returns a time and an unidentified number; no gun locations have been established.')
 end
 function M.draw(ui)

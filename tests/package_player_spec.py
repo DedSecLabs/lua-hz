@@ -51,7 +51,7 @@ class PlayerPackageTests(unittest.TestCase):
             root = Path(directory)
             resources = root / 'horizonbase'
             for name in ('fonts/Rubik/Rubik-Regular.ttf', 'sa_map/1.jpg', 'sa_map/36.jpg',
-                         'weaponicons/0.png', 'hud-v0218/hud-font.png', 'dashboard-v0221/car-gear.png',
+                         'weaponicons/0.png', 'hud-v0218/hud-font.png', 'dashboard-v031/car-gear.png',
                          'portraits-v0222/1.png', 'ui-v0212/radar_centre.png',
                          'native-v0232/LuaHZVisuals.dll', 'loading-v0233/loading.enc',
                          'loading-v0233/SOURCE.json', 'ui-v027/old.png'):

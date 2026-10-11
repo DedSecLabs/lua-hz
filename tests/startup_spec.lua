@@ -339,12 +339,30 @@ events.onTextDrawSetString(2050,'~g~Test Vehicle Unlocked')
 onWindowMessage(0x0100,85,0);onWindowMessage(0x0100,27,0);assert(not frames[7].Condition())
 assert(frames[7].LockPlayer and not frames[7].HideCursor)
 rawPrint('PASS actual U panel, repeat/typing guards, deferred one-shot clear, target revalidation, finding, vehicle tracking and Stop controls')
+local vehicleSendCount=#sent
+commands.luahzcapture('vstorage');assert(#sent==vehicleSendCount,'Capture cannot request a storage action')
+commands.luahzcapture('vehicles');tick();assert(#sent==vehicleSendCount,'Vehicle capture only observes user actions')
+assert(events.onServerMessage(-1,'You are the owner of this Test Car.')==nil)
+assert(captured[#captured]:find('"event":"vehicle_ownership_message"',1,true))
+assert(events.onSendCommand('/vstorage')==nil)
+assert(events.onShowDialog(801,2,'Vehicle Storage','Select','Cancel','Test Car')==nil)
+gameClock=gameClock+9000;tick()
+assert(events.onSendDialogResponse(801,1,0,'private response text')==nil)
+assert(captured[#captured]:find('"event":"vehicle_dialog_response"',1,true))
+assert(events.onServerMessage(-1,'Your vehicle was spawned at its last parking location.')==nil)
+assert(captured[#captured]:find('last parking location',1,true))
+assert(#sent==vehicleSendCount and not table.concat(captured):find('private response text',1,true))
+onWindowMessage(0x0008,0,0);local vehicleStopped=#captured
+onWindowMessage(0x0007,0,0);tick()
+assert(#captured==vehicleStopped,'Focus return must not restart vehicle capture')
+rawPrint('PASS actual vehicle capture command, entry/menu response passthrough, no action sends, private input exclusion and focus cancellation')
 noExtraSend=#sent
 commands.luahzcapture('families');assert(#sent==noExtraSend,'A queued capture must remain unsent before the main loop')
 rawPrint('PASS runtime capture preserves chat/dialog/checkpoint/textdraw callbacks and observes version without extra commands')
 
+local beforeDisconnectClose=closedCapture
 gamestate=5;tick();assert(nativeHud==true);assert(not frames[1].Condition(),'Disconnect must hide the player HUD again')
-assert(closedCapture==4,'Disconnect must close a live capture file')
+assert(closedCapture==beforeDisconnectClose+1,'Disconnect must close a live capture file exactly once')
 io.open=originalOpen
 if catalog then
     assert(catalog.address==nil)

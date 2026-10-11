@@ -3,7 +3,7 @@ local M={}
 M.energyWidth=368 -- 15% wider than the original 320-unit stamina/oxygen panel.
 function M.layout(w,h,scale,mode,nitro)
     local width=math.min(mode=='energy' and M.energyWidth or 320,(w-24)/scale)
-    local height=mode=='minimal' and 112 or mode=='energy' and 82 or 198
+    local height=mode=='minimal' and 126 or mode=='energy' and 82 or 212
     return {x=w-(width+12)*scale,y=h-(height+20)*scale,width=width*scale,height=height*scale,logicalWidth=width}
 end
 function M.bounds(settings,s,scale,w,h,staminaShown,oxygenShown)
@@ -25,13 +25,14 @@ function M.draw(o,dl,s,scale,w,h,staminaShown,oxygenShown)
     local box=panels[1]
     local x,y=box.x,box.y;local width=box.logicalWidth;local right=x+(width-16)*scale
     local white=im.U32(1,1,1,1);local gold=im.U32(.86,.67,.29,1)
-    local red=im.U32(.73,.12,.16,1);local green=im.U32(.20,.46,.13,1);local blue=im.U32(.40,.70,.91,1)
+    local red=im.U32(.73,.12,.16,1);local blue=im.U32(.40,.70,.91,1)
     local function text(value,tx,ty,size,kind,tint,stroke)
         o:nativeText(dl,im.ImVec2(tx,ty),tint,value,size*scale,kind,(stroke or 2)*scale)
     end
-    local function icon(name,ix,iy,tint)
-        local tex=o:texture('dashboard-v0221/'..name..'.png')
-        if tex then dl:AddImage(tex,im.ImVec2(ix,iy),im.ImVec2(ix+36*scale,iy+36*scale),im.ImVec2(0,0),im.ImVec2(1,1),tint)end
+    local function icon(name,ix,iy,tint,size)
+        size=(size or 36)*scale
+        local tex=o:texture('dashboard-v031/'..name..'.png')
+        if tex then dl:AddImage(tex,im.ImVec2(ix,iy),im.ImVec2(ix+size,iy+size),im.ImVec2(0,0),im.ImVec2(1,1),tint)end
     end
     local function energy(panel)
         local ex,ey=panel.x,panel.y
@@ -72,20 +73,26 @@ function M.draw(o,dl,s,scale,w,h,staminaShown,oxygenShown)
             text(digit,edge-o.bitmap:width(digit,size,'pricedown')*scale,numY,size,'pricedown',white,3)
         end
         text('MPH',slotX-o.bitmap:width('MPH',16,'gothic')*scale-10*scale,numY+(size-16)*scale,16,'gothic',white,1.5)
-        if s.locked~=nil then icon(s.locked and 'car-door-lock' or 'car-door-lock-open',x+18*scale,numY+4*scale,s.locked and red or green)end
+        -- Both states remain visible on dark scenes; shape, color and text agree.
+        -- Unknown native state stays neutral instead of implying an unlocked car.
+        local label=s.locked==true and 'Locked' or s.locked==false and 'Unlocked' or 'Unknown'
+        local tint=s.locked==true and im.U32(1,.68,.24,1) or s.locked==false and im.U32(.45,.80,1,1) or im.U32(.85,.87,.90,1)
+        dl:AddRectFilled(im.ImVec2(x+12*scale,numY-2*scale),im.ImVec2(x+108*scale,numY+66*scale),im.U32(.10,.11,.13,.96))
+        icon(s.locked==false and 'car-door-lock-open' or 'car-door-lock',x+18*scale,numY+2*scale,tint,44)
+        dl:AddTextFontPtr(im.GetFont(),13*scale,im.ImVec2(x+18*scale,numY+49*scale),tint,label)
     end
-    local barY=y+(vehicle and(full and 110 or 76)or 54)*scale
+    local barY=y+(vehicle and(full and 122 or 88)or 54)*scale
     local value=logic.clamp((s.vehicleHealth or 0)/1000,0,1)
     o:bar(dl,x+16*scale,barY,(width-32)*scale,16*scale,value,red,nil,im.U32(.16,.16,.18,1))
     if full then
         local hp=tostring(math.floor(value*100))
         local hpSize=32;local hpW=o.bitmap:width(hp,hpSize,'pricedown')*scale
         local percentW=(o.bitmap:width('%',16,'gothic')+6)*scale
-        local footerY=y+145*scale
-        icon('car-gear',right-hpW-percentW-46*scale,footerY-2*scale,red)
+        local footerY=y+159*scale
+        icon('car-gear',right-hpW-percentW-54*scale,footerY-2*scale,im.U32(.95,.38,.40,1),44)
         text(hp,right-hpW-percentW,footerY,hpSize,'pricedown',white,2.5)
         text('%',right-percentW+6*scale,footerY+16*scale,16,'gothic',white,1.5)
-        if o.game.cruise.active then text('CC '..math.floor(o.game.cruise.target),x+16*scale,y+179*scale,13,'gothic',gold,1.2)end
+        if o.game.cruise.active then text('CC '..math.floor(o.game.cruise.target),x+16*scale,y+193*scale,13,'gothic',gold,1.2)end
     end
     if oxygenShown then energy(panels[2])end
 end

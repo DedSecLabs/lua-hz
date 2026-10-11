@@ -352,6 +352,10 @@ function M:content()
         im.TextDisabled('0% = left/top. 100% = right/bottom.')
     elseif self.tab==8 then
         self:section('Changelog')
+        im.TextUnformatted('LuaHZ 0.3.1 — local test')
+        im.BulletText('Larger, brighter vehicle icons with explicit Locked/Unlocked labels')
+        im.BulletText('Manual vehicle capture observes entry, controls, storage and tracking menus')
+        im.Spacing()
         im.TextUnformatted('LuaHZ 0.3.0')
         im.BulletText('Quick Actions, Server pages, smart locks and unified HUD notices')
         im.BulletText('Backed-up upgrades preserve preferences and saved locations')
@@ -541,7 +545,7 @@ function M:draw()
     local lineHeight=im.GetFontSize()
     local headingY=40*S-(2*lineHeight+3*S)/2
     im.SetCursorPos(im.ImVec2(headingX,headingY));im.TextColored(im.ImVec4(1,.62,0,1),'LuaHZ')
-    im.SetCursorPos(im.ImVec2(headingX,headingY+lineHeight+3*S));im.TextDisabled('0.3.0')
+    im.SetCursorPos(im.ImVec2(headingX,headingY+lineHeight+3*S));im.TextDisabled('0.3.1')
     local sidebarOrder={1,2,3,4,5,6,9,7,8}
     local rowStep=math.min(42,(size.y/S-94-65-34)/(#tabs-1))
     for slot,i in ipairs(sidebarOrder) do
