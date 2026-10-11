@@ -62,9 +62,21 @@ bash install.sh "/path/to/GTA San Andreas"
 
 The path must contain `gta_sa.exe`.
 
-### 4. Join Horizon
+### 4. Join Horizon Roleplay
 
 Add `samp.hzgaming.net:7777` in the SA-MP browser and connect. A LuaHZ notice appears at the **bottom right**.
+
+## Features
+
+| Area | What LuaHZ adds |
+|---|---|
+| HUD | Player information, stamina and oxygen, vehicle speed and health |
+| Quickmap | Saved Horizon locations and a configurable map |
+| Character Status | Skin portrait, live player information, and tabbed server statistics |
+| Controls | Editable shortcuts, custom command bindings, and cruise control |
+| Performance | FPS limits for different game contexts |
+| Horizon helpers | Ordinary server commands, offer handling, and tracking tools |
+| Visuals | Special game loading artwork, high quality fonts, game map, radar map and map blips |
 
 ## Controls
 
@@ -77,48 +89,39 @@ Add `samp.hzgaming.net:7777` in the SA-MP browser and connect. A LuaHZ notice ap
 | **Numpad + / −** or **= / −** | Raise or lower the cruise target by 1 mph |
 | **Numpad 1 / 2 / 3** | Cruise at **50 / 80 / 120 mph** |
 
-Change shortcuts and preset speeds in **Settings → Hotkeys**. Cruise works while you drive a road vehicle. Brake, or press **X** again, to cancel.
+> Change shortcuts and preset speeds in **Settings → Hotkeys**. Cruise works while you drive a road vehicle. Brake, or press **X** again, to cancel.
 
-<p align="center">
-  <img src="docs/images/settings.png" alt="LuaHZ settings window open on the HUD tab" width="640"><br>
-  <b>Settings.</b> Press F9 or type /luahz.
-</p>
+### Settings: Press F9 or type `/luahz`.
+<img src="docs/images/settings_blog_776_canvas.png" alt="LuaHZ settings window open on the HUD tab"><br>
 
-## Features
+### Keybinds: Custom keybinds for your needs.
+<img src="docs/images/keybinds_blog_776_canvas.png" alt="Custom keybinds for your needs"><br>
 
-| Area | What LuaHZ adds |
-|---|---|
-| HUD | Player information, stamina and oxygen, vehicle speed and health |
-| Quickmap | Saved Horizon locations and a configurable map |
-| Character Status | Skin portrait, live player information, and tabbed server statistics |
-| Controls | Editable shortcuts, custom command bindings, and cruise control |
-| Performance | FPS limits for different game contexts |
-| Horizon helpers | Ordinary server commands, offer handling, and tracking tools |
-| Visuals | Loading artwork, fonts, radar icons, and map textures, active only on Horizon |
+### Character Status: Skin portrait and tabbed server statistics.
+<img src="docs/images/character_status_blog_776_canvas.png" alt="Character Status window with skin portrait and statistics">
 
-<p align="center">
-  <img src="docs/images/dashboard.png" alt="Vehicle dashboard showing speed and health" width="420"><br>
-  <b>HUD.</b> Vehicle name, speed, and health.
-</p>
+### Map: Quickmap with saved locations. Press `M`, or `Escape`, to close it.
+<img src="docs/images/quickmap.jpg" alt="The game map with saved locations. Press `M`, or `Escape`, to close it" width="720"><br>
 
-<p align="center">
-  <img src="docs/images/quickmap.jpg" alt="Quickmap of San Andreas with saved locations" width="720"><br>
-  <b>Quickmap.</b> The Horizon map and saved locations. Press M, or Escape, to close it.
-</p>
+### Map: High quality game map and map blips with and saved locations.
+<img src="docs/images/sa-mp-057.png" alt="High quality game map and map blips with and saved locations" width="720"><br>
 
-<p align="center">
-  <img src="docs/images/character-status.png" alt="Character Status window with skin portrait and statistics" width="640"><br>
-  <b>Character Status.</b> Skin portrait and tabbed server statistics.
-</p>
+### Map: High quality radar map and map blips.
+<img src="docs/images/minimap_776_canvas.png" alt="High quality radar map and map blips"><br>
 
-Live health, armor, cash, and skin come from the game client. Account, job, and inventory information comes from recognized server responses.
+### HUD: Vehicle name, speed, and health.
+<img src="docs/images/vehicle_hud_blog_776_canvas.png" alt="Vehicle name, speed, and health"><br>
+
+### HUD: Player stamina status.
+<img src="docs/images/running_hud_blog_776_canvas.png" alt="Player stamina status"><br>
+
+### HUD: Player oxygen status.
+<img src="docs/images/swimming_hud_blog_776_canvas.png" alt="Vehicle dashboard showing speed and health"><br>
 
 ## Other servers
-
 On any other server, LuaHZ menus, HUD, and custom visuals stay inactive. Original game and plugin files remain stock on disk.
 
 ## Development
-
 Source checks need **Python 3.11+**, **LuaJIT 2.1**, and **GCC**:
 
 ```sh
