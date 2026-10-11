@@ -3,18 +3,23 @@
 # LuaHZ
 
 <p align="center">
+  <img src="assets/branding/luahz-logo.png" alt="LuaHZ logo" width="160">
+</p>
+
+<p align="center">
   <a href="https://github.com/DedSecLabs/luahz/releases/tag/v0.2.39-player"><img src="https://img.shields.io/badge/release-0.2.39-2563eb" alt="release 0.2.39"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-64748b" alt="license MIT"></a>
 </p>
 
 <p align="center">
-  <img src="assets/branding/luahz-logo.png" alt="LuaHZ logo" width="200">
+  <b>A modern HUD and quality-of-life toolkit for Horizon Roleplay.</b>
 </p>
 
-<img width="1024" height="410" alt="LuaHZ in Horizon Roleplay" src="docs/images/readme-banner.png">
+<br>
 
-
-**A modern HUD and quality-of-life toolkit for Horizon Roleplay.**
+<p align="center">
+  <img width="1024" height="410" alt="LuaHZ in Horizon Roleplay" src="docs/images/readme-banner.png">
+</p>
 
 It activates only on `samp.hzgaming.net:7777` / `213.32.6.232:7777`. The same SA-MP installation can still join other servers.
 
