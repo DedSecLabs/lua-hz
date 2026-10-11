@@ -103,7 +103,7 @@ Add `samp.hzgaming.net:7777` in the SA-MP browser and connect. A LuaHZ notice ap
 ### Map: Quickmap with saved locations. Press `M`, or `Escape`, to close it.
 <img src="docs/images/quickmap.jpg" alt="The game map with saved locations. Press `M`, or `Escape`, to close it" width="720"><br>
 
-### Map: High quality game map and map blips with and saved locations.
+### Map: High quality game map and map blips with saved locations.
 <img src="docs/images/sa-mp-057.png" alt="High quality game map and map blips with and saved locations" width="720"><br>
 
 ### Map: High quality radar map and map blips.
