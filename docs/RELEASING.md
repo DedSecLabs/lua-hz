@@ -1,6 +1,6 @@
 # Releases and player downloads
 
-The latest published player download is [LuaHZ 0.2.39](https://github.com/DedSecLabs/luahz/releases/tag/v0.2.39-player). The next feature milestone is **0.3.0**; **0.3.0-rc.1** is the candidate being prepared and tested. A candidate is not a completed release, and offline checks do not establish gameplay QA.
+The latest published player download is [LuaHZ 0.2.39](https://github.com/DedSecLabs/luahz/releases/tag/v0.2.39-player). The next feature milestone is **0.3.0**; **0.3.0-rc.1** passed the owner’s Linux/Wine checklist. The stable archive is being prepared for its final launch check. A candidate is not a completed release, and offline checks do not establish gameplay QA.
 
 ## Player candidate workflow
 

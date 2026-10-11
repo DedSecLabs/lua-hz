@@ -123,7 +123,7 @@ The **GTA folder** contains `gta_sa.exe`. The installer verifies the payload and
 powershell -NoProfile -ExecutionPolicy Bypass -File .\\install.ps1 "C:\\Games\\GTA San Andreas"
 ```
 
-To upgrade an existing LuaHZ installation, add `-Upgrade`. Keep the backup until the new build works. Native Windows gameplay QA has not been recorded; this candidate is being tested on Linux/Wine.
+To upgrade an existing LuaHZ installation, add `-Upgrade`. Keep the backup until the new build works. Native Windows gameplay QA has not been recorded. Linux/Wine owner gameplay results are recorded for each exact packaged build.
 
 **Linux/Wine:** from the extracted folder, run:
 

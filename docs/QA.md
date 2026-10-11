@@ -164,8 +164,10 @@ Run tools/check.py for syntax, fake-runtime Lua behavior, native C ownership/pol
 
 Activation, hashes, backup paths and test logs are recorded in ignored build/ and game receipt files. STATUS.md is the concise current handoff; historical experiment notes are archived privately.
 
-## 0.3.0 release candidate
+## 0.3.0 release verification
 
 Use the exact packaged 0.3.0-rc.1 archive; keep its SHA-256 and installed payload hash verification with the result. Offline upgrade/recovery checks use the published 0.2.39 ZIP, disposable prerequisites and representative preferences/saved places. PowerShell fixtures on Linux validate script transactions, not native Windows gameplay.
 
 Owner checks: login and movement; F9 Server Families/Members/Rules/Settings/Links quiet Refresh; Commands tabs; I and M; U navigation clear with active tracking, vehicle selection/start/stop, player selection/find/stop and job denial; smart locking near each vehicle type and neither; stamina/oxygen notices; saved settings/locations; a complete restart and other-server round trip. Keep native Windows unverified unless separately reported. Final publication requires owner QA of the final stable archive as well.
+
+On 2026-10-11 the owner reported “All tests positive” after testing the exact installed 0.3.0-rc.1 archive, SHA-256 `a8874a2dd31024ab2b57091cbe1b17eee2329db43c9c9f146aa030b3a0fadfb0`. The candidate checklist above is accepted on Linux/Wine; earlier feature-specific pending entries are historical snapshots. The stable 0.3.0 archive is a new build and awaits a final owner launch smoke test. Native Windows gameplay remains unverified.
