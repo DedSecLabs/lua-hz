@@ -352,7 +352,7 @@ function M:content()
         im.TextDisabled('0% = left/top. 100% = right/bottom.')
     elseif self.tab==8 then
         self:section('Changelog')
-        im.TextUnformatted('LuaHZ 0.4.0-rc.3 — local test')
+        im.TextUnformatted('LuaHZ 0.4.0-rc.4 — local test')
         im.BulletText('Neutral icons replace Unknown and waiting captions')
         im.BulletText('Trunk contents requested in K stay silent; manual commands print normally')
         im.BulletText('Compact right-side K Vehicle menu; move normally and hold Alt to click')
@@ -560,7 +560,7 @@ function M:draw()
     local lineHeight=im.GetFontSize()
     local headingY=40*S-(2*lineHeight+3*S)/2
     im.SetCursorPos(im.ImVec2(headingX,headingY));im.TextColored(im.ImVec4(1,.62,0,1),'LuaHZ')
-    im.SetCursorPos(im.ImVec2(headingX,headingY+lineHeight+3*S));im.TextDisabled('0.4.0-rc.3')
+    im.SetCursorPos(im.ImVec2(headingX,headingY+lineHeight+3*S));im.TextDisabled('0.4.0-rc.4')
     local sidebarOrder={1,2,3,4,5,6,9,7,8}
     local rowStep=math.min(42,(size.y/S-94-65-34)/(#tabs-1))
     for slot,i in ipairs(sidebarOrder) do

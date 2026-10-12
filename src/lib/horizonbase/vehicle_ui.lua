@@ -67,7 +67,8 @@ function M:draw()
     if not enabled then hint=self.vehicle.pending and '' or c and c.unavailable[part] and 'Not available' or 'Inside vehicle only'
     elseif value~=nil then hint=(part=='window' or part=='hood' or part=='trunk')and(value and 'Open' or 'Closed')or(value and 'On' or 'Off')end
     local y=part=='hood' and 252 or 128+math.floor((i-1)/2)*62
-    self:tile(row[1],hint,part,18+((i-1)%2)*168,y,S,enabled,'vehicleControl',part)
+    local x=part=='hood' and 18 or part=='trunk' and 186 or 18+((i-1)%2)*168
+    self:tile(row[1],hint,part,x,y,S,enabled,'vehicleControl',part)
    end
    self:tile('Lock / unlock','Personal or family','lock',186,190,S,not self.vehicle.pending,'lock')
   elseif self.page==2 then
