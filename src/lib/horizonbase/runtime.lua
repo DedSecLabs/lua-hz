@@ -149,8 +149,8 @@ if ok then
             not app.overlay.mapOpen and not app.ui:isMapPreview()
     end,function()
         local hudReady=guard('HUD',function() app.overlay:hud() end)
-        if hudReady and app.toast:announce('0.4.0-rc.6',app.faults,app.interfaceReady) then
-            notify('0.4.0-rc.6 loaded. Settings: /luahz or '..app.ui:keyName(prefs.keybinds.settingsPanel,prefs.modifiers.settingsPanel))
+        if hudReady and app.toast:announce('0.4.0-rc.5',app.faults,app.interfaceReady) then
+            notify('0.4.0-rc.5 loaded. Settings: /luahz or '..app.ui:keyName(prefs.keybinds.settingsPanel,prefs.modifiers.settingsPanel))
         end
     end)
     app.hudFrame.HideCursor=true;app.hudFrame.LockPlayer=false
@@ -230,7 +230,7 @@ end
 local function toggleVehicle()
     if not app.vehicleUI or app.faults.Vehicle or not app.server.loginSeen or not app.game.sample.ready or not app.game.sample.alive or not app.focused or isPauseMenuActive() then return end
     local opening=not app.vehicleUI.open[0];app.vehicleUI:reset();app.vehicleUI.open[0]=opening
-    if opening then app.vehicleUI.page=1 end
+    if opening then app.vehicleUI.page=app.vehicle.current and 1 or 2 end
     if app.actions then app.actions:reset()end
     if app.status then app.status.open[0]=false end
     if app.ui then app.ui.open[0]=false;app.ui.capture=nil end
@@ -718,7 +718,7 @@ local function start()
         local ok,limiter=pcall(function()return require('horizonbase.limiter').new()end)
         if ok then app.limiter=limiter else app.faults.Limiter=tostring(limiter) end
     end
-    print('[LuaHZ] 0.4.0-rc.6 authorized endpoint 213.32.6.232:7777; waiting for login.')
+    print('[LuaHZ] 0.4.0-rc.5 authorized endpoint 213.32.6.232:7777; waiting for login.')
 end
 
 local function tick()

@@ -332,7 +332,7 @@ sampGetPlayerNickname=oldNickname
 onWindowMessage(0x0100,85,0);im.clicks['Find player##quickAction']=true;frames[7].draw()
 im.clicks['Jane_Doe (18)##quickTarget18']=true;frames[7].draw();gameClock=78000;tick();assert(sent[#sent]=='/find 18')
 onWindowMessage(0x0100,85,0);im.clicks['Stop finding##quickAction']=true;frames[7].draw();tick()
-onWindowMessage(0x0100,75,0);im.drawTexts={};frames[8].draw();assert(table.concat(im.drawTexts,'|'):find('Engine',1,true),'K must open Controls while on foot')
+onWindowMessage(0x0100,75,0);im.drawTexts={};frames[8].draw();assert(table.concat(im.drawTexts,'|'):find('Trunk balance',1,true),'K must open Trunk while on foot')
 im.clicks['My vehicles##vehicleTab3']=true;im.clicks['Track vehicle##vehicleAction']=true;down[18]=true;tick();frames[8].draw();down[18]=nil;gameClock=79500;tick();assert(sent[#sent]=='/trackcar')
 im.clicks['Stop tracking##vehicleAction']=true;down[18]=true;tick();frames[8].draw();down[18]=nil;tick()
 im.clicks['Controls##vehicleTab1']=true;im.clicks['Lock / unlock##vehicleAction']=true;down[18]=true;tick();frames[8].draw();down[18]=nil;gameClock=81000;tick();assert(sent[#sent]=='/pvl')
@@ -354,6 +354,7 @@ gameClock=83000;tick();events.onServerMessage(-1,'You are the owner of this Test
 local vehicleBefore=#sent
 chat=true;onWindowMessage(0x0100,75,0);assert(not frames[8].Condition());chat=false
 onWindowMessage(0x0100,75,0);assert(frames[8].Condition() and not frames[7].Condition())
+im.drawTexts={};frames[8].draw();assert(table.concat(im.drawTexts,'|'):find('Engine',1,true),'K must open Controls while seated')
 onWindowMessage(0x0100,75,0x40000000);assert(frames[8].Condition())
 im.clicks['Engine##vehicleAction']=true;down[18]=true;tick();frames[8].draw();down[18]=nil;assert(frames[8].Condition() and not frames[8].LockPlayer and frames[8].PassKeyboard and #sent==vehicleBefore)
 gameClock=84500;tick();assert(sent[#sent]=='/car engine' and #sent==vehicleBefore+1)
@@ -389,7 +390,7 @@ assert(events.onServerMessage(-1,"** Driver's license: Acquired.")==false)
 assert(events.onServerMessage(-1,'** Pilot license: Acquired.')==false)
 assert(events.onServerMessage(-1,'** Boating license: Acquired.')==false)
 onWindowMessage(0x0100,27,0)
-commands.luahzvehicle();im.drawTexts={};frames[8].draw();assert(table.concat(im.drawTexts,'|'):find('Engine',1,true),'Vehicle command must reopen Controls after another tab')
+commands.luahzvehicle();im.drawTexts={};frames[8].draw();assert(table.concat(im.drawTexts,'|'):find('Trunk balance',1,true),'Vehicle command must reopen Trunk while on foot')
 down[18]=true;tick();im.clicks['Trunk##vehicleTab2']=true;im.clicks['Trunk balance##vehicleAction']=true;frames[8].draw();down[18]=nil
 gameClock=gameClock+1500;tick();assert(sent[#sent]=='/trunkbalance')
 assert(events.onServerMessage(-1,"*** John Doe's Test Car Trunk ***")==false)
