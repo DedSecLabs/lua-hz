@@ -25,7 +25,7 @@
 
 It activates only on `samp.hzgaming.net:7777` / `213.32.6.232:7777`. The same SA-MP installation can still join other servers.
 
-[Download: My Car! My F\*\*\*in’ Car!!](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.0) · [Install](#install) · [Controls](#controls) · [Features](#features) · [Development](#development)
+[Download](https://github.com/DedSecLabs/luahz/releases/latest) · [Install](#install) · [Controls](#controls) · [Features](#features) · [Development](#development)
 
 </div>
 
