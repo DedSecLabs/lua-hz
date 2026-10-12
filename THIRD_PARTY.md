@@ -36,3 +36,7 @@ Our native helpers are original implementations. Addresses/layout facts refer to
 ## Dashboard closed-door icon
 
 The dashboard-v031 closed-door icon is rendered from Pictogrammers Material Design `car-door-lock.svg`, using explicit white fill for runtime tinting. Upstream: https://github.com/Templarian/MaterialDesign/blob/master/svg/car-door-lock.svg. The icon is Apache 2.0; the upstream collection notice and full license accompany the resource group. Other copied dashboard PNGs retain their existing provenance.
+
+## Vehicle interface icons
+
+The vehicle-v040 resource group retains the exact eight locally tested PNGs. Streamline Ultimate's engine icon is CC BY 4.0, attributed to [Streamline](https://streamlinehq.com) / [Webalys](https://github.com/webalys-hq/streamline-vectors). MingCute's window, Pictogrammers Material Design's lights/users and Google's Material Symbols key/garage icons are Apache 2.0. Custom Brand Icons' hood/trunk icons are MIT. They were obtained through AllSVGIcons, converted to 128x128 white-alpha PNGs, and verified against normalized upstream geometry. Full licenses and per-file credit are included in player-resources/vehicle-v040/ATTRIBUTION.txt and its license files; source-only exports omit these PNGs. See its SOURCE.json for identities/hashes.

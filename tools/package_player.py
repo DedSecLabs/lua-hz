@@ -19,6 +19,19 @@ GROUPS = (
 )
 REQUIRED = (
     'moonloader/resource/horizonbase/hud-v0218/hud-font.png',
+    'moonloader/resource/horizonbase/dashboard-v031/car-door-lock.png',
+    'moonloader/resource/horizonbase/dashboard-v031/car-door-lock-open.png',
+    'moonloader/resource/horizonbase/dashboard-v031/car-gear.png',
+    'moonloader/resource/horizonbase/dashboard-v031/run.png',
+    'moonloader/resource/horizonbase/dashboard-v031/swimming-filled.png',
+    'moonloader/resource/horizonbase/vehicle-v040/engine.png',
+    'moonloader/resource/horizonbase/vehicle-v040/lights.png',
+    'moonloader/resource/horizonbase/vehicle-v040/window.png',
+    'moonloader/resource/horizonbase/vehicle-v040/hood.png',
+    'moonloader/resource/horizonbase/vehicle-v040/trunk.png',
+    'moonloader/resource/horizonbase/vehicle-v040/key.png',
+    'moonloader/resource/horizonbase/vehicle-v040/users.png',
+    'moonloader/resource/horizonbase/vehicle-v040/garage.png',
     'moonloader/resource/horizonbase/sa_map/1.jpg',
     'moonloader/resource/horizonbase/sa_map/36.jpg',
     'moonloader/resource/horizonbase/ui-v0212/radar_centre.png',
@@ -133,7 +146,7 @@ bash install.sh "/path/to/GTA San Andreas"
 
 To upgrade, run `bash install.sh "/path/to/GTA San Andreas" --upgrade`. Existing resource groups not used by this build are left in place; recovery restores overwritten files and removes files added by this installation. Install SilentPatchSA Build 34.1 separately before upgrading from 0.2.39.
 
-Join samp.hzgaming.net:7777. F9 opens settings, I opens Character Status, M opens Quickmap, U opens Quick Actions, and X toggles cruise while driving.
+Join samp.hzgaming.net:7777. F9 opens settings, I opens Character Status, M opens Quickmap, U opens character Quick Actions, K opens Vehicle, and X toggles cruise while driving. Hold Alt to click the Vehicle panel; release Alt for mouse/camera control. K or Escape closes it. Shortcuts are configurable in F9; existing key assignments are preserved.
 
 Download `LuaHZ-{version}-player.zip` to install the mod. The “Source code” archives are for developers.
 '''.encode()

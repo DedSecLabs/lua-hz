@@ -57,3 +57,7 @@ The dashboard-v031 group preserves the previous run, swimming, unlocked-door and
 ## Vehicle menu — local 0.4.0-rc.1
 
 Eight owner-provided SVGs are rendered to 128×128 white-alpha PNGs under ignored .local/prepared-hud/vehicle-v040 for local QA: engine, lights, window, hood, trunk, key, users and garage. Source filename/hash and owner AllSVGIcons attribution are retained privately in .local/vehicle-capture-assets/vehicle-icon-provenance.json; originals stay untouched. Existing maintained Lucide close/radar and dashboard lock assets are reused. This group is not yet in public player-resources; verify each icon’s upstream collection/license before public packaging. Staging includes it locally; source exports omit it.
+
+## Vehicle icon review — release 0.4.0
+
+The eight existing vehicle-v040 PNGs are now staged in player-resources with per-file credit and full applicable terms. Exact normalized upstream RGBA matches were verified for all eight, retaining the owner-tested bytes: Streamline Ultimate engine (CC BY 4.0), MingCute window (Apache 2.0), Pictogrammers lights/users (Apache 2.0), Google Material Symbols key/garage (Apache 2.0), and Custom Brand Icons hood/trunk (MIT). Attribution/modifications are stated in ATTRIBUTION.txt; public SOURCE.json contains no machine paths/account data. Local preparation/verification logs stay ignored. This completes this group's previously pending review; source exports still exclude its raster inputs.

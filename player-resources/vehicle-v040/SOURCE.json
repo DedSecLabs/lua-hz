@@ -1,0 +1,98 @@
+{
+  "group": "vehicle-v040",
+  "owner_source": "https://allsvgicons.com/",
+  "review_date": "2026-10-12",
+  "render": "128x128 white-alpha; upstream geometry pixel-identical",
+  "icons": {
+    "engine": {
+      "filename": "car-engine-11-bold.svg",
+      "source_sha256": "2604c96eb24494e15b220ca2cbc20379535b7a3f378866307d86621bcd47455e",
+      "png_sha256": "3a63bf080e73207e73b89b8bad862e9cc4d47f41e1b1838a6e3d62d354f21d5c"
+    },
+    "lights": {
+      "filename": "car-light-high.svg",
+      "source_sha256": "e6b1fe077ea79423bc1408c2ee768b03314d14af1f62ec23aabdf70e8060f917",
+      "png_sha256": "49d5c9ceea6a7bcc7ce43a22fc87fcc40ed6c40a2a057f662e5f008c2ec5915c"
+    },
+    "window": {
+      "filename": "car-window-fill.svg",
+      "source_sha256": "57e33a349729f87086079ef1969cfa765f2f3981a7d4b34ebb89586e4f123155",
+      "png_sha256": "ff53e961177382af941af79e67afb5955a7ae3157aa46fd719c61f1da71420d6"
+    },
+    "hood": {
+      "filename": "tesla-hood.svg",
+      "source_sha256": "773b50e40dc108d277e757ebaca4aeabf1d951e98a99200cd85ae77ec8721b0a",
+      "png_sha256": "45534687140766574953f8d099d5e958c6689487b5e4bdc7de7787d6b38d1a05"
+    },
+    "trunk": {
+      "filename": "tesla-trunk.svg",
+      "source_sha256": "0994e3d2e66ac19e0a3f579f9fcfa2303c9e3f54d1a8b59cfc0bea12048b94f6",
+      "png_sha256": "525ce9ad150b9a62451f62c16df58dcf154ffffd8c85053fc3dc4efa427cc88d"
+    },
+    "key": {
+      "filename": "key.svg",
+      "source_sha256": "2f50e6c4f34afbac37822412d330499a1b72491e4e685c45005ecc452c07a13e",
+      "png_sha256": "4718e0238b32e1a585a8ccec6404395e740d651b2bccd59631a7529bda3621e5"
+    },
+    "users": {
+      "filename": "users.svg",
+      "source_sha256": "668fccf7535006cbf3edd73e3b82d3d193b224441476bd3c4c83e3f7a1a8a14e",
+      "png_sha256": "ec1a068aa072b37696548fb4355d19ab1d82517425b772bdab23849a917d481e"
+    },
+    "garage": {
+      "filename": "garage.svg",
+      "source_sha256": "90750793c5bd6626c5bf20e0b78d8a2f6938a6179be5b6b8dfd56d32f931378a",
+      "png_sha256": "47c9045cd5d90cf757d9b1a56ec6ae2fbff8efc9694b5472780d44a85733f956"
+    }
+  },
+  "upstreams": {
+    "engine": {
+      "collection": "Streamline Ultimate",
+      "icon": "car-engine-11-bold",
+      "license": "CC-BY-4.0",
+      "url": "https://github.com/webalys-hq/streamline-vectors"
+    },
+    "window": {
+      "collection": "MingCute",
+      "icon": "car-window-fill",
+      "license": "Apache-2.0",
+      "url": "https://github.com/mingcute-design/mingcute-icons"
+    },
+    "lights": {
+      "collection": "Material Design Icons",
+      "icon": "car-light-high",
+      "license": "Apache-2.0",
+      "url": "https://github.com/Templarian/MaterialDesign"
+    },
+    "users": {
+      "collection": "Material Design Icons",
+      "icon": "account-multiple",
+      "license": "Apache-2.0",
+      "url": "https://github.com/Templarian/MaterialDesign"
+    },
+    "key": {
+      "collection": "Material Symbols",
+      "icon": "key",
+      "license": "Apache-2.0",
+      "url": "https://github.com/google/material-design-icons"
+    },
+    "garage": {
+      "collection": "Material Symbols",
+      "icon": "garage",
+      "license": "Apache-2.0",
+      "url": "https://github.com/google/material-design-icons"
+    },
+    "hood": {
+      "collection": "Custom Brand Icons",
+      "icon": "tesla-hood",
+      "license": "MIT",
+      "url": "https://github.com/elax46/custom-brand-icons/blob/main/icon-svg/tesla-hood.svg"
+    },
+    "trunk": {
+      "collection": "Custom Brand Icons",
+      "icon": "tesla-trunk",
+      "license": "MIT",
+      "url": "https://github.com/elax46/custom-brand-icons/blob/main/icon-svg/tesla-trunk.svg"
+    }
+  }
+}

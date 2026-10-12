@@ -1,0 +1,31 @@
+Vehicle interface icons
+
+Obtained by the project owner through https://allsvgicons.com/.
+Underlying collections and terms:
+
+engine.png: Streamline Ultimate, car-engine-11-bold, by Streamline / Webalys.
+Source: https://github.com/webalys-hq/streamline-vectors
+Website and attribution: https://streamlinehq.com
+License: CC BY 4.0, https://creativecommons.org/licenses/by/4.0/
+
+window.png: MingCute, car-window-fill, by MingCute Design.
+Source: https://github.com/mingcute-design/mingcute-icons
+License: Apache 2.0.
+
+lights.png: Material Design Icons, car-light-high, by Michael Irigoyen.
+users.png: Material Design Icons, account-multiple, by Pictogrammers contributors.
+Source: https://github.com/Templarian/MaterialDesign
+License: Apache 2.0.
+
+key.png and garage.png: Google Material Symbols, key and garage, by Google.
+Source: https://github.com/google/material-design-icons
+License: Apache 2.0.
+
+hood.png and trunk.png: Custom Brand Icons, tesla-hood and tesla-trunk.
+Source: https://github.com/elax46/custom-brand-icons
+License: MIT. The upstream copyright/license is in CUSTOM-BRAND-ICONS-MIT-LICENSE.txt.
+
+Modifications by LuaHZ: SVGs converted to 128 x 128 white-alpha PNGs for runtime
+coloring. Geometry is unchanged. Normalized upstream reference renders were
+verified pixel-for-pixel against these PNGs. Existing tested PNG bytes are retained.
+Full Apache 2.0 and CC BY 4.0 terms accompany this folder.
