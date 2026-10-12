@@ -388,7 +388,7 @@ assert(events.onServerMessage(-1,"** Driver's license: Acquired.")==false)
 assert(events.onServerMessage(-1,'** Pilot license: Acquired.')==false)
 assert(events.onServerMessage(-1,'** Boating license: Acquired.')==false)
 onWindowMessage(0x0100,27,0)
-commands.luahzvehicle();down[18]=true;tick();im.clicks['Trunk##vehicleTab2']=true;im.clicks['Contents##vehicleAction']=true;frames[8].draw();down[18]=nil
+commands.luahzvehicle();down[18]=true;tick();im.clicks['Trunk##vehicleTab2']=true;im.clicks['Trunk balance##vehicleAction']=true;frames[8].draw();down[18]=nil
 gameClock=gameClock+1500;tick();assert(sent[#sent]=='/trunkbalance')
 assert(events.onServerMessage(-1,"*** John Doe's Test Car Trunk ***")==false)
 assert(events.onServerMessage(-1,'Slot 1: MP5')==false)

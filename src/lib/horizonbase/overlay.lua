@@ -192,6 +192,11 @@ function M:energyPanelLayout(w,h)
     local layout=self:hudGeometry(w,h)
     return require('horizonbase.dashboard').layout(w,h,layout.scale,'energy'),layout.scale
 end
+function M:vehicleMenuGeometry(w,h)
+    -- Reserve the same normal vehicle HUD space on foot and while seated.
+    local upper=logic.hudLayout(w,h,self.config.hud,264,hudStyle.playerWidth,232+130,448)
+    return upper,require('horizonbase.dashboard').layout(w,h,upper.scale,'full')
+end
 function M:lowerHudBounds(w,h)
     if not self.game.sample.ready then return {}end
     local layout,stamina,oxygen=self:hudGeometry(w,h)

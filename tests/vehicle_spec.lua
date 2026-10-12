@@ -105,3 +105,17 @@ sample.vehicle=13;v:update(sample,true);v:onOutgoing('/car lights',true)
 panel.page=1;panel.cursor=true;im.drawTexts={};panel:draw()
 for _,text in ipairs(im.drawTexts)do assert(text~='Waiting for server')end
 print('PASS bounded quiet GUI trunk framing, preserved unrelated/manual output, echo ownership, expiry and minimal pending presentation')
+local Overlay=require 'horizonbase.overlay'
+local dockSample={ready=true,alive=true,vehicle=false,underwater=false}
+local dockGame={sample=dockSample,cruise={active=false}}
+ui.overlay=Overlay.new(im,ui.prefs,dockGame,server)
+for _,screen in ipairs({{640,480},{1280,720},{1920,1080}})do
+ local foot=panel:layout(screen[1],screen[2])
+ for _,state in ipairs({{vehicle=12,underwater=false},{vehicle=false,underwater=true},{vehicle=12,underwater=true},{vehicle=false,underwater=false}})do
+  dockSample.vehicle=state.vehicle;dockSample.underwater=state.underwater
+  local seated=panel:layout(screen[1],screen[2])
+  assert(foot.width==seated.width and foot.height==seated.height and foot.scale==seated.scale,'Entering, exiting or oxygen visibility must not resize the vehicle menu')
+  assert(seated.x>=0 and seated.x+seated.width<=screen[1] and seated.y>=0 and seated.y+seated.height<=screen[2])
+ end
+end
+print('PASS constant vehicle dock size across on-foot/seated/oxygen contexts and viewport bounds')

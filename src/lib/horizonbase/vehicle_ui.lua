@@ -7,20 +7,28 @@ function M:submit(kind,arg)
  local ok,err=self.perform(kind,arg)
  if ok then self.notice=nil else self.notice=err or 'Action unavailable.'end
 end
--- Fit between the actual upper HUD and the lower HUD/notice stack.
+-- Use one reserved dock size regardless of whether the player is seated.
 function M:layout(w,h)
  local overlay=self.ui.overlay;local top=12;local bottom=h-20;local preferred=self.ui.scale
  if overlay and overlay.game.sample.ready then
-  local upper=overlay:hudGeometry(w,h)
+  local upper,lower=overlay:vehicleMenuGeometry(w,h)
   top=upper.y+upper.height+12*upper.scale
-  for _,panel in ipairs(overlay:lowerHudBounds(w,h))do bottom=math.min(bottom,panel.y-114*upper.scale)end
+  bottom=math.min(bottom,lower.y-114*upper.scale)
   bottom=math.min(bottom,h-114*upper.scale)
  end
  local available=bottom-top
  -- Extreme custom HUD placements use a viewport-safe fallback.
  if available<160 then top=12;bottom=h-20;available=bottom-top end
  local S=math.min(preferred,(w-24)/360,available/340)
- return {x=w-12-360*S,y=top,width=360*S,height=340*S,scale=S}
+ local x=w-12-360*S
+ -- Extra oxygen/notice space may move the dock left, never change its size.
+ if overlay and overlay.game.sample.underwater and overlay.config.settings.oxygen then
+  local upper=overlay:vehicleMenuGeometry(w,h)
+  for _,panel in ipairs(overlay:lowerHudBounds(w,h))do
+   if top+340*S>panel.y-114*upper.scale then x=math.max(12,math.min(x,panel.x-12*S-360*S))end
+  end
+ end
+ return {x=x,y=top,width=360*S,height=340*S,scale=S}
 end
 function M:tile(label,hint,icon,x,y,S,enabled,kind,arg)
  local im=self.im;im.SetCursorPos(im.ImVec2(x*S,y*S));local p=im.GetCursorScreenPos()
@@ -74,14 +82,14 @@ function M:draw()
   elseif self.page==2 then
    self:tile('Trunk','Open / close','trunk',18,128,S,not self.vehicle.pending,'vehicleControl','trunk')
    local onFoot=not(self.vehicle.sample or {}).vehicle
-   self:tile('Contents',onFoot and 'Refresh contents' or 'Exit vehicle first','garage',186,128,S,onFoot and not self.vehicle.pending,'cargo')
+   self:tile('Trunk balance',onFoot and 'Show balance' or 'Exit vehicle first','garage',186,128,S,onFoot and not self.vehicle.pending,'cargo')
    im.SetCursorPos(im.ImVec2(18*S,202*S));im.BeginChild('##trunkContents',im.ImVec2(324*S,100*S),false)
    local cargoOk,cargoErr=pcall(function()
     local cargo=self.vehicle.cargo
     if cargo then
-     im.TextWrapped(cargo.title..' — Trunk')
+     im.TextWrapped(cargo.title..' - Trunk')
      for _,line in ipairs(cargo.rows)do im.TextUnformatted(line)end
-    else im.TextWrapped(self.vehicle.pending and self.vehicle.pending.part=='cargo' and 'Loading contents...'or 'On foot, open the nearby trunk and click Contents.')end
+    else im.TextWrapped(self.vehicle.pending and self.vehicle.pending.part=='cargo' and 'Loading balance...'or 'On foot, open the nearby trunk and show its balance.')end
    end)
    im.EndChild();if not cargoOk then error(cargoErr)end
   else
