@@ -69,7 +69,8 @@ function M:onOutgoing(command,gui)
  if part=='cargo' and s.vehicle or part~='cargo' and not parts[part] or
   part~='cargo' and part~='trunk' and (not c or not c.driver) then self.pending=nil;return end
  local now=self.now()
- if self.pending and self.pending.part==part and self.pending.epoch==self.epoch and now-self.pending.at<250 then return end
+ if gui~=false and self.pending and self.pending.part==part and self.pending.epoch==self.epoch and
+  now-self.pending.at<(part=='cargo' and self.pending.gui and 1000 or 250)then return end
  self.pending={part=part,epoch=self.epoch,at=now,expires=now+8000,gui=gui==true,
   anchor=not c and {x=s.x,y=s.y,z=s.z}or nil}
  if part=='cargo'then self.cargo=nil end
@@ -93,12 +94,13 @@ function M:onMessage(text,actor)
   return
  end
  if p.part=='cargo'then
+  local recognized=false
   local title=clean:match('^%*%*%* (.+) Trunk %*%*%*$')
-  if title then p.draft={title=title,rows={}};p.lastLine=self.now()
+  if title then p.draft={title=title,rows={}};p.lastLine=self.now();recognized=true
   elseif p.draft and (#p.draft.rows<16)and (clean:match('^Slot %d+: .+$') or clean:match('^Pot: %d+ grams$') or clean:match('^Crack: %d+ grams$'))then
-   p.draft.rows[#p.draft.rows+1]=clean;p.lastLine=self.now()
+   p.draft.rows[#p.draft.rows+1]=clean;p.lastLine=self.now();recognized=true
   end
-  return
+  return p.gui and recognized or false
  end
  local response=replies[clean]
  if p.part=='window' and type(actor)=='string' and #actor<=64 then

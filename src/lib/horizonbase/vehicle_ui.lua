@@ -64,11 +64,12 @@ function M:draw()
   if self.page==1 then
    for i,row in ipairs({{'Engine','engine'},{'Lights','lights'},{'Window','window'},{'Hood','hood'},{'Trunk','trunk'}})do
     local part=row[2];local enabled,hint=self.vehicle:available(part);local value=self.vehicle:state(part)
-    if not enabled then hint=self.vehicle.pending and 'Waiting for server' or c and c.unavailable[part] and 'Not available' or 'Inside vehicle only'
+    if not enabled then hint=self.vehicle.pending and '' or c and c.unavailable[part] and 'Not available' or 'Inside vehicle only'
     elseif value~=nil then hint=(part=='window' or part=='hood' or part=='trunk')and(value and 'Open' or 'Closed')or(value and 'On' or 'Off')end
-    self:tile(row[1],hint,part,18+((i-1)%2)*168,128+math.floor((i-1)/2)*62,S,enabled,'vehicleControl',part)
+    local y=part=='hood' and 252 or 128+math.floor((i-1)/2)*62
+    self:tile(row[1],hint,part,18+((i-1)%2)*168,y,S,enabled,'vehicleControl',part)
    end
-   self:tile('Lock / unlock','Personal or family','lock',186,252,S,not self.vehicle.pending,'lock')
+   self:tile('Lock / unlock','Personal or family','lock',186,190,S,not self.vehicle.pending,'lock')
   elseif self.page==2 then
    self:tile('Trunk','Open / close','trunk',18,128,S,not self.vehicle.pending,'vehicleControl','trunk')
    local onFoot=not(self.vehicle.sample or {}).vehicle

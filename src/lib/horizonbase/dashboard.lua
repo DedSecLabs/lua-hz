@@ -83,8 +83,10 @@ function M.draw(o,dl,s,scale,w,h,staminaShown,oxygenShown)
             local value
             if part=='lock'then value=s.locked elseif matching then value=observer:state(part)end
             local label=part=='lock' and 'Doors' or part:gsub('^%l',string.upper)
-            local status=matching and current.unavailable and current.unavailable[part] and 'N/A' or value==nil and 'Unknown' or part=='lock' and(value and 'Locked' or 'Unlocked')or
-                part=='window' and(value and 'Open' or 'Closed')or(value and 'On' or 'Off')
+            local status
+            if matching and current.unavailable and current.unavailable[part] then status='N/A'
+            elseif value~=nil then status=part=='lock' and(value and 'Locked' or 'Unlocked')or
+                part=='window' and(value and 'Open' or 'Closed')or(value and 'On' or 'Off')end
             local tint=value==nil and im.U32(.85,.87,.90,1)or value and im.U32(1,.68,.24,1)or im.U32(.45,.80,1,1)
             local cell=(width-152)/4;local center=x+(16+(i-.5)*cell)*scale
             local tex=o:texture((part=='lock' and 'dashboard-v031/'..(value==false and 'car-door-lock-open' or 'car-door-lock')or 'vehicle-v040/'..part)..'.png')

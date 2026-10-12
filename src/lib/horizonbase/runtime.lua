@@ -149,8 +149,8 @@ if ok then
             not app.overlay.mapOpen and not app.ui:isMapPreview()
     end,function()
         local hudReady=guard('HUD',function() app.overlay:hud() end)
-        if hudReady and app.toast:announce('0.4.0-rc.2',app.faults,app.interfaceReady) then
-            notify('0.4.0-rc.2 loaded. Settings: /luahz or '..app.ui:keyName(prefs.keybinds.settingsPanel,prefs.modifiers.settingsPanel))
+        if hudReady and app.toast:announce('0.4.0-rc.3',app.faults,app.interfaceReady) then
+            notify('0.4.0-rc.3 loaded. Settings: /luahz or '..app.ui:keyName(prefs.keybinds.settingsPanel,prefs.modifiers.settingsPanel))
         end
     end)
     app.hudFrame.HideCursor=true;app.hudFrame.LockPlayer=false
@@ -313,7 +313,7 @@ local function hotkeys()
                 app.server:cancelSequence()
                 app.server:onOutgoing(binding.command,false)
                 guard('Observations',function()app.observations:onOutgoing(binding.command,'keybind')end)
-                guard('Vehicle',function()app.vehicle:onOutgoing(binding.command)end)
+                guard('Vehicle',function()app.vehicle:onOutgoing(binding.command,false)end)
                 sampSendChat(binding.command)
             end
             app.commandBindDue=getGameTimer()+300
@@ -558,9 +558,9 @@ local function hookEvents()
     function events.onStopAudioStream() audioTrace('server stop') end
     function events.onServerMessage(_,text)
         guard('Observations',function()app.observations:event('chat',{text=text})end)
-        guard('Vehicle',function()app.vehicle:onMessage(text,app.server.characterName)end)
+        local vehicleOk,vehicleHide=guard('Vehicle',function()return app.vehicle:onMessage(text,app.server.characterName)end)
         local success,hide=guard('Server',function() return app.server:onMessage(text) end)
-        if success and hide then return false end
+        if vehicleOk and vehicleHide or success and hide then return false end
     end
     function events.onSendCommand(command)
         guard('Observations',function()app.observations:onOutgoing(command)end)
@@ -718,7 +718,7 @@ local function start()
         local ok,limiter=pcall(function()return require('horizonbase.limiter').new()end)
         if ok then app.limiter=limiter else app.faults.Limiter=tostring(limiter) end
     end
-    print('[LuaHZ] 0.4.0-rc.2 authorized endpoint 213.32.6.232:7777; waiting for login.')
+    print('[LuaHZ] 0.4.0-rc.3 authorized endpoint 213.32.6.232:7777; waiting for login.')
 end
 
 local function tick()
