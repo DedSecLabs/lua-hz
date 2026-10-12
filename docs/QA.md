@@ -202,3 +202,8 @@ Enter a personal vehicle and a family vehicle freshly (not merely reload while a
 On foot, use Vehicle storage and deliberately select/cancel the native server menu. A spawned row may store the vehicle; no storage action is automated. Track a spawned vehicle, wait for one periodic refresh, then Stop tracking. Stored or Empty rows must not cause repeated requests. Confirm clear navigation under U still resets local finding/tracking only after the server acknowledgement.
 
 Offline fixtures cover identity/epoch changes, early/late/conflicting ownership messages, wrong actors and reply parts, duplicate command echoes, state expiry, source-input cancellation, disabled controls, frame-stack cleanup, viewport fit, K collision migration, real runtime dispatch/input guards and GPS list/dialog ownership. Owner gameplay/visual QA remains pending.
+
+
+## 0.4.0 final archive verification
+
+The final player archive requires an owner report for its exact ZIP hash and source revision. Confirm login and movement, F9/I/M/U/K, preference persistence/restart, Trunk-on-foot and Controls-inside defaults, Alt cursor/movement behavior, personal/family dashboard badges and vehicle controls, silent menu Trunk balance versus visible manual `/trunkbalance`, storage/tracking, license refresh and an available profession action. Other-server isolation remains part of the check. Source/installer fixtures establish code and filesystem behavior; native Windows gameplay remains unverified. Exact archive hashes, deployment backup and owner results are recorded locally.

@@ -1,0 +1,380 @@
+{
+  "captured_build": "0.4.0-rc.5",
+  "method": "Native-resolution crops and alpha masks only. Captured RGB/text/version labels preserved exactly. Translucent dashboard tint and the player HUD game backdrop retained. Matching canvases within groups.",
+  "images": [
+    {
+      "file": "docs/images/gallery-v04/player-hud.png",
+      "source": "Screenshot From 2026-10-12 16-30-08.png",
+      "source_sha256": "448c11380a72735ee6f12801808addea69537c7c7339ab6061154e027dc7af22",
+      "output_sha256": "7b4598778464674973e6294433b82a799c8aa7766550def865b87fce3a09fa10",
+      "crop": [
+        0,
+        0,
+        380,
+        288
+      ],
+      "radius": 0,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        406,
+        314
+      ],
+      "group": "player-hud"
+    },
+    {
+      "file": "docs/images/gallery-v04/vehicle-controls.png",
+      "source": "Screenshot From 2026-10-12 16-30-19.png",
+      "source_sha256": "143c1c4faeac1e73aa487a644087a9d615da2319c2eff8f91f5908263b272b8d",
+      "output_sha256": "8e7b7f72b347ba02400882c4a413d4da897fded9f6b07dd81353b1a16f2411f8",
+      "crop": [
+        19,
+        16,
+        426,
+        400
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        433,
+        410
+      ],
+      "group": "vehicle-menu"
+    },
+    {
+      "file": "docs/images/gallery-v04/vehicle-trunk-balance.png",
+      "source": "Screenshot From 2026-10-12 16-31-20.png",
+      "source_sha256": "4de951a1ab5dc88503c0127ca818d7cc7e3669893ee4d36a69beb306c3c855f8",
+      "output_sha256": "365ff20d2683e1a230abb6769b355ebdc6c04f614d3886cfaad7b4991931baa6",
+      "crop": [
+        19,
+        16,
+        426,
+        400
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        433,
+        410
+      ],
+      "group": "vehicle-menu"
+    },
+    {
+      "file": "docs/images/gallery-v04/vehicle-my-vehicles.png",
+      "source": "Screenshot From 2026-10-12 16-32-00.png",
+      "source_sha256": "683a30bb9a6e396f6c4d41d7e342890f31144cd6a1dcc382bfc9669cdf038432",
+      "output_sha256": "a0f2fead36b7571e92bc8d7d81968a80465a72df75e0174080dc399b31eb43f1",
+      "crop": [
+        19,
+        16,
+        426,
+        400
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        433,
+        410
+      ],
+      "group": "vehicle-menu"
+    },
+    {
+      "file": "docs/images/gallery-v04/vehicle-personal.png",
+      "source": "Screenshot From 2026-10-12 16-33-11.png",
+      "source_sha256": "851c19f6dc5e082fbae1e91bffdecd8bd592dfbfdf75dd2221e9679e1061f2a3",
+      "output_sha256": "59300500a1936539cc6af1f9e47bf856628beabe8633a8bc792a36b42f52dbad",
+      "crop": [
+        17,
+        17,
+        463,
+        247
+      ],
+      "radius": 10,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        472,
+        256
+      ],
+      "group": "dashboard"
+    },
+    {
+      "file": "docs/images/gallery-v04/vehicle-family.png",
+      "source": "Screenshot From 2026-10-12 16-34-36.png",
+      "source_sha256": "50f2c45d857263be7277977beda75a7c5dd17aaf845a86c46a27b0731d237b9c",
+      "output_sha256": "3ff4f96f0ded11fab820fd2d8274f91020a9d9563f98d04ae17232c6160d9f46",
+      "crop": [
+        17,
+        17,
+        463,
+        247
+      ],
+      "radius": 10,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        472,
+        256
+      ],
+      "group": "dashboard"
+    },
+    {
+      "file": "docs/images/gallery-v04/quick-actions.png",
+      "source": "Screenshot From 2026-10-12 16-52-58.png",
+      "source_sha256": "d80a9bce16603815bf82fbfb4160d6e652983f04e0e58fcf15699d3ccd45f8aa",
+      "output_sha256": "6a7469e5f9f4848b6f48e95f5f552b8a28b41a9b55ed5cd3275799aaecec9a52",
+      "crop": [
+        16,
+        12,
+        734,
+        634
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        744,
+        648
+      ],
+      "group": "quick-actions"
+    },
+    {
+      "file": "docs/images/gallery-v04/character-licenses.png",
+      "source": "Screenshot From 2026-10-12 16-35-40.png",
+      "source_sha256": "56096a9e1ff8b31c633ad347a2d04ebd393d2021f62f13dc785b1170a61cb836",
+      "output_sha256": "cd4726196d396f9fc39e3154c2a1be31bfe02d5ba6f13b71f65a20380b80a20d",
+      "crop": [
+        8,
+        11,
+        1086,
+        657
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v04/normal-keybinds.png",
+      "source": "Screenshot From 2026-10-12 16-36-56.png",
+      "source_sha256": "a64d3ea2f6dd122cce37104270070cace286ccf99b321e0c9124ae06bd6c0956",
+      "output_sha256": "ead5098efce5433e37e999b159a0e671cc292804a67d3f6cca3c794135ab3201",
+      "crop": [
+        17,
+        14,
+        1095,
+        660
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v04/character.png",
+      "source": "Screenshot From 2026-10-12 16-37-59.png",
+      "source_sha256": "311601adde4d829a45ac1f84f6655a5aed830d1d0e9c3ab86252483dbd086502",
+      "output_sha256": "a6e03dbaaa5341ebde947580b83cc245e1c72ec811c5757071b542b58f94f9f5",
+      "crop": [
+        8,
+        11,
+        1086,
+        657
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v04/character-work.png",
+      "source": "Screenshot From 2026-10-12 16-38-01.png",
+      "source_sha256": "0f1bcbf66e7d05cc368c155d60c9016ce11da042bf2abdba40b58ce5ffb75eba",
+      "output_sha256": "47cbf64c45cb2138531412758e4cd2760e1007a0d897f9d7fa54a166de21e0a8",
+      "crop": [
+        8,
+        11,
+        1086,
+        657
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v04/character-finances.png",
+      "source": "Screenshot From 2026-10-12 16-38-02.png",
+      "source_sha256": "6798d0e30a5d074cc5d7bff7b7a7c6dc8bf989a634c2a50befd04d9d6553d576",
+      "output_sha256": "43b4a9fb976b951b804c6c0ddab0f4af78d4cce207a2190f20a4dcea891a5237",
+      "crop": [
+        8,
+        11,
+        1086,
+        657
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v04/character-health.png",
+      "source": "Screenshot From 2026-10-12 16-38-04.png",
+      "source_sha256": "486147080fedeb235023ff3e38788aba145b8d3fc79003a7efb8c069e4c92f39",
+      "output_sha256": "456eebbcb9c17672cc54409071fa5609a13204f665608467b95a0d5be7b36692",
+      "crop": [
+        8,
+        11,
+        1086,
+        657
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v04/character-inventory.png",
+      "source": "Screenshot From 2026-10-12 16-38-06.png",
+      "source_sha256": "8b637e0ea59c346ad72ec6637074454c0387c5eb57ed018d72d60dee246a5cb2",
+      "output_sha256": "8019f47f54649ebe68a53d20f79d4fc18e13564d1647b629719bcf44ee9c3529",
+      "crop": [
+        8,
+        11,
+        1086,
+        657
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v04/mod-commands.png",
+      "source": "Screenshot From 2026-10-12 16-49-25.png",
+      "source_sha256": "5d80d08f3e237f1f2dc0e5abf52ec43817ed56c9d81f9ecbcc9386353ef6f5e9",
+      "output_sha256": "fb6882e10207cd2c6433830582ba3316115163782547a49eaecfd9be9b2415c0",
+      "crop": [
+        9,
+        11,
+        1087,
+        657
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v04/server-status.png",
+      "source": "Screenshot From 2026-10-12 16-40-55.png",
+      "source_sha256": "f0b4d23b129968e21eb350732e36bdc021e66f5bd768daa5d4d7c92549395cd9",
+      "output_sha256": "30236be4009c3e4102761fb66b6819e022e2222f0d70d18f03352aa85620d5b4",
+      "crop": [
+        9,
+        11,
+        1087,
+        657
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    },
+    {
+      "file": "docs/images/gallery-v04/changelog.png",
+      "source": "Screenshot From 2026-10-12 16-41-12.png",
+      "source_sha256": "03c63a52c11b90f36a8a8886816b2da5f98ad5a476f42b6382d64cf0dc341a15",
+      "output_sha256": "0629b54174dcf26eb3f9f20a9c8aef39d3618a7fe8c7497bf64f2e510b27dcba",
+      "crop": [
+        9,
+        11,
+        1087,
+        657
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu"
+    }
+  ]
+}

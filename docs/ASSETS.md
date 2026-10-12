@@ -61,3 +61,8 @@ Eight owner-provided SVGs are rendered to 128×128 white-alpha PNGs under ignore
 ## Vehicle icon review — release 0.4.0
 
 The eight existing vehicle-v040 PNGs are now staged in player-resources with per-file credit and full applicable terms. Exact normalized upstream RGBA matches were verified for all eight, retaining the owner-tested bytes: Streamline Ultimate engine (CC BY 4.0), MingCute window (Apache 2.0), Pictogrammers lights/users (Apache 2.0), Google Material Symbols key/garage (Apache 2.0), and Custom Brand Icons hood/trunk (MIT). Attribution/modifications are stated in ATTRIBUTION.txt; public SOURCE.json contains no machine paths/account data. Local preparation/verification logs stay ignored. This completes this group's previously pending review; source exports still exclude its raster inputs.
+
+
+## Documentation gallery — release 0.4.0
+
+`docs/images/gallery-v04/` contains 17 owner-supplied screenshots captured in 0.4.0-rc.5. Native-resolution crops and alpha masks preserve every captured RGB pixel, including text and version labels. Game-blended outer panel edges are excluded; translucent dashboard tint and the native player HUD backdrop remain as captured. There is no raster scaling or text retouching. Matching transparent canvases use 13-pixel padding: F9/Character 1104×672, Vehicle menu 433×410, Quick Actions 744×648, dashboard 472×256, and player HUD 406×314. `sources.json` records source filenames/hashes, crop boxes, output hashes and group geometry. The older gallery and existing map/radar/energy/Find player captures remain intact.
