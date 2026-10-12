@@ -39,7 +39,7 @@ The installer prints a recovery command for its new `LuaHZ-backups` directory. R
 
 ## Required player release presentation
 
-The GitHub title is `LuaHZ <version> — player release`. Do not repeat it as a heading in the release body. The generated body, attached `RELEASE_NOTES.md` and notes inside the ZIP use this order:
+The GitHub title is `LuaHZ <version> — <feature name>`. Choose a theme that describes the release during preparation. Do not repeat it as a heading in the release body. The generated body, attached `RELEASE_NOTES.md` and notes inside the ZIP use this order:
 
 1. **Mod Changes**: what players will notice since the previous published player release. Include intervening local versions; use the F9 changelog as the baseline, not commit subjects. If no behavior changed, say so.
 2. **What's Changed**: source commit subjects in the exact previous-stable-tag-to-packaged-revision interval, followed by the **Full Changelog** compare link.
