@@ -1,6 +1,6 @@
 # Releases and player downloads
 
-The latest published player download is [LuaHZ 0.3.0](https://github.com/DedSecLabs/luahz/releases/tag/v0.3.0). The owner passed the RC checklist and final exact-archive smoke test on Linux/Wine on 2026-10-11. Native Windows gameplay remains unverified. The historical 0.2.39 download is preserved.
+The latest published player download is [LuaHZ 0.4.0 — My Car! My F\*\*\*in’ Car!!](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.0). The owner passed the exact final archive checklist on Linux/Wine on 2026-10-12. Native Windows gameplay remains unverified. Historical player releases and checksums are preserved.
 
 ## Player candidate workflow
 
@@ -10,7 +10,7 @@ The latest published player download is [LuaHZ 0.3.0](https://github.com/DedSecL
 
 New player tags use `v<version>`, such as `v0.3.0-rc.1` and `v0.3.0`. The archive retains the `-player.zip` edition suffix. Historical tags such as `v0.2.39-player` remain unchanged. Changes are compared with the previous stable player tag, excluding RC, base and source-preview tags.
 
-1. Freeze the feature batch, record pending QA, and synchronize the version in `manifests/release.json`, `src/HorizonBase.lua`, `tools/deploy.py`, the runtime notice and F9 version label. Keep the historical F9 changelog.
+1. Freeze the feature batch, record pending QA, and synchronize the version in `manifests/release.json`, `src/HorizonBase.lua`, `tools/deploy.py`, the runtime notice and F9 version label. Keep the historical F9 changelog. Choose the release theme in `manifests/release.json` as `release_name`; the player manifest and draft workflow carry that name forward. Prepare the new README on the release branch with its planned tag URLs so the tagged source snapshot includes it; activate it on the default branch after publication and live-link verification.
 2. Write player-facing changes in `docs/releases/<major.minor.patch>.md`. RCs and the final milestone share that change interval; verify claims against the shipped code and the previous public release.
 3. Run `tools/check.py`, source export and fresh-clone verification. Validate shell and PowerShell installer upgrades/recovery, and check the generated release notes and ZIP contents. Native Windows gameplay QA remains a separate report even when PowerShell fixtures pass on Linux.
 4. Commit the actual release inputs before packaging. The packager rejects a dirty working tree or a revision other than HEAD; its recorded revision must represent the payload.

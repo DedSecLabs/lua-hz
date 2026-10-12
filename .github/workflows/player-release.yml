@@ -79,6 +79,7 @@ jobs:
           sha256sum --check SHA256SUMS.txt
           tag=$(python3 -c 'import json; print(json.load(open("release-manifest.json"))["tag"])')
           version=$(python3 -c 'import json; print(json.load(open("release-manifest.json"))["version"])')
+          release_name=$(python3 -c 'import json; print(json.load(open("release-manifest.json")).get("release_name", "player release"))')
           if gh release view "$tag" --json isDraft --jq .isDraft > is-draft.txt; then
             if [ "$(cat is-draft.txt)" != true ]; then
               echo 'Published release preserved. Use a new version for changed bytes.' >> "$GITHUB_STEP_SUMMARY"
@@ -86,12 +87,12 @@ jobs:
             fi
             gh release upload "$tag" ./*.zip SHA256SUMS.txt RELEASE_NOTES.md release-manifest.json --clobber
             gh release edit "$tag" --draft --prerelease --latest=false --target "$SOURCE_REVISION" \
-              --title "LuaHZ $version — player release" --notes-file RELEASE_NOTES.md
+              --title "LuaHZ $version — $release_name" --notes-file RELEASE_NOTES.md
             echo 'Draft refreshed. Owner testing is required before publication.' >> "$GITHUB_STEP_SUMMARY"
             gh release view "$tag" --json url --jq .url >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           gh release create "$tag" ./*.zip SHA256SUMS.txt RELEASE_NOTES.md release-manifest.json \
             --draft --prerelease --latest=false --target "$SOURCE_REVISION" \
-            --title "LuaHZ $version — player release" --notes-file RELEASE_NOTES.md
+            --title "LuaHZ $version — $release_name" --notes-file RELEASE_NOTES.md
           gh release view "$tag" --json url --jq .url >> "$GITHUB_STEP_SUMMARY"

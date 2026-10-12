@@ -1,5 +1,6 @@
 """Exercise release publication policy with a disposable mock GitHub CLI."""
 import hashlib
+import json
 import os
 from pathlib import Path
 import subprocess
@@ -14,7 +15,7 @@ class PlayerWorkflowTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory);player = root / 'dist/player';player.mkdir(parents=True)
             files = {'candidate.zip': b'payload', 'RELEASE_NOTES.md': b'notes',
-                     'release-manifest.json': b'{"version":"0.3.0-rc.1","tag":"v0.3.0-rc.1"}'}
+                     'release-manifest.json': json.dumps({'version':'0.3.0-rc.1','tag':'v0.3.0-rc.1','release_name':'My Car! My F***in’ Car!!'}).encode()}
             for name, content in files.items():(player / name).write_bytes(content)
             (player / 'SHA256SUMS.txt').write_text(''.join(hashlib.sha256(content).hexdigest() + '  ' + name + '\n' for name,content in files.items()))
             mock = root / 'bin';mock.mkdir();log = root / 'calls.txt'
@@ -43,5 +44,6 @@ class PlayerWorkflowTests(unittest.TestCase):
         self.assertIn('--prerelease',edit)
         self.assertIn('--latest=false',edit)
         self.assertIn('--target '+('a'*40),edit)
+        self.assertIn('--title LuaHZ 0.3.0-rc.1 — My Car! My F***in’ Car!!',edit)
 
 if __name__=='__main__':unittest.main()

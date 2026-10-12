@@ -1,12 +1,12 @@
 # Installation guide
 
-**Player download:** [LuaHZ 0.3.0](https://github.com/DedSecLabs/luahz/releases/tag/v0.3.0). Use the supplied PowerShell or Linux/Wine installer; existing installations require an explicit upgrade. See [installation and upgrade](#player-installation-and-upgrade). [BASE_INSTALL.md](BASE_INSTALL.md) describes the earlier small preview, which omits the visuals.
+**Player download:** [LuaHZ 0.4.0](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.0). Use the supplied PowerShell or Linux/Wine installer; existing installations require an explicit upgrade. See [installation and upgrade](#player-installation-and-upgrade). [BASE_INSTALL.md](BASE_INSTALL.md) describes the earlier small preview, which omits the visuals.
 
-LuaHZ 0.3.0 targets classic **GTA San Andreas 1.0 US**, **SA-MP 0.3.7 R5** and the prerequisite versions linked in the [README](../README.md#install). This guide documents that prerequisite setup. The repository source ZIP is not the player download.
+LuaHZ 0.4.0 targets classic **GTA San Andreas 1.0 US**, **SA-MP 0.3.7 R5** and the prerequisite versions linked in the [README](../README.md#install). This guide documents that prerequisite setup. The repository source ZIP is not the player download.
 
 ## What you can install today
 
-Install the prerequisites below, then download `LuaHZ-0.3.0-player.zip` from [Releases](https://github.com/DedSecLabs/luahz/releases/tag/v0.3.0). GitHub’s **Code → Download ZIP** contains developer source and cannot replace that package. Python, GCC and LuaJIT build tools are for contributors, not prerequisites players need to install separately.
+Install the prerequisites below, then download `LuaHZ-0.4.0-player.zip` from [Releases](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.0). GitHub’s **Code → Download ZIP** contains developer source and cannot replace that package. Python, GCC and LuaJIT build tools are for contributors, not prerequisites players need to install separately.
 
 ## Find your game folder
 
@@ -48,7 +48,7 @@ SunSizeHack=0
 UseDesktopRefreshRate=0
 ```
 
-These disable optional mission-script, intro, sun-size and refresh-rate changes; the streaming-deadlock fix remains active. Keep `SmallSteamTexts=-1`, `MinimalHUD=0`, and `TrueInvincibility=0` as supplied. No GTA executable replacement is needed. The 0.3.0 player installers verify the tested ASI hash; the historical 0.2.39 archive predates this prerequisite check.
+These disable optional mission-script, intro, sun-size and refresh-rate changes; the streaming-deadlock fix remains active. Keep `SmallSteamTexts=-1`, `MinimalHUD=0`, and `TrueInvincibility=0` as supplied. No GTA executable replacement is needed. The 0.4.0 player installers verify the tested ASI hash; the historical 0.2.39 archive predates this prerequisite check.
 
 ## SAMP.Lua baseline
 
@@ -105,7 +105,7 @@ This is a layout checklist, not a full archive inventory. The prerequisite archi
 
 ## Installing LuaHZ itself
 
-**Player package:** [LuaHZ-0.3.0-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.3.0/LuaHZ-0.3.0-player.zip). Extract outside the GTA folder, then use `install.ps1` on Windows or `install.sh` on Linux/Wine. Follow the [first-install/upgrade commands](#player-installation-and-upgrade) below. Downloads labeled **developer preview** and GitHub’s automatic **Source code** archives are for contributors.
+**Player package:** [LuaHZ-0.4.0-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.4.0/LuaHZ-0.4.0-player.zip). Extract outside the GTA folder, then use `install.ps1` on Windows or `install.sh` on Linux/Wine. Follow the [first-install/upgrade commands](#player-installation-and-upgrade) below. Downloads labeled **developer preview** and GitHub’s automatic **Source code** archives are for contributors.
 
 **Source/local testing:** Use [the development guide](DEVELOPMENT.md) to check/build the source and deploy it with backups. Our Lua entry point is historically named `HorizonBase.lua`; it belongs in `moonloader`, and `src/lib/horizonbase` becomes `moonloader/lib/horizonbase`. Use the deployment tools to stage the licensed UI icons and available external resources; copying only that Lua file is insufficient.
 
@@ -116,7 +116,7 @@ The player ZIP already contains `LuaHZVisuals.dll`, the native visual files, and
 With LuaHZ deployed, launch Horizon from the same SA-MP browser you normally use:
 
 - A LuaHZ notification appears at the bottom right.
-- **F9** or `/luahz` opens settings; **M** opens Quickmap; **I** opens Character Status; **U** opens Quick Actions.
+- **F9** or `/luahz` opens settings; **M** opens Quickmap; **I** opens Character Status; **U** opens character Quick Actions; **K** or `/luahzvehicle` opens Vehicle. Hold **Alt** to click its controls, then release for mouse/camera input.
 - While driving a road vehicle, **X** toggles cruise control; **Numpad + / −** (or **= / −** on the main keyboard) adjusts the target by 1 mph. Brake or press **X** again to cancel. See the [README controls table](../README.md#controls) for cruise preset shortcuts.
 - Exit the game, connect to another server, and verify LuaHZ UI/custom visuals remain inactive.
 - Exit again and reconnect to Horizon; LuaHZ should activate normally.
@@ -164,7 +164,7 @@ The CLEO 4.4.4 and MoonLoader archives were fetched and matched during the earli
 
 ## Player installation and upgrade
 
-The 0.3.0 player ZIP includes guarded installers for Linux/Wine and PowerShell. These commands apply to 0.3.0; the historical 0.2.39 installer has different upgrade behavior. Close GTA and the SA-MP browser; install the prerequisite versions above, including SilentPatchSA 1.1 Build 34.1. Extract the ZIP outside the game folder.
+The 0.4.0 player ZIP includes guarded installers for Linux/Wine and PowerShell. These commands apply to 0.4.0; the historical 0.2.39 installer has different upgrade behavior. Close GTA and the SA-MP browser; install the prerequisite versions above, including SilentPatchSA 1.1 Build 34.1. Extract the ZIP outside the game folder.
 
 **Linux/Wine, first installation:**
 

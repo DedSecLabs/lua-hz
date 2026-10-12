@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/DedSecLabs/luahz/releases/tag/v0.3.0"><img src="https://img.shields.io/badge/Release-0.3.0-2563eb" alt="release 0.3.0"></a>
+  <a href="https://github.com/DedSecLabs/luahz/releases/tag/v0.4.0"><img src="https://img.shields.io/badge/Release-0.4.0-2563eb" alt="release 0.4.0"></a>
   <img src="https://img.shields.io/badge/Platform-SA--MP-ff8000" alt="platform SA-MP">
   <a href="https://github.com/DedSecLabs/luahz/actions/workflows/release.yml"><img src="https://img.shields.io/github/actions/workflow/status/DedSecLabs/luahz/release.yml?branch=main&label=Build&color=22c55e" alt="build status"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-64748b" alt="license MIT"></a>
@@ -25,7 +25,7 @@
 
 It activates only on `samp.hzgaming.net:7777` / `213.32.6.232:7777`. The same SA-MP installation can still join other servers.
 
-[Download](https://github.com/DedSecLabs/luahz/releases/tag/v0.3.0) · [Install](#install) · [Controls](#controls) · [Features](#features) · [Development](#development)
+[Download: My Car! My F\*\*\*in’ Car!!](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.0) · [Install](#install) · [Controls](#controls) · [Features](#features) · [Development](#development)
 
 </div>
 
@@ -33,7 +33,7 @@ It activates only on `samp.hzgaming.net:7777` / `213.32.6.232:7777`. The same SA
 
 ## Install
 
-Download **[LuaHZ-0.3.0-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.3.0/LuaHZ-0.3.0-player.zip)**.
+Download **[LuaHZ-0.4.0-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.4.0/LuaHZ-0.4.0-player.zip)**.
 
 ### 1. Prepare the game
 
@@ -88,10 +88,11 @@ Add `samp.hzgaming.net:7777` in the SA-MP browser and connect. A LuaHZ notice ap
 |---|---|
 | HUD | Player information, labeled stamina and oxygen, vehicle speed and health, and matching notices |
 | Quickmap | Saved Horizon locations and a configurable map |
-| Character Status | Skin portrait, live player information, and tabbed server statistics |
+| Character Status | Skin portrait, live player information, server statistics and licenses |
 | Controls | Editable shortcuts, separate normal bindings and command combos, smart vehicle locking, and cruise control |
 | Performance | FPS limits for different game contexts |
-| Quick Actions | Clear navigation, lock a nearby personal or family vehicle, track your vehicle, and find a player |
+| Vehicle | Controls, locks, storage, tracking and trunk balance in a compact K menu |
+| Quick Actions | Navigation, skills, job locations/help and actions for your current jobs |
 | Server | Searchable families and online members, rules, server settings, useful links and version observations |
 | Commands | Separate Horizon server help and LuaHZ command references |
 | Horizon helpers | Offer handling and tracking tools using ordinary server commands |
@@ -104,14 +105,15 @@ Add `samp.hzgaming.net:7777` in the SA-MP browser and connect. A LuaHZ notice ap
 | **F9** or `/luahz` | Open settings |
 | **M** | Open Quickmap |
 | **I** | Open Character Status |
-| **U** or `/luahzactions` | Open Quick Actions |
+| **U** or `/luahzactions` | Open character Quick Actions |
+| **K** or `/luahzvehicle` | Open Vehicle; hold **Alt** to click while it stays visible |
 | **X** | Toggle cruise control at your current speed |
 | **Numpad + / −** or **= / −** | Raise or lower the cruise target by 1 mph |
 | **Numpad 1 / 2 / 3** | Cruise at **50 / 80 / 120 mph** |
 
 > Change shortcuts and preset speeds in **F9 → Keybinds → Normal keybinds**. Cruise works while you drive a road vehicle. Brake, or press **X** again, to cancel.
 
-Screenshots below were captured in development build **0.2.54**.
+New screenshots show development build **0.4.0-rc.5**. Unchanged map/HUD/menu images are retained from earlier captures.
 
 ### Settings
 
@@ -123,13 +125,29 @@ Configure the HUD and interface with F9.
 
 Normal shortcuts and command combos have separate tabs. Smart vehicle locking tries the other vehicle type only after a recognized “not nearby” response.
 
-<img src="docs/images/gallery-v03/normal-keybinds.png" alt="Keybinds" width="720"><br>
+<img src="docs/images/gallery-v04/normal-keybinds.png" alt="Keybinds" width="720"><br>
+
+### Vehicle menu
+
+Press **K** for a compact panel on the right. Trunk opens on foot; Controls opens inside a vehicle. Keep moving or driving while it stays visible; hold **Alt** to click and release it for mouse/camera control. **K** or **Escape** closes it.
+
+**Controls** use ordinary server commands for engine, lights, window, hood, trunk and locks. Engine, lights, window and hood require the driver; trunk and locks also work nearby on foot. Availability still depends on the server and vehicle.
+
+<img src="docs/images/gallery-v04/vehicle-controls.png" alt="Vehicle controls" width="433"><br>
+
+**Trunk** opens/closes the nearby trunk and shows **Trunk balance** on foot. Menu balance requests stay silent; typing `/trunkbalance` yourself keeps normal chat output.
+
+<img src="docs/images/gallery-v04/vehicle-trunk-balance.png" alt="Trunk balance viewer" width="433"><br>
+
+**My vehicles** opens storage or starts/stops tracking. Choose the vehicle in the server menu; check Spawned/Stored status before confirming. Stored vehicles need spawning before tracking.
+
+<img src="docs/images/gallery-v04/vehicle-my-vehicles.png" alt="Vehicle storage and tracking" width="433"><br>
 
 ### Quick Actions
 
-Press U to clear navigation, lock a vehicle, track your vehicle or find a player. Clearing navigation also resets trackers and accepted fares.
+Press U for navigation, skills, job locations and help, plus actions matched to your current jobs. Detective tools appear for detectives. Some actions open a form for a player, price or choice; the server checks requirements.
 
-<img src="docs/images/gallery-v03/quick-actions.png" alt="Quick Actions" width="720"><br>
+<img src="docs/images/gallery-v04/quick-actions.png" alt="Quick Actions" width="720"><br>
 
 ### Find player
 
@@ -157,9 +175,15 @@ Browse server help in one tab and LuaHZ commands in another.
 
 ### Character Status
 
-Press I for Character, Work, Finances, Health and Inventory tabs.
+Press I for Character, Work, Finances, Health, Inventory and Licenses tabs.
 
-<img src="docs/images/gallery-v03/character.png" alt="Character Status" width="720"><br>
+<img src="docs/images/gallery-v04/character.png" alt="Character Status" width="720"><br>
+
+### Licenses
+
+View the server-received Driver's, Pilot and Boating license statuses; Refresh requests a new snapshot.
+
+<img src="docs/images/gallery-v04/character-licenses.png" alt="Character licenses" width="720"><br>
 
 ### Maps
 
@@ -175,11 +199,18 @@ High-resolution radar map and map blips.
 
 <img src="docs/images/minimap_776_canvas.png" alt="Radar map and map blips"><br>
 
+### High-resolution player HUD
+
+High-resolution HUD fonts and weapon icons keep the time, health, armor and cash readable.
+
+<img src="docs/images/gallery-v04/player-hud.png" alt="High-resolution player HUD"><br>
+
 ### Vehicle HUD
 
-Vehicle name, speed and health.
+Vehicle name, speed and health, Personal/Family ownership badges, and readable Doors, Engine, Lights and Window states. Unknown states use neutral icons.
 
-<img src="docs/images/gallery-v03/vehicle-driving.png" alt="Vehicle dashboard showing speed and health"><br>
+<img src="docs/images/gallery-v04/vehicle-personal.png" alt="Personal vehicle dashboard"><br>
+<img src="docs/images/gallery-v04/vehicle-family.png" alt="Family vehicle dashboard"><br>
 
 ### Stamina and oxygen
 
@@ -205,11 +236,11 @@ Labeled bars share the same width as LuaHZ notices. Notices stack above active H
 
 **Server status**
 
-<img src="docs/images/gallery-v03/server-status.png" alt="Server status" width="720"><br>
+<img src="docs/images/gallery-v04/server-status.png" alt="Server status" width="720"><br>
 
 **LuaHZ command reference**
 
-<img src="docs/images/gallery-v03/mod-commands.png" alt="LuaHZ command reference" width="720"><br>
+<img src="docs/images/gallery-v04/mod-commands.png" alt="LuaHZ command reference" width="720"><br>
 
 **Quickmap settings**
 
@@ -229,19 +260,23 @@ Labeled bars share the same width as LuaHZ notices. Notices stack above active H
 
 **Character work**
 
-<img src="docs/images/gallery-v03/character-work.png" alt="Character work" width="720"><br>
+<img src="docs/images/gallery-v04/character-work.png" alt="Character work" width="720"><br>
 
 **Character finances**
 
-<img src="docs/images/gallery-v03/character-finances.png" alt="Character finances" width="720"><br>
+<img src="docs/images/gallery-v04/character-finances.png" alt="Character finances" width="720"><br>
 
 **Character health**
 
-<img src="docs/images/gallery-v03/character-health.png" alt="Character health" width="720"><br>
+<img src="docs/images/gallery-v04/character-health.png" alt="Character health" width="720"><br>
 
 **Character inventory**
 
-<img src="docs/images/gallery-v03/character-inventory.png" alt="Character inventory" width="720"><br>
+<img src="docs/images/gallery-v04/character-inventory.png" alt="Character inventory" width="720"><br>
+
+**Changelog**
+
+<img src="docs/images/gallery-v04/changelog.png" alt="LuaHZ changelog" width="720"><br>
 
 </details>
 

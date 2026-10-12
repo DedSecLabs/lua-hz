@@ -6,5 +6,6 @@
   "player_release_blockers": [
     "This developer preview excludes the full visual resource packs; use the separate complete player ZIP.",
     "Native Windows gameplay QA has not been recorded."
-  ]
+  ],
+  "release_name": "My Car! My F***in\u2019 Car!!"
 }

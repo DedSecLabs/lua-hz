@@ -189,6 +189,11 @@ def package(output, revision, resources, asi):
         'includes': list(GROUPS) + ['LuaHZLoading.asi'],
         'excluded': ['GTA', 'SA-MP', 'CLEO', 'SilentPatchSA', 'MoonLoader', 'SAMPFUNCS', 'mimgui', 'older resource versions'],
     }
+    release_name = json.loads((ROOT / 'manifests/release.json').read_text()).get('release_name')
+    if release_name is not None:
+        if not isinstance(release_name, str) or not release_name.strip() or '\n' in release_name or '\r' in release_name:
+            raise ValueError('Release name must be nonempty text on one line')
+        result['release_name'] = release_name.strip()
     notes = release_notes(version, revision, len(files))
     output.mkdir(parents=True)
     work = output / ('LuaHZ-' + version + '-player')
