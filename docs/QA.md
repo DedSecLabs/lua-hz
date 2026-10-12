@@ -207,3 +207,6 @@ Offline fixtures cover identity/epoch changes, early/late/conflicting ownership 
 ## 0.4.0 final archive verification
 
 The final player archive requires an owner report for its exact ZIP hash and source revision. Confirm login and movement, F9/I/M/U/K, preference persistence/restart, Trunk-on-foot and Controls-inside defaults, Alt cursor/movement behavior, personal/family dashboard badges and vehicle controls, silent menu Trunk balance versus visible manual `/trunkbalance`, storage/tracking, license refresh and an available profession action. Other-server isolation remains part of the check. Source/installer fixtures establish code and filesystem behavior; native Windows gameplay remains unverified. Exact archive hashes, deployment backup and owner results are recorded locally.
+
+
+On 2026-10-12 the owner reported “All works as intended, tests pass” for the exact installed 0.4.0 archive, SHA-256 `a52c95aefd680a059580742a27d5208ede5e3d81305b99100d165ff6410782ff`, source `27b27c5819f749016070fa777facebe905d95a70`. This accepts the final checklist on Linux/Wine. All 693 installed payload hashes and four draft asset digests were rechecked unchanged after the report. Native Windows gameplay remains unverified.
