@@ -176,7 +176,7 @@ rawPrint('PASS I opens/closes Character Status; Escape, typing and gameplay-hotk
 -- Complete the stats request queued by opening the empty panel before checking other queue traffic.
 gameClock=4000;tick()
 local statusEvents=require 'samp.events'
-statusEvents.onServerMessage(-1,'John Doe - (Level: 1) - (Playing hours: 7) - (Age: 35) - (Gender: Male) - (Warnings: 0) - (Donator: No)')
+statusEvents.onServerMessage(-1,'John Doe - (Level: 1) - (Playing hours: 7) - (Age: 35) - (Gender: Male) - (Warnings: 0) - (Job: Detective [lvl: 1]) - (Donator: No)')
 gameClock=5500
 commands.autofind('17');tick();assert(sent[#sent]=='/find 17')
 local events=require 'samp.events'
@@ -221,7 +221,7 @@ assert(events.onServerMessage(-1,'(Cash: $4,360) - (Donator: No)')==false)
 assert(events.onServerMessage(-1,sep)==false)
 assert(events.onServerMessage(-1,'Unrelated server message')==nil)
 events.onSendCommand('/stats')
-assert(events.onServerMessage(-1,'John Doe - (Level: 1) - (Playing hours: 7) - (Age: 35) - (Gender: Male) - (Warnings: 0) - (Donator: No)')==nil)
+assert(events.onServerMessage(-1,'John Doe - (Level: 1) - (Playing hours: 7) - (Age: 35) - (Gender: Male) - (Warnings: 0) - (Job: Detective [lvl: 1]) - (Donator: No)')==nil)
 onWindowMessage(0x0100,27,0)
 rawPrint('PASS actual incoming chat callback suppresses only owned stats; ordinary and manual responses pass through')
 
@@ -332,9 +332,9 @@ sampGetPlayerNickname=oldNickname
 onWindowMessage(0x0100,85,0);im.clicks['Find player##quickAction']=true;frames[7].draw()
 im.clicks['Jane_Doe (18)##quickTarget18']=true;frames[7].draw();gameClock=78000;tick();assert(sent[#sent]=='/find 18')
 onWindowMessage(0x0100,85,0);im.clicks['Stop finding##quickAction']=true;frames[7].draw();tick()
-onWindowMessage(0x0100,75,0);im.clicks['Track my vehicle##vehicleAction']=true;frames[8].draw();gameClock=79500;tick();assert(sent[#sent]=='/trackcar')
-onWindowMessage(0x0100,75,0);im.clicks['Stop tracking##vehicleAction']=true;frames[8].draw();tick()
-onWindowMessage(0x0100,75,0);im.clicks['Controls##vehicleTab1']=true;im.clicks['Lock / unlock##vehicleAction']=true;frames[8].draw();gameClock=81000;tick();assert(sent[#sent]=='/pvl')
+onWindowMessage(0x0100,75,0);im.clicks['My vehicles##vehicleTab3']=true;im.clicks['Track vehicle##vehicleAction']=true;down[18]=true;tick();frames[8].draw();down[18]=nil;gameClock=79500;tick();assert(sent[#sent]=='/trackcar')
+im.clicks['Stop tracking##vehicleAction']=true;down[18]=true;tick();frames[8].draw();down[18]=nil;tick()
+im.clicks['Controls##vehicleTab1']=true;im.clicks['Lock / unlock##vehicleAction']=true;down[18]=true;tick();frames[8].draw();down[18]=nil;gameClock=81000;tick();assert(sent[#sent]=='/pvl')
 events.onTextDrawSetString(2050,'~g~Test Vehicle Unlocked')
 onWindowMessage(0x0100,85,0);onWindowMessage(0x0100,27,0);assert(not frames[7].Condition())
 assert(frames[7].LockPlayer and not frames[7].HideCursor)
@@ -354,14 +354,14 @@ local vehicleBefore=#sent
 chat=true;onWindowMessage(0x0100,75,0);assert(not frames[8].Condition());chat=false
 onWindowMessage(0x0100,75,0);assert(frames[8].Condition() and not frames[7].Condition())
 onWindowMessage(0x0100,75,0x40000000);assert(frames[8].Condition())
-im.clicks['Engine##vehicleAction']=true;frames[8].draw();assert(not frames[8].Condition() and #sent==vehicleBefore)
+im.clicks['Engine##vehicleAction']=true;down[18]=true;tick();frames[8].draw();down[18]=nil;assert(frames[8].Condition() and not frames[8].LockPlayer and frames[8].PassKeyboard and #sent==vehicleBefore)
 gameClock=84500;tick();assert(sent[#sent]=='/car engine' and #sent==vehicleBefore+1)
 events.onServerMessage(-1,'Vehicle engine turned off.')
-onWindowMessage(0x0100,75,0);im.clicks['Hood##vehicleAction']=true;frames[8].draw()
+im.clicks['Hood##vehicleAction']=true;down[18]=true;tick();frames[8].draw();down[18]=nil;
 parkedCar=3;gameClock=86000;tick();assert(#sent==vehicleBefore+1,'Changed vehicle must cancel an unsent control')
 onWindowMessage(0x0100,75,0);onWindowMessage(0x0008,0,0);assert(not frames[8].Condition())
 onWindowMessage(0x0007,0,0);onWindowMessage(0x0100,75,0);onWindowMessage(0x0100,27,0);assert(not frames[8].Condition())
-onWindowMessage(0x0100,75,0);im.clicks['My vehicles##vehicleTab2']=true;im.clicks['Vehicle storage##vehicleAction']=true;frames[8].draw();gameClock=88000;tick();assert(sent[#sent]=='/vstorage')
+onWindowMessage(0x0100,75,0);im.clicks['My vehicles##vehicleTab3']=true;im.clicks['Storage##vehicleAction']=true;down[18]=true;tick();frames[8].draw();down[18]=nil;gameClock=88000;tick();assert(sent[#sent]=='/vstorage')
 parkedCar=nil;tick()
 rawPrint('PASS K repeat/typing/escape/focus guards, deferred control send, identity revalidation and storage while on foot')
 local vehicleSendCount=#sent
@@ -381,6 +381,29 @@ onWindowMessage(0x0008,0,0);local vehicleStopped=#captured
 onWindowMessage(0x0007,0,0);tick()
 assert(#captured==vehicleStopped,'Focus return must not restart vehicle capture')
 rawPrint('PASS actual vehicle capture command, entry/menu response passthrough, no action sends, private input exclusion and focus cancellation')
+commands.luahzstatus();im.clicks['Licenses##characterTab6']=true;frames[5].draw()
+gameClock=gameClock+1500;tick();assert(sent[#sent]=='/licenses','License refresh must run while I is open')
+assert(events.onServerMessage(-1,'Your licenses...')==false)
+assert(events.onServerMessage(-1,"** Driver's license: Acquired.")==false)
+assert(events.onServerMessage(-1,'** Pilot license: Acquired.')==false)
+assert(events.onServerMessage(-1,'** Boating license: Acquired.')==false)
+onWindowMessage(0x0100,27,0)
+events.onSendCommand('/stats')
+events.onServerMessage(-1,'John Doe - (Level: 1) - (Playing hours: 7) - (Age: 35) - (Gender: Male) - (Job: Bodyguard) - (Job 2: None) - (Donator: No)')
+commands.luahzactions();im.clicks['Find player##quickAction']=true;frames[7].draw()
+assert(not im.clicks['Offer armor##quickAction'])
+im.clicks['Offer armor##quickAction']=true;frames[7].draw()
+local inputText=im.InputText
+im.InputText=function(label,ptr,size)
+ if label=='##jobTarget'then im.StrCopy(ptr,'18')elseif label=='##jobAmount'then im.StrCopy(ptr,'200')end
+ return false
+end
+im.clicks['Run##jobSubmit']=true;frames[7].draw();im.InputText=inputText
+local jobBefore=#sent
+sampGetPlayerNickname=function(id)return id==18 and 'Changed_Player' or oldNickname(id)end
+gameClock=gameClock+1500;tick();assert(#sent==jobBefore,'Job target identity must be revalidated before sending')
+sampGetPlayerNickname=oldNickname
+rawPrint('PASS live I license refresh, profession-specific action forms and queued player identity revalidation')
 noExtraSend=#sent
 commands.luahzcapture('families');assert(#sent==noExtraSend,'A queued capture must remain unsent before the main loop')
 rawPrint('PASS runtime capture preserves chat/dialog/checkpoint/textdraw callbacks and observes version without extra commands')

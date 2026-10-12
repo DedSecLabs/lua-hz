@@ -50,3 +50,7 @@ assert(r.keybinds.quickmap==83 and r.modifiers.quickmap==5)
 ui.capture={section='keybinds',key='settingsPanel'};ui:captureKey(83,1500,5)
 assert(r.keybinds.settingsPanel==120) -- Existing chord collision rejected.
 print('PASS capture waits through modifiers, formats combo, unsets and rejects collisions')
+assert(Keys.uiKeyboardPass({{_render=true,HideCursor=true},{_render=true,HideCursor=false,PassKeyboard=true}}))
+assert(not Keys.uiKeyboardPass({{_render=true,PassKeyboard=true},{_render=true,HideCursor=false}}),'Another interactive window must retain keyboard capture')
+assert(not Keys.uiKeyboardPass({{_render=false,PassKeyboard=true},{_render=true,HideCursor=true}}),'An inactive panel cannot grant keyboard passthrough')
+print('PASS pointer-only vehicle keyboard passthrough and ordinary interactive-menu capture')

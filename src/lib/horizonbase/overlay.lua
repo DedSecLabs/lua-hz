@@ -179,7 +179,12 @@ end
 
 function M:hudGeometry(w,h)
     local s=self.game.sample
-    return logic.hudLayout(w,h,self.config.hud,264,hudStyle.playerWidth),
+    local fitHeight=264
+    if s.vehicle and self.config.settings.vdb>0 then
+        fitHeight=(self.config.settings.vdb==2 and 146 or 232)+130+
+            (self.config.settings.oxygen and s.underwater and 94 or 0)
+    end
+    return logic.hudLayout(w,h,self.config.hud,264,hudStyle.playerWidth,fitHeight,s.vehicle and self.config.settings.vdb>0 and 448 or hudStyle.playerWidth),
         self.config.settings.stamina and not s.vehicle and (s.running or (s.stamina or 1)<.995),
         self.config.settings.oxygen and s.underwater
 end

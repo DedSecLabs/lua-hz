@@ -41,6 +41,7 @@ function getScreenResolution()return 1920,1080 end
 function getGameTimer()return now end
 local ui=require('horizonbase.ui').new(im,Config.copy(Config.defaults),function()end,function()end)
 s.horizon=true;s.ready=true;s.loginSeen=true;s.find={active=false};s.track={active=false}
+s.character.fields.Job='Detective [lvl: 1]'
 local actions={}
 local panel=require('horizonbase.actions_ui').new(im,ui,s,function(kind,arg)actions[#actions+1]={kind=kind,arg=arg};return true end,function()return {{id=10,name='Player_Test'}}end)
 panel.open[0]=true;im.clicks['Clear navigation##quickAction']=true;panel:draw()
@@ -69,7 +70,7 @@ im.Button=function(label,size)
     return oldButton(label,size)
 end
 s.checkpoint=nil;panel:reset();panel.open[0]=true;panel:draw()
-assert(status['No checkpoint received'].x==status['Player finding is off'].x and not status['Vehicle tracking is off'],'Status rows must keep one explicit left margin despite native cursor reset')
+assert(status['No checkpoint received'].x==status['General actions and your current jobs'].x and not status['Vehicle tracking is off'],'Status rows must keep one explicit left margin despite native cursor reset')
 panel.findMode=true;panel:draw()
 local find,back,refresh=buttons['Find##submitTarget'],buttons['Back##actions'],buttons['Refresh##quickPlayers']
 assert(find.y==back.y and back.y==refresh.y and find.height==back.height and back.height==refresh.height,'Find/Back/Refresh must share a baseline and height')

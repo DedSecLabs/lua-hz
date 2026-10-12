@@ -175,7 +175,10 @@ local function RegisterEvents()
                 renderer:SwitchContext()
                 local io = imgui.GetIO()
                 renderer:WindowMessage(msg, wparam, lparam)
-                if (keyboard and io.WantCaptureKeyboard) or (mouse and io.WantCaptureMouse) then
+                -- A pointer-only vehicle panel must not swallow movement keys.
+                -- Any other interactive subscription retains normal keyboard capture.
+                local passKeyboard=require('horizonbase.keys').uiKeyboardPass(subscriptionsNewFrame)
+                if (keyboard and io.WantCaptureKeyboard and not passKeyboard) or (mouse and io.WantCaptureMouse) then
                     if msg == winmsg.WM_KEYDOWN or msg == winmsg.WM_SYSKEYDOWN then
                         keyState[wparam] = false
                         consumeWindowMessage(true, true, true)

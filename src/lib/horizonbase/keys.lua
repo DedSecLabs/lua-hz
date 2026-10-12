@@ -20,4 +20,14 @@ end
 function M.pressed(code,mods)
     return code~=0 and (mods or 0)==M.modifiers() and isKeyJustPressed(code)
 end
+function M.uiKeyboardPass(subscriptions)
+    local pass=false
+    for _,sub in ipairs(subscriptions)do
+        if sub._render and sub.PassKeyboard then pass=true end
+    end
+    for _,sub in ipairs(subscriptions)do
+        if sub._render and not sub.HideCursor and not sub.PassKeyboard then return false end
+    end
+    return pass
+end
 return M

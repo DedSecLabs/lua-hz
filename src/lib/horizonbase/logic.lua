@@ -67,10 +67,10 @@ function M.interfaceScale(width,height,percent,baseWidth)
     return math.min(fit,math.max(.5,wanted))
 end
 
-function M.hudLayout(width,height,prefs,baseHeight,baseWidth)
+function M.hudLayout(width,height,prefs,baseHeight,baseWidth,fitHeight,fitWidth)
     baseWidth=baseWidth or 254
-    local scale=math.max(.5,math.min(height/1080*(prefs.scale/100),
-        (width-24)/baseWidth,(height-24)/baseHeight))
+    local scale=math.min(math.max(.5,height/1080*(prefs.scale/100)),
+        (width-24)/(fitWidth or baseWidth),(height-24)/(fitHeight or baseHeight))
     local panelWidth,panelHeight=baseWidth*scale,baseHeight*scale
     local x=12+math.max(0,width-24-panelWidth)*(prefs.x/100)
     local y=12+math.max(0,height-24-panelHeight)*(prefs.y/100)

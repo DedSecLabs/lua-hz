@@ -45,16 +45,19 @@ function M:draw()
     im.SetCursorPos(im.ImVec2(22*S,382*S));im.TextDisabled(sample.ready and sample.playerId and 'Player ID '..sample.playerId or 'Player ID unavailable')
     im.SetCursorPos(im.ImVec2(22*S,414*S))
     if im.Button('Refresh',im.ImVec2(142*S,30*S)) then
-        if self.server:requestStats() then self.notice=nil
+        if self.tab==6 and self.server:requestInfo('licenses') or self.tab~=6 and self.server:requestStats() then self.notice=nil
         else self.notice='Refresh requires Horizon gameplay and a 10-second request gap.' end
     end
-    local tabs={'Character','Work','Finances','Health','Inventory'}
+    local tabs={'Character','Work','Finances','Health','Inventory','Licenses'}
     local tabStep=contentWidth/#tabs;local tabWidth=tabStep-6
     dl:AddLine(im.ImVec2(origin.x+184*S,origin.y+121*S),im.ImVec2(origin.x+(panelWidth-22)*S,origin.y+121*S),im.U32(.20,.21,.24,1),S)
     for i,label in ipairs(tabs)do
         im.SetCursorPos(im.ImVec2((184+(i-1)*tabStep)*S,90*S))
         local row=im.GetCursorScreenPos()
-        if im.InvisibleButton(label..'##characterTab'..i,im.ImVec2(tabWidth*S,30*S))then self.tab=i end
+        if im.InvisibleButton(label..'##characterTab'..i,im.ImVec2(tabWidth*S,30*S))then
+            self.tab=i
+            if i==6 and not self.server.info.pages.licenses.updatedAt then self.server:requestInfo('licenses')end
+        end
         local selected=self.tab==i
         local color=selected and im.U32(1,.62,0,1) or im.IsItemHovered() and im.U32(1,1,1,1) or im.U32(.64,.66,.70,1)
         local text=im.CalcTextSize(label)
@@ -64,6 +67,17 @@ function M:draw()
     im.SetCursorPos(im.ImVec2(184*S,134*S))
     im.BeginChild('##characterFields'..self.tab,im.ImVec2(contentWidth*S,341*S),false)
     local ok,err=pcall(function()
+        if self.tab==6 then
+            local page=self.server.info.pages.licenses
+            for _,label in ipairs({"Driver's",'Pilot','Boating'})do
+                im.TextUnformatted(label..' license');im.SameLine()
+                im.TextDisabled(page.fields[label] or 'Not received')
+            end
+            im.Spacing()
+            im.TextWrapped(page.loading and 'Refreshing licenses...' or page.error or
+                (page.updatedAt and ('Updated %d seconds ago.'):format(math.max(0,math.floor((getGameTimer()-page.updatedAt)/1000))) or 'Click Refresh to load your licenses.'))
+            return
+        end
         if not c.updatedAt then
             im.TextWrapped((c.pending or self.server.statsRequested) and 'Requesting character stats...' or
                 'Your stats will load after login. Click Refresh to request them now.')
@@ -94,7 +108,7 @@ function M:draw()
         math.max(0,math.floor((getGameTimer()-c.updatedAt)/1000)),c.partial and ' Some fields were not received.' or '')
     else status='Source: Horizon /stats. No stats are saved between sessions.' end
     im.TextWrapped(status)
-    im.SetCursorPos(im.ImVec2(22*S,516*S));im.TextDisabled('Health, armor and cash are live. Other fields use /stats. Carried items use /inv.')
+    im.SetCursorPos(im.ImVec2(22*S,516*S));im.TextDisabled(self.tab==6 and 'License statuses are received from the server.' or 'Health, armor and cash are live. Other fields use /stats. Carried items use /inv.')
     im.End()
     if not ok then error(err) end
 end

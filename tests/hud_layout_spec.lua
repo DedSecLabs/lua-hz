@@ -118,14 +118,14 @@ for _,mode in ipairs({1,2})do
     for _,state in ipairs({'locked','unlocked','unknown'})do
         if state=='locked' then sample.locked=true elseif state=='unlocked' then sample.locked=false else sample.locked=nil end
         images={};rects={};texts={};Dashboard.draw(o,dl,sample,1,1920,1080,false,false)
-        local label=texts[1];local icon;for _,image in ipairs(images)do if image.tex==4 then icon=image;break end end
+        local label=texts[2];local icon;for _,image in ipairs(images)do if image.tex==4 then icon=image;break end end
         assert(label.text==(state=='locked' and 'Locked' or state=='unlocked' and 'Unlocked' or 'Unknown'))
         assert(icon.b.x-icon.a.x==44 and icon.b.y-icon.a.y==44)
         assert(icon.color[4]==1 and math.max(icon.color[1],icon.color[2],icon.color[3])>=.90,'Lock state must never turn black or transparent')
         assert(label.pos.y>=icon.b.y and label.size==15,'Lock label must be readable below the icon')
         for _,rect in ipairs(rects)do assert(rect.color[4]~=.96,'Lock indicator must share the dashboard background without a separate plate')end
         local box=Dashboard.layout(1920,1080,1,mode==1 and 'full' or 'minimal')
-        assert(label.pos.y+label.size<box.y+(mode==1 and 122 or 88),'Lock label must not overlap the health bar')
+        assert(label.pos.y+label.size<box.y+(mode==1 and 136 or 100),'Lock label must not overlap the health bar')
     end
 end
 print('PASS larger vehicle icons and bright locked/unlocked/unknown labels sharing the dashboard background')
@@ -135,7 +135,7 @@ sample.networkVehicleId=20
 for _,mode in ipairs({1,2})do
     prefs.settings.vdb=mode
     for _,owner in ipairs({'personal','family'})do
-        game.vehicleInfo={current={handle=sample.vehicle,id=20,ownership=owner}}
+        game.vehicleInfo={current={handle=sample.vehicle,id=20,ownership=owner},state=function()return nil end}
         texts={};images={};Dashboard.draw(o,dl,sample,1,1920,1080,false,false)
         local badge
         for _,row in ipairs(texts)do if row.text==(owner=='personal' and 'Personal' or 'Family')then badge=row end end

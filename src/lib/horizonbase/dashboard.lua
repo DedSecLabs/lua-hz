@@ -2,8 +2,8 @@ local logic=require 'horizonbase.logic'
 local M={}
 M.energyWidth=368 -- 15% wider than the original 320-unit stamina/oxygen panel.
 function M.layout(w,h,scale,mode,nitro)
-    local width=math.min(mode=='energy' and M.energyWidth or 320,(w-24)/scale)
-    local height=mode=='minimal' and 126 or mode=='energy' and 82 or 212
+    local width=math.min(mode=='energy' and M.energyWidth or 448,(w-24)/scale)
+    local height=mode=='minimal' and 146 or mode=='energy' and 82 or 232
     return {x=w-(width+12)*scale,y=h-(height+20)*scale,width=width*scale,height=height*scale,logicalWidth=width}
 end
 function M.bounds(settings,s,scale,w,h,staminaShown,oxygenShown)
@@ -64,7 +64,7 @@ function M.draw(o,dl,s,scale,w,h,staminaShown,oxygenShown)
         local cell=0
         for digit=0,9 do cell=math.max(cell,o.bitmap:width(tostring(digit),1,'pricedown'))end
         local slots=math.max(3,#number)
-        local size=math.min(o:playerNumberSize(),(width-100)/(slots*cell))
+        local size=math.min(o:playerNumberSize(),120/(slots*cell))
         local numY=y+(full and 50 or 14)*scale
         local slotX=right-slots*cell*size*scale
         for i=1,#number do
@@ -72,22 +72,37 @@ function M.draw(o,dl,s,scale,w,h,staminaShown,oxygenShown)
             local edge=slotX+(slots-#number+i)*cell*size*scale
             text(digit,edge-o.bitmap:width(digit,size,'pricedown')*scale,numY,size,'pricedown',white,3)
         end
-        text('MPH',slotX-o.bitmap:width('MPH',16,'gothic')*scale-10*scale,numY+(size-16)*scale,16,'gothic',white,1.5)
+        text('MPH',right-o.bitmap:width('MPH',16,'gothic')*scale,numY+61*scale,16,'gothic',white,1.5)
         -- Both states remain visible on dark scenes; shape, color and text agree.
         -- Unknown native state stays neutral instead of implying an unlocked car.
-        local label=s.locked==true and 'Locked' or s.locked==false and 'Unlocked' or 'Unknown'
-        local tint=s.locked==true and im.U32(1,.68,.24,1) or s.locked==false and im.U32(.45,.80,1,1) or im.U32(.85,.87,.90,1)
-        icon(s.locked==false and 'car-door-lock-open' or 'car-door-lock',x+18*scale,numY+2*scale,tint,44)
-        dl:AddTextFontPtr(im.GetFont(),15*scale,im.ImVec2(x+18*scale,numY+49*scale),tint,label)
+        local observer=o.game.vehicleInfo
+        local current=observer and observer.current
+        local matching=current and current.handle==s.vehicle and current.id==s.networkVehicleId
+        local rowY=y+(full and 50 or 14)*scale
+        for i,part in ipairs({'lock','engine','lights','window'})do
+            local value
+            if part=='lock'then value=s.locked elseif matching then value=observer:state(part)end
+            local label=part=='lock' and 'Doors' or part:gsub('^%l',string.upper)
+            local status=matching and current.unavailable and current.unavailable[part] and 'N/A' or value==nil and 'Unknown' or part=='lock' and(value and 'Locked' or 'Unlocked')or
+                part=='window' and(value and 'Open' or 'Closed')or(value and 'On' or 'Off')
+            local tint=value==nil and im.U32(.85,.87,.90,1)or value and im.U32(1,.68,.24,1)or im.U32(.45,.80,1,1)
+            local cell=(width-152)/4;local center=x+(16+(i-.5)*cell)*scale
+            local tex=o:texture((part=='lock' and 'dashboard-v031/'..(value==false and 'car-door-lock-open' or 'car-door-lock')or 'vehicle-v040/'..part)..'.png')
+            if tex then dl:AddImage(tex,im.ImVec2(center-22*scale,rowY),im.ImVec2(center+22*scale,rowY+44*scale),im.ImVec2(0,0),im.ImVec2(1,1),tint)end
+            for j,caption in ipairs({label,status})do
+                local size=(j==1 and 14 or 15)*scale;local tw=im.CalcTextSize(caption).x*size/im.GetFontSize()
+                dl:AddTextFontPtr(im.GetFont(),size,im.ImVec2(center-tw/2,rowY+(j==1 and 45 or 61)*scale),tint,caption)
+            end
+        end
     end
-    local barY=y+(vehicle and(full and 122 or 88)or 54)*scale
+    local barY=y+(vehicle and(full and 136 or 100)or 54)*scale
     local value=logic.clamp((s.vehicleHealth or 0)/1000,0,1)
     o:bar(dl,x+16*scale,barY,(width-32)*scale,16*scale,value,red,nil,im.U32(.16,.16,.18,1))
     local current=o.game.vehicleInfo and o.game.vehicleInfo.current
     if current and current.handle==s.vehicle and current.id==s.networkVehicleId and (current.ownership=='personal' or current.ownership=='family') then
         local name=current.ownership=='personal' and 'key' or 'users'
         local tint=current.ownership=='personal' and gold or blue
-        local iy=y+(full and 159 or 108)*scale;local size=(full and 24 or 14)*scale
+        local iy=y+(full and 169 or 124)*scale;local size=(full and 24 or 14)*scale
         local tex=o:texture('vehicle-v040/'..name..'.png')
         if tex then dl:AddImage(tex,im.ImVec2(x+16*scale,iy),im.ImVec2(x+16*scale+size,iy+size),im.ImVec2(0,0),im.ImVec2(1,1),tint)end
         dl:AddTextFontPtr(im.GetFont(),(full and 14 or 13)*scale,im.ImVec2(x+(full and 46 or 35)*scale,iy+(full and 4 or 0)*scale),tint,current.ownership=='personal' and 'Personal' or 'Family')
@@ -96,11 +111,11 @@ function M.draw(o,dl,s,scale,w,h,staminaShown,oxygenShown)
         local hp=tostring(math.floor(value*100))
         local hpSize=32;local hpW=o.bitmap:width(hp,hpSize,'pricedown')*scale
         local percentW=(o.bitmap:width('%',16,'gothic')+6)*scale
-        local footerY=y+159*scale
+        local footerY=y+169*scale
         icon('car-gear',right-hpW-percentW-54*scale,footerY-2*scale,im.U32(.95,.38,.40,1),44)
         text(hp,right-hpW-percentW,footerY,hpSize,'pricedown',white,2.5)
         text('%',right-percentW+6*scale,footerY+16*scale,16,'gothic',white,1.5)
-        if o.game.cruise.active then text('CC '..math.floor(o.game.cruise.target),x+16*scale,y+193*scale,13,'gothic',gold,1.2)end
+        if o.game.cruise.active then text('CC '..math.floor(o.game.cruise.target),x+16*scale,y+213*scale,13,'gothic',gold,1.2)end
     end
     if oxygenShown then energy(panels[2])end
 end

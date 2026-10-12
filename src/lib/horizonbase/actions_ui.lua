@@ -1,11 +1,12 @@
 local ffi=require 'ffi'
 local M={};M.__index=M
+local Jobs=require 'horizonbase.job_actions'
 function M.new(im,ui,server,perform,players)
     return setmetatable({im=im,ui=ui,server=server,perform=perform,players=players,
-        open=im.new.bool(false),query=im.new.char[65](''),targets={},findMode=false},M)
+        open=im.new.bool(false),query=im.new.char[65](''),value=im.new.char[33](''),targets={},findMode=false},M)
 end
 function M:reset()
-    self.open[0]=false;self.findMode=false;self.notice=nil;self.targets={};self.im.StrCopy(self.query,'')
+    self.open[0]=false;self.findMode=false;self.jobAction=nil;self.notice=nil;self.targets={};self.im.StrCopy(self.query,'');self.im.StrCopy(self.value,'')
 end
 function M:submit(kind,arg)
     local ok,err=self.perform(kind,arg)
@@ -25,7 +26,10 @@ function M:tile(label,hint,icon,x,y,width,S,action)
 end
 function M:draw()
     local im=self.im;self.ui:theme()
-    local height=self.findMode and 400 or 280
+    if self.findMode and not Jobs.has(self.server.character,'detective') and not self.server.find.active then self.findMode=false end
+    local spec=self.jobAction and Jobs.get(self.server.character,self.jobAction)
+    if self.jobAction and not spec then self.jobAction=nil end
+    local height=(self.findMode or spec) and 400 or 520
     local w,h=getScreenResolution();local S=math.min(self.ui.scale,(w-24)/600,(h-24)/height)
     im.GetIO().FontGlobalScale=S*15/(im.FontBaseSize or 15)
     im.SetNextWindowSize(im.ImVec2(600*S,height*S),im.Cond.Always)
@@ -39,7 +43,27 @@ function M:draw()
         local closeIcon=self.ui.overlay and self.ui.overlay:texture('ui-v0212/x.png')
         if closeIcon then im.GetWindowDrawList():AddImage(closeIcon,im.ImVec2(closePos.x+3*S,closePos.y+3*S),im.ImVec2(closePos.x+21*S,closePos.y+21*S),im.ImVec2(0,0),im.ImVec2(1,1),im.IsItemHovered()and im.U32(1,.62,0,1)or im.U32(.68,.70,.74,1))end
         local server=self.server
-        if self.findMode then
+        if spec then
+            im.SetCursorPos(im.ImVec2(22*S,54*S));im.TextUnformatted(spec.label)
+            im.SetCursorPos(im.ImVec2(22*S,82*S));im.TextDisabled('Runs once. The server checks access and requirements.')
+            if spec.mode=='target' or spec.mode=='price'then
+                im.SetCursorPos(im.ImVec2(22*S,112*S));im.TextUnformatted('Player name or ID')
+                im.SetCursorPos(im.ImVec2(22*S,137*S));im.PushItemWidth(556*S);im.InputText('##jobTarget',self.query,65);im.PopItemWidth()
+            end
+            if spec.mode=='price' or spec.mode=='fare'then
+                im.SetCursorPos(im.ImVec2(22*S,176*S));im.TextUnformatted(('Amount (%d–%d)'):format(spec.min,spec.max))
+                im.SetCursorPos(im.ImVec2(22*S,202*S));im.PushItemWidth(556*S);im.InputText('##jobAmount',self.value,33);im.PopItemWidth()
+            elseif spec.mode=='crate'then
+                im.SetCursorPos(im.ImVec2(22*S,140*S));im.TextUnformatted('Choose crate contents')
+                im.SetCursorPos(im.ImVec2(22*S,174*S));if im.Button('Pot##jobCrate')then im.StrCopy(self.value,'pot')end
+                im.SetCursorPos(im.ImVec2(130*S,174*S));if im.Button('Crack##jobCrate')then im.StrCopy(self.value,'crack')end
+                im.SetCursorPos(im.ImVec2(22*S,214*S));im.TextDisabled(ffi.string(self.value))
+            end
+            im.SetCursorPos(im.ImVec2(22*S,260*S));if im.Button('Run##jobSubmit',im.ImVec2(74*S,28*S))then
+                self:submit('job',{id=spec.id,target=ffi.string(self.query),value=ffi.string(self.value)})
+            end
+            im.SetCursorPos(im.ImVec2(106*S,260*S));if im.Button('Back##jobBack',im.ImVec2(74*S,28*S))then self.jobAction=nil;self.notice=nil end
+        elseif self.findMode then
             im.SetCursorPos(im.ImVec2(22*S,54*S));im.TextUnformatted('Find player')
             im.SetCursorPos(im.ImVec2(22*S,76*S))
             im.TextDisabled('Detective job required.')
@@ -73,14 +97,33 @@ function M:draw()
             im.SetCursorPos(im.ImVec2(22*S,56*S))
             im.TextUnformatted(server.clearNavigation and 'Clearing navigation...' or server.checkpoint and 'Checkpoint active' or 'No checkpoint received')
             im.SetCursorPos(im.ImVec2(22*S,76*S))
-            im.TextDisabled(server.find.active and (server.find.paused and 'Waiting for ' or 'Finding ')..server.find.name or 'Player finding is off')
-            self:tile('Clear navigation','Also resets trackers and fares','map-pin-off',22,108,272,S,function()self:submit('clear')end)
-            self:tile(server.find.active and 'Stop finding' or 'Find player',server.find.active and server.find.name or 'Select an online name or ID','search',306,108,272,S,function()
-                if server.find.active then self:submit('stopFind')
-                else self.findMode=true;self.notice=nil;self.targets=self.players()end
+            im.TextDisabled(server.find.active and (server.find.paused and 'Waiting for ' or 'Finding ')..server.find.name or 'General actions and your current jobs')
+            im.SetCursorPos(im.ImVec2(482*S,49*S))
+            if im.Button('Refresh##quickJobs',im.ImVec2(96*S,28*S))then server:requestStats()end
+            local rows={
+                {label='Clear navigation',hint='Also resets trackers and fares',icon='map-pin-off',kind='clear'},
+                {label='Skills',hint='View your skill levels',icon='gauge',kind='general',arg='skills'},
+                {label='Find a job',hint='Choose a job location',icon='search',kind='general',arg='findjob'},
+                {label='Job help',hint='View your current job commands',icon='terminal',kind='general',arg='jobhelp'},
+            }
+            if Jobs.has(server.character,'detective') or server.find.active then rows[#rows+1]={label=server.find.active and 'Stop finding' or 'Find player',hint=server.find.active and server.find.name or 'Detective: choose an online player',icon='search',find=true}end
+            for _,a in ipairs(Jobs.list(server.character))do rows[#rows+1]={label=a.label,hint=a.mode and 'Choose details before running' or 'Run once',icon='bot',job=a}end
+            im.SetCursorPos(im.ImVec2(22*S,108*S));im.BeginChild('##quickActionGrid',im.ImVec2(556*S,342*S),false)
+            local gridOk,gridErr=pcall(function()
+                for i,row in ipairs(rows)do
+                    self:tile(row.label,row.hint,row.icon,((i-1)%2)*284,math.floor((i-1)/2)*94,272,S,function()
+                        if row.find then
+                            if server.find.active then self:submit('stopFind')else self.findMode=true;self.notice=nil;self.targets=self.players()end
+                        elseif row.job then
+                            if row.job.mode then self.jobAction=row.job.id;self.notice=nil;im.StrCopy(self.query,'');im.StrCopy(self.value,'')
+                            else self:submit('job',{id=row.job.id})end
+                        else self:submit(row.kind,row.arg)end
+                    end)
+                end
             end)
+            im.EndChild();if not gridOk then error(gridErr)end
         end
-        im.SetCursorPos(im.ImVec2(22*S,(height==400 and 340 or 226)*S))
+        im.SetCursorPos(im.ImVec2(22*S,(height==400 and 340 or 477)*S))
         if self.notice then im.TextWrapped(self.notice)else im.TextDisabled('Escape closes this panel.')end
     end)
     im.End();if not ok then error(err)end

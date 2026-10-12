@@ -1,7 +1,7 @@
 -- Session snapshots; only exact rows of a LuaHZ-owned refresh may be hidden.
 local logic=require 'horizonbase.logic'
 local M={};M.__index=M
-local kinds={families=true,members=true,rules=true,settings=true,info=true,help=true}
+local kinds={families=true,members=true,rules=true,settings=true,info=true,help=true,licenses=true}
 local settingNames={'Global Chat','Newbie Chat','Speedo','Toys','GPS','Wristwatch','CHUD','VDB','Low HP Blink','Turfs','Damage Informer'}
 local linkNames={'Website','Forums','Discord','Faction Discord','Gang Discord'}
 local rulesFooter='*** This is a short version of our server rulebook. Please visit hzgaming.net to see a full list of the server rules ***'
@@ -72,6 +72,7 @@ function M:finish(partial,reason)
     elseif d.kind=='settings' then partial=partial or count(d.fields)~=#settingNames or not d.commands
     elseif d.kind=='info' then partial=partial or count(d.fields)~=#linkNames
     elseif d.kind=='rules' then partial=partial or not d.footer or #d.rows~=9 end
+    if d.kind=='licenses' then partial=partial or count(d.fields)~=3 end
     p.rows=d.rows;p.fields=d.fields;p.commands=d.commands;p.updatedAt=self.now();p.partial=partial==true;p.error=reason
 end
 function M:onCommand(command,quiet)
@@ -91,13 +92,21 @@ function M:onMessage(text,character)
     elseif clean=='*** Server Rules ***' then kind='rules'
     elseif clean:match('^Global Chat: ') and clean:find(' | Newbie Chat:',1,true) then kind='settings'
     elseif clean:match('^Website: ') and clean:find(' | Forums:',1,true) then kind='info' end
+    if clean=='Your licenses...' then kind='licenses' end
     if kind and (not self.active or self.active.kind~=kind) then self:begin(kind)end
     local d=self.active;if not d then return false end
     if self.now()>=d.expires then self:finish(true,'Response window ended.');return false end
     local quiet=d.quiet==true
     local recognized=kind==d.kind and kind~='settings' and kind~='info'
     if kind then d.header=true end
-    if d.kind=='families' and d.header then
+    if d.kind=='licenses' and d.header then
+        local label,value=clean:match('^%*%* ([^:]+) license: ([^%.]+)%.$')
+        if (label=="Driver's" or label=='Pilot' or label=='Boating') and
+            (value=='Acquired' or value=='Not acquired') then
+            d.fields[label]=value;recognized=true
+            if count(d.fields)==3 then self:finish(false)end
+        end
+    elseif d.kind=='families' and d.header then
         local row=M.family(text)
         if row then recognized=true end
         if row and not d.seen[row.id] and #d.rows<100 then d.rows[#d.rows+1]=row;d.seen[row.id]=true end
