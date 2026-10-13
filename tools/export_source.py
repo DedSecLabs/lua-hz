@@ -27,8 +27,8 @@ def candidates(root=ROOT):
     for directory in sorted(DIRECTORIES):
         for p in sorted((root/directory).rglob('*')):
             if not p.is_file() or p.is_symlink() or '__pycache__' in p.parts or p.suffix in FORBIDDEN_EXTENSIONS:continue
-            if directory=='assets' and str(p.relative_to(root)) in APPROVED_BRANDING:
-                if hashlib.sha256(p.read_bytes()).hexdigest()!=APPROVED_BRANDING[str(p.relative_to(root))]:
+            if directory=='assets' and p.relative_to(root).as_posix() in APPROVED_BRANDING:
+                if hashlib.sha256(p.read_bytes()).hexdigest()!=APPROVED_BRANDING[p.relative_to(root).as_posix()]:
                     raise ValueError('Approved README logo changed: '+str(p))
                 paths.append(p)
                 continue
@@ -52,7 +52,7 @@ def export(output,root=ROOT):
     hashes={}
     for p in paths:
         relative=p.relative_to(root);target=output/relative;target.parent.mkdir(parents=True,exist_ok=True)
-        shutil.copy2(p,target);hashes[str(relative)]=hashlib.sha256(target.read_bytes()).hexdigest()
+        shutil.copy2(p,target);hashes[relative.as_posix()]=hashlib.sha256(target.read_bytes()).hexdigest()
     return {'scope':'Source only; no game files/private art/runtime binaries','files':hashes,'file_count':len(hashes)}
 
 if __name__=='__main__':

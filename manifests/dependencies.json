@@ -142,11 +142,12 @@
       2048,
       1024
     ],
-    "format": "A8R8G8B8"
+    "format": "A8R8G8B8",
+    "helper_sha256": "1015ae9964782df09f2dc2cfec114aa1e4bad083b60005410f624aea11cbfbae"
   },
   "platform_validation": {
     "wine": "Wine 11.0 via GE-Proton11-7 x86_64",
-    "windows_native": "not yet tested"
+    "windows_native": "Owner accepted Windows 11 open.mp 1.6.1/build 6 + SA-MP R5 loading artwork, centered bar, browser/HUD and settings input on 2026-10-13; unchanged classic R5 installation also tested. Combined-helper classic installation and full feature/server-switch QA remain pending."
   },
   "publication_scope": "Source, tests, tools, notices, licensed Lucide assets and the owner-approved README/menu logo",
   "runtime_libraries": {
@@ -180,5 +181,22 @@
       "UseDesktopRefreshRate": 0
     },
     "reference": "docs/INSTALLATION.md#silentpatch-configuration"
+  },
+  "optional_launchers": {
+    "open.mp": {
+      "launcher_version": "1.6.1",
+      "source": "https://open.mp/downloads/launcher",
+      "bundled": false,
+      "samp_client": "Verified 0.3.7 R5; installed or matching managed client",
+      "native_client_build": 6,
+      "native_client_md5": "865da2905ba33153c9db9462915db006",
+      "native_client_sha256": "be89d6254e641faa34ebd5333751e02f3e18bc6d4897a60cdda285466621c458",
+      "native_metadata": {
+        "timestamp": "0x69430243",
+        "entry_rva": "0xb23e4",
+        "image_bytes": "0x219000"
+      },
+      "settings_binding": "User-configured F12 recommended; classic default F9 retained"
+    }
   }
 }

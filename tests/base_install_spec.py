@@ -9,6 +9,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 
+@unittest.skipIf(os.name=='nt','Unix shell installer fixtures run on Linux; Windows uses PowerShell fixtures')
 class BaseInstallTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()

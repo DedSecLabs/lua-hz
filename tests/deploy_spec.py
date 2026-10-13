@@ -49,7 +49,7 @@ class DeploymentTests(unittest.TestCase):
     def test_install_failure_restores_original(self):
         real=deploy.shutil.copytree
         def fail(source,destination,*a,**kw):
-            if str(source).endswith('build/moonloader/lib/horizonbase'):
+            if Path(source).as_posix().endswith('build/moonloader/lib/horizonbase'):
                 Path(destination).mkdir(parents=True);(Path(destination)/'partial.lua').write_text('partial')
                 raise OSError('injected copy failure')
             return real(source,destination,*a,**kw)
@@ -81,7 +81,7 @@ class DeploymentTests(unittest.TestCase):
         (self.fake_project/'src/HorizonBase.lua').write_bytes(b'updated source')
         real=deploy.shutil.copytree
         def fail(source,destination,*a,**kw):
-            if str(source).endswith('build/moonloader/lib/horizonbase'):
+            if Path(source).as_posix().endswith('build/moonloader/lib/horizonbase'):
                 Path(destination).mkdir(parents=True)
                 raise OSError('injected update failure')
             return real(source,destination,*a,**kw)

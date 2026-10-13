@@ -83,12 +83,15 @@ class WindowsBaseInstallTests(unittest.TestCase):
 
     def test_tampered_payload_refused_before_writing(self):
         path = self.bundle / 'payload/moonloader/HorizonBase.lua'
-        original = path.read_bytes()
         path.write_bytes(b'tampered')
         self.assertNotEqual(self.run_script(self.bundle / 'install.ps1').returncode, 0)
         self.assertFalse((self.game / 'LuaHZ-backups').exists())
-        path.write_bytes(original)
-        (self.game / 'LuaHZ-backups').symlink_to(self.bundle, target_is_directory=True)
+
+    def test_symlink_backup_is_refused_before_writing(self):
+        try:
+            (self.game / 'LuaHZ-backups').symlink_to(self.bundle, target_is_directory=True)
+        except OSError as error:
+            self.skipTest('This account/filesystem cannot create the symlink fixture: '+str(error))
         self.assertNotEqual(self.run_script(self.bundle / 'install.ps1').returncode, 0)
         self.assertFalse((self.game / 'moonloader/HorizonBase.lua').exists())
 

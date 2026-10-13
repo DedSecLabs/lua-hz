@@ -104,6 +104,7 @@ function doesCharExist()return false end;tick();assert(not frames[1].Condition()
 function doesCharExist()return true end;tick();assert(frames[1].Condition(),'Transient ped loss must not discard successful login')
 onWindowMessage(0x0100,120,0)
 assert(consumed==1)
+assert(not frames[1].Condition(),'Settings must hide the custom player HUD so it cannot overlap the menu')
 for _,f in ipairs(frames)do if f.Condition()then f.draw()end end
 assert(im.stack==0)
 rawPrint('PASS F9 opens the menu and consumes the SA-MP key')
@@ -122,6 +123,7 @@ pressed=nil;tick();assert(#sent==count+1)
 down[18]=nil;onWindowMessage(0x0100,120,0);tick();down[18]=true;pressed=83;tick();assert(#sent==count+1)
 pressed=nil;down[18]=nil;onWindowMessage(0x0100,27,0)
 local consumedBefore=consumed
+assert(frames[1].Condition(),'Closing settings must restore the custom player HUD')
 onWindowMessage(0x0100,77,0);assert(consumed==consumedBefore)
 down[18]=true;onWindowMessage(0x0104,77,0x20000000);assert(consumed==consumedBefore+1)
 onWindowMessage(0x0104,77,0x20000000);down[18]=nil
@@ -166,6 +168,7 @@ rawPrint('PASS reload hotkey fires for guns, stays quiet for fists/camera and is
 
 local statusBefore=consumed
 onWindowMessage(0x0100,73,0);assert(consumed==statusBefore+1 and frames[5].Condition())
+assert(not frames[1].Condition(),'Character Status must hide the custom player HUD')
 assert(frames[5].LockPlayer==true and not frames[5].HideCursor)
 frames[5].draw();assert(im.stack==0)
 local typingCount=#sent;pressed=82;tick();assert(#sent==typingCount,'Status panel must block gameplay shortcuts')
@@ -311,6 +314,7 @@ commands.autofind('')
 chat=true;local actionConsumed=consumed;onWindowMessage(0x0100,85,0)
 assert(consumed==actionConsumed and not frames[7].Condition());chat=false
 onWindowMessage(0x0100,85,0);assert(frames[7].Condition() and not frames[3].Condition())
+assert(not frames[1].Condition(),'Quick Actions must hide the custom player HUD')
 onWindowMessage(0x0100,85,0x40000000);assert(frames[7].Condition(),'Held U must not toggle repeatedly')
 local beforeAction=#sent;im.clicks['Clear navigation##quickAction']=true;frames[7].draw()
 assert(#sent==beforeAction and not frames[7].Condition(),'GUI actions send from the main loop after closing the panel')

@@ -10,6 +10,7 @@ local app={faults={},focused=true,started=false,audioHistory={}}
 local ownedCommands,ownedEvents={},{}
 local queueQuickAction,onlinePlayers
 local function sessionActive() return app.started and authorized() end
+local ompCompat=require('horizonbase.openmp_compat').new(sessionActive)
 local root=getWorkingDirectory()
 local configPath=root..'\\config\\horizonbase.ini'
 local imported=Config.read(configPath)
@@ -136,6 +137,7 @@ if ok then
     app.toast.hudVisible=function()
         return sessionActive() and app.server.loginSeen and app.game.sample.ready and app.focused and not isPauseMenuActive()
             and not app.overlay.mapOpen and not app.ui:isMapPreview() and not app.faults.HUD
+            and not app.externalBrowserOpen and not app.ui.open[0] and not app.status.open[0] and not app.actions.open[0]
     end
     im.OnInitialize(function()
         local resourcesStart=getGameTimer()
@@ -146,7 +148,8 @@ if ok then
     end)
     app.hudFrame=im.OnFrame(function()
         return sessionActive() and app.server.loginSeen and app.game.sample.ready and app.focused and not isPauseMenuActive() and
-            not app.overlay.mapOpen and not app.ui:isMapPreview()
+            not app.overlay.mapOpen and not app.ui:isMapPreview() and
+            not app.externalBrowserOpen and not app.ui.open[0] and not app.status.open[0] and not app.actions.open[0]
     end,function()
         local hudReady=guard('HUD',function() app.overlay:hud() end)
         if hudReady and app.toast:announce('0.4.0',app.faults,app.interfaceReady) then
@@ -194,7 +197,7 @@ local function isTyping()
     return Game.call('sampIsChatInputActive',false) or Game.call('sampIsDialogActive',false)
 end
 local function blocked(allowMap,allowVehicle)
-    return not app.focused or isPauseMenuActive() or isTyping() or not app.game.sample.alive or
+    return app.externalBrowserOpen or not app.focused or isPauseMenuActive() or isTyping() or not app.game.sample.alive or
         not allowVehicle and app.vehicleUI and app.vehicleUI.open[0] and app.vehicleUI.cursor or
         app.actions and app.actions.open[0] or
         app.status and app.status.open[0] or
@@ -273,7 +276,15 @@ local function window(msg,key,lparam)
         app.quickRequest=nil;app.vehicle.pending=nil
         guard('Server',function()app.server:noteManualCommand(Game.call('sampGetChatInputText',''))end)
     end
-    if isTyping() or isPauseMenuActive() or not app.focused then return end
+    if key==prefs.keybinds.settingsPanel then
+        local fresh=ompCompat:noteWindowKey(key,getGameTimer())
+        if not fresh then
+            consumeWindowMessage(true,true,true)
+            print('[LuaHZ open.mp QA] Duplicate settings window message suppressed after polling.')
+            return
+        end
+    end
+    if app.externalBrowserOpen or isTyping() or isPauseMenuActive() or not app.focused then return end
     if Keys.matches(prefs.keybinds.settingsPanel,prefs.modifiers.settingsPanel,key,mods) then toggleMenu();consumeWindowMessage(true,true,true)
     elseif app.vehicleUI and app.ui and app.overlay and app.server.loginSeen and app.game.sample.ready and app.game.sample.alive and Keys.matches(prefs.keybinds.vehicleMenu,prefs.modifiers.vehicleMenu,key,mods) and not app.ui.open[0] and not(app.status and app.status.open[0]) and not(app.actions and app.actions.open[0]) and not app.overlay.mapOpen then
         toggleVehicle();consumeWindowMessage(true,true,true)
@@ -679,6 +690,7 @@ local function closePanels()
 end
 
 local function stop()
+    ompCompat.reset();app.externalBrowserOpen=false
     if not app.started then return end
     if app.saveDue then pcall(save) end
     app.started=false
@@ -724,6 +736,17 @@ end
 local function tick()
     if not sessionActive() then stop();return end
     if focusProvider then app.focused=focusProvider() end
+    local ompKnown,ompBrowser=ompCompat.state()
+    if app.externalBrowserOpen~=ompBrowser then
+        app.externalBrowserOpen=ompBrowser
+        if ompKnown then print('[LuaHZ open.mp QA] Browser visible='..tostring(ompBrowser)) end
+    end
+    if ompKnown and ompCompat:pollKey(prefs.keybinds.settingsPanel,getGameTimer())
+        and not ompBrowser and app.focused and not isTyping() and not isPauseMenuActive()
+        and not(app.ui and app.ui.capture)
+        and Keys.modifiers()==prefs.modifiers.settingsPanel then
+        toggleMenu();print('[LuaHZ open.mp QA] Settings key opened/toggled through Windows polling fallback.')
+    end
         guard('Observations',function()
             if not app.focused then app.observations:stop('window lost focus') end
             app.observations:update()

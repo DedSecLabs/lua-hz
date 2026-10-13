@@ -9,7 +9,7 @@ def fnv(data):
     value=2166136261
     for byte in data:value=((value^byte)*16777619)&0xffffffff
     return value
-def build(toolchain,asset=None,cc='gcc',asset_fingerprint=None):
+def artwork_fingerprint(asset=None,asset_fingerprint=None):
     if asset is not None:
         data=asset.read_bytes()
         if len(data)!=8388776:raise ValueError('Expected approved uncompressed loading resource')
@@ -18,6 +18,10 @@ def build(toolchain,asset=None,cc='gcc',asset_fingerprint=None):
         if not isinstance(asset_fingerprint,int) or not 0<=asset_fingerprint<=0xffffffff:
             raise ValueError('Provide artwork or its verified 32-bit fingerprint for a source-only build')
         fingerprint=asset_fingerprint
+    return fingerprint
+
+def build(toolchain,asset=None,cc='gcc',asset_fingerprint=None):
+    fingerprint=artwork_fingerprint(asset,asset_fingerprint)
     out=ROOT/'build/native';out.mkdir(parents=True,exist_ok=True)
     asm=out/'loading.s';peasm=out/'loading-pe.s';obj=out/'loading.o';target=out/'LuaHZLoading.asi'
     subprocess.run([cc,'-m32','-std=c11','-Os','-fleading-underscore','-ffreestanding','-fno-builtin',
@@ -39,8 +43,23 @@ def build(toolchain,asset=None,cc='gcc',asset_fingerprint=None):
         '-o',str(target),str(obj),str(ROOT/'native/loading.def'),
         str(toolchain/'i686-w64-mingw32/lib/libkernel32.a')],check=True)
     return target
+
+def build_zig(zig,asset=None,asset_fingerprint=None):
+    """Native Windows alternative; same freestanding x86 code and imports."""
+    fingerprint=artwork_fingerprint(asset,asset_fingerprint)
+    out=ROOT/'build/native';out.mkdir(parents=True,exist_ok=True)
+    target=out/'LuaHZLoading.asi'
+    subprocess.run([str(zig),'cc','-target','x86-windows-gnu','-Os','-std=c11',
+        '-ffreestanding','-fno-builtin','-fno-stack-protector','-fno-strict-aliasing','-mno-sse',
+        '-DEXPECTED_SPLASH_FNV='+hex(fingerprint)+'u','-nostdlib','-shared',
+        str(ROOT/'native/loading.c'),str(ROOT/'native/loading.def'),'-lkernel32',
+        '-Wl,--entry,DllMain@12,--image-base,0x69000000','-o',str(target)],check=True)
+    return target
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--toolchain',required=True,type=Path)
+    p=argparse.ArgumentParser(description=__doc__)
+    compiler=p.add_mutually_exclusive_group(required=True)
+    compiler.add_argument('--toolchain',type=Path);compiler.add_argument('--zig',type=Path)
     source=p.add_mutually_exclusive_group(required=True);source.add_argument('--asset',type=Path);source.add_argument('--asset-fnv',type=lambda text:int(text,0))
     p.add_argument('--cc',default='gcc')
-    args=p.parse_args();print(build(args.toolchain,args.asset,args.cc,args.asset_fnv))
+    args=p.parse_args()
+    print(build_zig(args.zig,args.asset,args.asset_fnv) if args.zig else build(args.toolchain,args.asset,args.cc,args.asset_fnv))

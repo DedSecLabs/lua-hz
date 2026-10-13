@@ -12,6 +12,15 @@ python3 -m venv .venv
 
 No GTA installation, downloaded prerequisites, art, network connection or account is required for these checks. Tests use explicit Lua stubs and temporary native/deployment fixtures. C policy tests use GCC AddressSanitizer/UBSan. They do not prove live graphics/network behavior. Optional `--moonloader /path/to/game/moonloader` verifies native/event/ImGui API names against the installed runtime.
 
+On Windows, use a standalone x86 LuaJIT and a compatible C compiler. With portable Zig 0.13.0, set the test compiler argument list before running the same checks:
+
+```powershell
+$env:LUAHZ_TEST_CC='["C:/Tools/zig/zig.exe","cc","-target","x86-windows-gnu"]'
+python tools/check.py --luajit C:/Tools/luajit/luajit.exe
+```
+
+Windows runs the PowerShell installer and exact Win32 open.mp ABI/address fixtures. Unix installer/GitHub Bash policy tests run on Linux; a symlink fixture skips if the account/filesystem cannot create one. Linux retains ASan/UBSan; the Windows C fixtures run without those sanitizers. All open.mp native fixture resources are synthetic, with no GTA or private artwork dependency.
+
 ## Native code build
 
 The tested freestanding path uses host GCC plus MinGW x86 assembler/linker and libkernel32.a. On Ubuntu, developer packages are gcc, binutils-mingw-w64-i686 and mingw-w64-i686-dev; LuaJIT is a separate package. `--toolchain /usr` works with that standard layout. An extracted equivalent usr directory is also supported.
@@ -23,6 +32,14 @@ python3 tools/build_native_loading.py --toolchain /usr --asset-fnv "$asset_finge
 ```
 
 The command above reads the matched artwork fingerprint from manifests/dependencies.json. A source-only loading build compiles code from that public fingerprint; deploying artwork still requires the paired external loading.enc. For a local artwork build, replace --asset-fnv with --asset /path/to/loading.enc. Native outputs stay under ignored build/native. The source contains all native implementation/build logic; upstream game addresses/layouts are references, not external compile-time source dependencies. The native helpers target only the fingerprints listed in the manifest.
+
+The loading helper also has a native Windows build path, verified with Zig 0.13.0:
+
+```powershell
+python tools/build_native_loading.py --zig C:/Tools/zig/zig.exe --asset-fnv 0x9f67e0e8
+```
+
+The original GCC/MinGW path remains available. Both produce the freestanding x86 implementation with KERNEL32-only imports. Every loaded PE section of the Windows source build matched the owner-tested helper during promotion; whole-file hashes can differ because of object/symbol metadata.
 
 ## Local resources and deployment
 

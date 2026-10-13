@@ -5,25 +5,35 @@
 typedef unsigned char Byte;
 typedef unsigned int U32;
 #define WIN __attribute__((stdcall))
-extern char *WIN GetCommandLineA(void) __asm__("\"_GetCommandLineA@0\"");
-extern void *WIN GetModuleHandleA(const char *) __asm__("\"_GetModuleHandleA@4\"");
-extern int WIN GetModuleHandleExA(U32,const char *,void **) __asm__("\"_GetModuleHandleExA@12\"");
-extern U32 WIN GetModuleFileNameA(void *,char *,U32) __asm__("\"_GetModuleFileNameA@12\"");
-extern U32 WIN VirtualQuery(const void *,void *,U32) __asm__("\"_VirtualQuery@12\"");
-extern int WIN VirtualProtect(void *,U32,U32,U32 *) __asm__("\"_VirtualProtect@16\"");
-extern void *WIN GetCurrentProcess(void) __asm__("\"_GetCurrentProcess@0\"");
-extern int WIN FlushInstructionCache(void *,const void *,U32) __asm__("\"_FlushInstructionCache@12\"");
-extern void *WIN CreateThread(void *,U32,U32 (WIN *)(void *),void *,U32,U32 *) __asm__("\"_CreateThread@24\"");
-extern void WIN Sleep(U32) __asm__("\"_Sleep@4\"");
-extern U32 WIN GetTickCount(void) __asm__("\"_GetTickCount@0\"");
-extern void *WIN CreateFileA(const char *,U32,U32,void *,U32,U32,void *) __asm__("\"_CreateFileA@28\"");
-extern U32 WIN GetFileSize(void *,void *) __asm__("\"_GetFileSize@8\"");
-extern int WIN ReadFile(void *,void *,U32,U32 *,void *) __asm__("\"_ReadFile@20\"");
-extern int WIN WriteFile(void *,const void *,U32,U32 *,void *) __asm__("\"_WriteFile@20\"");
-extern int WIN CloseHandle(void *) __asm__("\"_CloseHandle@4\"");
-extern void *WIN GetProcessHeap(void) __asm__("\"_GetProcessHeap@0\"");
-extern void *WIN HeapAlloc(void *,U32,U32) __asm__("\"_HeapAlloc@12\"");
-extern int WIN HeapFree(void *,U32,void *) __asm__("\"_HeapFree@12\"");
+/* Host GCC emits ELF assembly for the freestanding MinGW pipeline. Windows
+   clang uses natural stdcall names; its no-CRT link needs these two roots. */
+#if defined(HZL_QA_TEST) || (defined(__clang__) && defined(_WIN32))
+#define WIN_LINK(name)
+#if !defined(HZL_QA_TEST)
+unsigned _tls_index; int _fltused;
+#endif
+#else
+#define WIN_LINK(name) __asm__(name)
+#endif
+extern char *WIN GetCommandLineA(void) WIN_LINK("\"_GetCommandLineA@0\"");
+extern void *WIN GetModuleHandleA(const char *) WIN_LINK("\"_GetModuleHandleA@4\"");
+extern int WIN GetModuleHandleExA(U32,const char *,void **) WIN_LINK("\"_GetModuleHandleExA@12\"");
+extern U32 WIN GetModuleFileNameA(void *,char *,U32) WIN_LINK("\"_GetModuleFileNameA@12\"");
+extern U32 WIN VirtualQuery(const void *,void *,U32) WIN_LINK("\"_VirtualQuery@12\"");
+extern int WIN VirtualProtect(void *,U32,U32,U32 *) WIN_LINK("\"_VirtualProtect@16\"");
+extern void *WIN GetCurrentProcess(void) WIN_LINK("\"_GetCurrentProcess@0\"");
+extern int WIN FlushInstructionCache(void *,const void *,U32) WIN_LINK("\"_FlushInstructionCache@12\"");
+extern void *WIN CreateThread(void *,U32,U32 (WIN *)(void *),void *,U32,U32 *) WIN_LINK("\"_CreateThread@24\"");
+extern void WIN Sleep(U32) WIN_LINK("\"_Sleep@4\"");
+extern U32 WIN GetTickCount(void) WIN_LINK("\"_GetTickCount@0\"");
+extern void *WIN CreateFileA(const char *,U32,U32,void *,U32,U32,void *) WIN_LINK("\"_CreateFileA@28\"");
+extern U32 WIN GetFileSize(void *,void *) WIN_LINK("\"_GetFileSize@8\"");
+extern int WIN ReadFile(void *,void *,U32,U32 *,void *) WIN_LINK("\"_ReadFile@20\"");
+extern int WIN WriteFile(void *,const void *,U32,U32 *,void *) WIN_LINK("\"_WriteFile@20\"");
+extern int WIN CloseHandle(void *) WIN_LINK("\"_CloseHandle@4\"");
+extern void *WIN GetProcessHeap(void) WIN_LINK("\"_GetProcessHeap@0\"");
+extern void *WIN HeapAlloc(void *,U32,U32) WIN_LINK("\"_HeapAlloc@12\"");
+extern int WIN HeapFree(void *,U32,void *) WIN_LINK("\"_HeapFree@12\"");
 typedef struct {void *base,*allocation;U32 allocationProtect,bytes,state,protect,type;} MemoryInfo;
 static const Byte key[32]={0xd1,0x33,0x48,0x4a,0xb6,0x89,0x7c,0x55,0xe0,0x68,0x04,0x83,0x3f,0xd1,0x78,0x60,0x3d,0x57,0xa8,0xcb,0x4e,0x6b,0xd2,0x58,0xc9,0xdd,0x18,0xf2,0xf6,0xa0,0x30,0xc5};
 static void *ownModule,*logFile;
@@ -31,6 +41,7 @@ static Byte *sfModule,*encoded;
 static U32 encodedLength;
 static volatile int drawCustom,squareOverride=1,hooked,getterSeen,seenConnection,geometryReady;
 static char directory[260];
+static volatile int ompHooked;
 #ifndef EXPECTED_SPLASH_FNV
 #error Build with the verified encoded artwork fingerprint
 #endif
@@ -141,6 +152,7 @@ static int fallback(Byte **out,U32 *size) {
 /* Called through the exact SF EDX + one caller-cleaned stack-argument ABI. */
 int hzl_getter(Byte **out,U32 *size) {
     if(!sfModule || !encoded){*out=0;*size=0;return 0;}
+    if(ompHooked)return fallback(out,size);
     int destination=native_destination();
     if(destination==0 || (destination<0 && seenConnection)){drawCustom=0;squareOverride=1;return fallback(out,size);}
     /* Apply the two draw decisions on the rendering thread, before this first
@@ -160,6 +172,200 @@ int hzl_getter(Byte **out,U32 *size) {
 __attribute__((naked)) void hzl_bridge(void) {
     __asm__ volatile("pushl 4(%esp)\n\tpushl %edx\n\tcall _hzl_getter\n\taddl $8, %esp\n\tret");
 }
+
+/* Local QA candidate: exact open.mp build 6 splash renderer; classic path unchanged. */
+static Byte *ompModule;
+static void *ompDictionary,*ompTexture;
+static Byte *ompBarOriginal;
+static int ompBarHooked,ompBarCustom,ompBarProbe;
+static int ompAttempted,ompDrawn,ompStockSprite=0;
+static void omp_log_value(const char *label,U32 value) {
+    static const char digits[]="0123456789abcdef";char number[11];
+    for(int i=0;i<8;i++)number[i]=digits[(value>>(28-4*i))&15];
+    number[8]='\r';number[9]='\n';number[10]=0;log_text(label);log_text(number);
+}
+static int omp_sf_passthrough(int install) {
+    U32 offsets[]={0x1b818,0x1b994,0x1b9fc};U32 original=(U32)(sfModule+0x1295a8),replacement=(U32)&ompStockSprite;
+    if(!sfModule)return 0;
+    if(install) {
+        if(!readable(sfModule+0x1b816,6) || sfModule[0x1b816]!=0x39 || sfModule[0x1b817]!=0x0d)return 0;
+        for(int i=0;i<3;i++)if(!readable(sfModule+offsets[i],4) || value32(sfModule+offsets[i])!=original)return 0;
+        for(int i=0;i<3;i++)if(!patch32(sfModule+offsets[i],original,replacement)) {
+            while(i--)patch32(sfModule+offsets[i],replacement,original);return 0;
+        }
+        log_text("SAMPFUNCS splash substitutions bypassed for the verified open.mp renderer.\r\n");return 1;
+    }
+    for(int i=0;i<3;i++)patch32(sfModule+offsets[i],replacement,original);
+    return 1;
+}
+/* RenderWare entry points verified against the installed 1.0 US executable. */
+#ifndef HZL_RW_OPEN
+#define HZL_RW_OPEN ((void *(*)(int,int,void *))0x7ecef0)
+#define HZL_RW_FIND ((int (*)(void *,U32,void *,void *))0x7ed2d0)
+#define HZL_RW_READ ((void *(*)(void *))0x804c30)
+#define HZL_RW_CLOSE ((int (*)(void *,void *))0x7ece20)
+#define HZL_SPRITE_DRAW ((void (__attribute__((thiscall)) *)(void *,const void *,const void *))0x728350)
+#define HZL_SPRITE_INIT ((void (*)(void))0x727350)
+#endif
+static int omp_functions_valid(void) {
+    static const Byte draw[]={0x8b,0x44,0x24,0x08,0x56,0x50,0x50,0x50};
+    static const Byte open[]={0xa1,0x24,0x7b,0xc9,0x00,0x8b,0x0d,0x2c};
+    static const Byte init[]={0x33,0xc0,0xa3,0x5c,0x04,0xc8,0x00,0xa3,0x58,0x04,0xc8,0x00};
+    return readable((void *)0x728350,8) && same((void *)0x728350,draw,8)
+        && readable((void *)0x7ecef0,8) && same((void *)0x7ecef0,open,8)
+        && readable((void *)0x727350,sizeof(init)) && same((void *)0x727350,init,sizeof(init));
+}
+static int omp_camera_ready(void) {
+    Byte *camera,*engine;U32 clip;
+    if(!readable((void *)0xc1703c,4) || !readable((void *)0xc97b24,4))return 0;
+    camera=*(Byte **)0xc1703c;engine=*(Byte **)0xc97b24;
+    if(!readable(camera,0x84) || !readable(engine,0x1c))return 0;
+    clip=value32(camera+0x80);
+    return clip>=0x00800000 && clip<0x7f800000 && value32(engine+0x18)<0x7f800000;
+}
+static int supported_omp(Byte *module) {
+    static const Byte entry[]={0x53,0x8b,0xdc,0x83,0xec,0x08,0x83,0xe4,0xf0,0x83,0xc4,0x04};
+    U32 pe;
+    if(!readable(module,0x100))return 0;
+    pe=value32(module+0x3c);
+    return pe<0x1000 && readable(module+pe,0x80)
+        && value32(module+pe+8)==0x69430243 && value32(module+pe+24+16)==0xb23e4
+        && value32(module+pe+24+56)==0x219000 && readable(module+0x427a0,sizeof(entry))
+        && same(module+0x427a0,entry,sizeof(entry));
+}
+static int omp_bar_position(int custom) {
+    unsigned short x,y;
+    if(!readable((void *)0x5903c8,6) || !readable((void *)0x5903e6,6)
+       || *(Byte *)0x5903c8!=0xd9 || *(Byte *)0x5903c9!=5
+       || *(Byte *)0x5903e6!=0xd8 || *(Byte *)0x5903e7!=0x0d)return 0;
+    x=*(unsigned short *)0x5903ca;y=*(unsigned short *)0x5903e8;
+    if((x!=0x8b40 && x!=0x8f80) || (y!=0x8a10 && y!=0x8fe8)
+       || *(unsigned short *)0x5903cc!=0x85 || *(unsigned short *)0x5903ea!=0x85)return 0;
+    bar_position(custom);ompBarCustom=custom;return 1;
+}
+#ifndef HZL_SAVED_BAR_CALL
+#define HZL_SAVED_BAR_CALL(pointer) ((void (*)(void))(pointer))()
+#define HZL_OMP_BAR_CALL(pointer) ((void (*)(void))(pointer))()
+#endif
+static void omp_render_bar(void) {
+    int destination=native_destination();
+    int custom=drawCustom && (destination>0 || (destination<0 && !seenConnection));
+    if(custom && ompBarOriginal && omp_bar_position(1)) {
+        HZL_SAVED_BAR_CALL(ompBarOriginal);return;
+    }
+    if(ompBarCustom)omp_bar_position(0);
+    if(ompModule)HZL_OMP_BAR_CALL(ompModule+0x42620);
+}
+static int omp_patch_jump(void *address,U32 expected,U32 replacement) {
+    U32 old,ignored,observed=expected;
+    if(!readable(address,4) || value32(address)!=expected || !VirtualProtect(address,4,0x40,&old))return 0;
+    __asm__ volatile("lock cmpxchgl %2,(%1)" : "+a"(observed)
+        : "r"(address),"r"(replacement) : "memory","cc");
+    FlushInstructionCache(GetCurrentProcess(),address,4);VirtualProtect(address,4,old,&ignored);
+    return observed==expected;
+}
+static void try_omp_bar_adapter(void) {
+    Byte *original;U32 expected;
+    static const Byte prologue[]={0x83,0xec,0x10,0x56,0x57};
+    if(!ompHooked || ompBarHooked || !ompModule || !readable(ompModule+0x42620,8)
+       || ompModule[0x42620]!=0x55 || ompModule[0x42621]!=0x8b || ompModule[0x42622]!=0xec
+       || ompModule[0x42623]!=0xa1 || value32(ompModule+0x42624)!=(U32)(ompModule+0x1bc4a4)
+       || !readable((void *)0x590370,5) || *(Byte *)0x590370!=0xe9
+       || !readable(ompModule+0x1d16f8,4))return;
+    expected=(U32)(ompModule+0x42620)-0x590375;
+    if(value32((void *)0x590371)!=expected)return;
+    original=*(Byte **)(ompModule+0x1d16f8);
+    if(!ompBarProbe && readable(original,12)) {
+        ompBarProbe=1;
+        omp_log_value("Saved loading-bar route first bytes=",value32(original));
+        omp_log_value("Saved loading-bar route next bytes=",value32(original+4));
+        omp_log_value("Saved loading-bar route final bytes=",value32(original+8));
+    }
+    if(!readable(original,10) || !same(original,prologue,5) || original[5]!=0xe9
+       || (U32)(original+10)+value32(original+6)!=0x590375)return;
+    ompBarOriginal=original;
+    if(omp_patch_jump((void *)0x590371,expected,(U32)&omp_render_bar-0x590375)) {
+        ompBarHooked=1;log_text("Verified centered LuaHZ loading bar installed for HZ; open.mp bar retained for other endpoints.\r\n");
+    } else ompBarOriginal=0;
+}
+static int omp_load_texture(void) {
+    Byte *plain,*texture,*raster;void *stream,*link;U32 i,refs;
+    struct {void *data;U32 bytes;} memory;
+    if(ompAttempted)return ompTexture!=0;
+    ompAttempted=1;
+    if(!encoded || !blob_valid(encoded,encodedLength))return 0;
+    plain=HeapAlloc(GetProcessHeap(),0,encodedLength);if(!plain)return 0;
+    for(i=0;i<encodedLength;i++)plain[i]=encoded[encodedLength-1-i]^key[31-i%32]^(i%32)^(i&255);
+    memory.data=plain;memory.bytes=encodedLength;
+    stream=HZL_RW_OPEN(3,1,&memory);
+    if(stream) {
+        if(HZL_RW_FIND(stream,22,0,0))ompDictionary=HZL_RW_READ(stream);
+        HZL_RW_CLOSE(stream,0);
+    }
+    HeapFree(GetProcessHeap(),0,plain);
+    if(!readable(ompDictionary,16))return 0;
+    link=*(void **)((Byte *)ompDictionary+8);
+    if((U32)link<8 || link==(Byte *)ompDictionary+8 || !readable((Byte *)link-8,88))return 0;
+    texture=(Byte *)link-8;raster=*(Byte **)texture;refs=value32(texture+84);
+    if(!readable(raster,52) || refs==0 || refs>=100000
+       || *(void **)(texture+4)!=ompDictionary
+       || value32(raster+12)!=2048 || value32(raster+16)!=1024)return 0;
+    /* The private dictionary owns its texture for process lifetime. Draw only
+       borrows it; no stock/open.mp sprite or texture reference is replaced. */
+    ompTexture=texture;
+    log_text("Approved HZ artwork decoded for the open.mp renderer.\r\n");return 1;
+}
+static void omp_render(void) {
+    int destination=native_destination();U32 width,height;
+    if(ompModule && drawCustom && (destination>0 || (destination<0 && !seenConnection))
+       && readable((void *)0xc17044,8) && omp_camera_ready() && omp_load_texture()) {
+        width=value32((void *)0xc17044);height=value32((void *)0xc17048);
+        if(width>=320 && width<=16384 && height>=200 && height<=16384) {
+            struct {float left,bottom,right,top;} rect={0,(float)height,(float)width,0};
+            U32 color=0xffffffff;struct {void *texture;} sprite={ompTexture};
+            /* Match the first call in GTA's original RenderSplash. It sets
+               the screen-space depth and reciprocal near clip for vertices. */
+            if(!ompDrawn) {
+                omp_log_value("Sprite depth before initialization=",value32((void *)0xc80460));
+                omp_log_value("Sprite reciprocal clip before initialization=",value32((void *)0xc80464));
+            }
+            HZL_SPRITE_INIT();
+            HZL_SPRITE_DRAW(&sprite,&rect,&color);
+            if(!ompDrawn) {
+                ompDrawn=1;
+                omp_log_value("Sprite depth after initialization=",value32((void *)0xc80460));
+                omp_log_value("Sprite reciprocal clip after initialization=",value32((void *)0xc80464));
+                log_text("LuaHZ splash draw submitted after GTA sprite initialization.\r\n");
+            }
+            return;
+        }
+    }
+    if(ompModule)((void (*)(void))(ompModule+0x427a0))();
+}
+static void try_omp_adapter(void) {
+    Byte *module=GetModuleHandleA("omp-client.dll");U32 expected,oldProtect,ignored,observed;void *pin=0;
+    if(ompHooked || !supported_omp(module) || !omp_functions_valid() || !readable((void *)0x58ff60,5)
+       || *(Byte *)0x58ff60!=0xe9)return;
+    expected=(U32)(module+0x427a0)-0x58ff65;
+    if(value32((void *)0x58ff61)!=expected)return;
+    if(!GetModuleHandleExA(5,(const char *)(module+0x427a0),&pin)
+       || !VirtualProtect((void *)0x58ff61,4,0x40,&oldProtect))return;
+    if(!omp_sf_passthrough(1)) {
+        VirtualProtect((void *)0x58ff61,4,oldProtect,&ignored);return;
+    }
+    ompModule=module;
+    /* This four-byte operand lies within one cache line. A locked compare /
+       exchange publishes the complete displacement and verifies ownership. */
+    observed=expected;
+    __asm__ volatile("lock cmpxchgl %2,(%1)" : "+a"(observed)
+        : "r"((void *)0x58ff61),"r"((U32)&omp_render-0x58ff65) : "memory","cc");
+    FlushInstructionCache(GetCurrentProcess(),(void *)0x58ff61,4);
+    VirtualProtect((void *)0x58ff61,4,oldProtect,&ignored);
+    if(observed==expected) {
+        ompHooked=1;log_text("Verified open.mp HZ splash adapter installed; original renderer retained for other endpoints.\r\n");
+    } else {ompModule=0;omp_sf_passthrough(0);}
+}
+
 static U32 WIN worker(void *unused) {
     U32 start=GetTickCount();Byte *module;void *pin=0;char path[260];(void)unused;
     GetModuleHandleExA(5,(const char *)&worker,&pin); /* Pin callback code for process lifetime. */
@@ -177,6 +383,8 @@ static U32 WIN worker(void *unused) {
     }
     hooked=1;log_text("HZ-only startup splash hook installed; original binaries remain on disk.\r\n");
     for(;;) {
+        try_omp_adapter();
+        try_omp_bar_adapter();
         int destination=native_destination();
         int allowed=destination<0?!seenConnection:destination;
         if(drawCustom!=allowed){drawCustom=allowed;squareOverride=!allowed;if(geometryReady)bar_position(allowed);}
@@ -188,7 +396,7 @@ static U32 WIN worker(void *unused) {
 int HZL_Destination(const char *command){return hzl_destination(command);}
 int HZL_Status(void){return hooked?(drawCustom?2:1):0;}
 int HZL_ValidateEncoded(const Byte *data,U32 length){return readable(data,length) && blob_valid(data,length);}
-int WIN DllMain(void *module,U32 reason,void *reserved) __asm__("\"_DllMain@12\"");
+int WIN DllMain(void *module,U32 reason,void *reserved) WIN_LINK("\"_DllMain@12\"");
 int WIN DllMain(void *module,U32 reason,void *reserved) {
     U32 n,i;void *thread;(void)reserved;
     if(reason!=1 || !hzl_destination(GetCommandLineA()))return 1;

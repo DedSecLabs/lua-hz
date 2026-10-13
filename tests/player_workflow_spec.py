@@ -10,6 +10,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 
+@unittest.skipIf(os.name=='nt','GitHub Actions Bash publication-policy fixtures run on Linux')
 class PlayerWorkflowTests(unittest.TestCase):
     def run_policy(self, state):
         with tempfile.TemporaryDirectory() as directory:

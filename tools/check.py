@@ -20,7 +20,7 @@ for path in sorted(Path('src').rglob('*.lua')):
     code='local f,e=loadfile('+json.dumps(str(path))+');assert(f,e)'
     subprocess.run([str(lj),'-e',code],check=True)
 print('PASS LuaJIT syntax for all source files',flush=True)
-for test in ['server_gate_spec.lua','bootstrap_spec.lua','native_visuals_spec.lua','core_spec.lua','resource_loading_spec.lua','reload_guard_spec.lua','character_spec.lua','native_locations_spec.lua','keys_spec.lua','server_hud_spec.lua','observations_spec.lua','server_info_spec.lua','quick_actions_spec.lua','vehicle_spec.lua','job_actions_spec.lua','bitmap_font_spec.lua','hud_layout_spec.lua','map_icons_spec.lua','gang_zones_spec.lua','ui_spec.lua','startup_spec.lua','font_spec.lua']:
+for test in ['server_gate_spec.lua','bootstrap_spec.lua','native_visuals_spec.lua','core_spec.lua','resource_loading_spec.lua','reload_guard_spec.lua','character_spec.lua','native_locations_spec.lua','keys_spec.lua','server_hud_spec.lua','observations_spec.lua','server_info_spec.lua','quick_actions_spec.lua','vehicle_spec.lua','job_actions_spec.lua','bitmap_font_spec.lua','hud_layout_spec.lua','map_icons_spec.lua','gang_zones_spec.lua','ui_spec.lua','startup_spec.lua','openmp_runtime_spec.lua','font_spec.lua']:
     if test=='startup_spec.lua':
         with tempfile.TemporaryDirectory(prefix='luahz-startup-tests-') as directory:
             subprocess.run([str(lj),'tests/'+test,directory],check=True)
@@ -36,21 +36,21 @@ if args.moonloader:
     used=set()
     for path in Path('src').rglob('*.lua'):
         if path.name=='ui_backend.lua':continue
-        if '_G.getTimeOfDay' in path.read_text():used.add('getTimeOfDay')
-        used.update(re.findall(r"\b(?:call|Game.call|invoke)\('([^']+)'",path.read_text()))
+        if '_G.getTimeOfDay' in path.read_text(encoding='utf-8'):used.add('getTimeOfDay')
+        used.update(re.findall(r"\b(?:call|Game.call|invoke)\('([^']+)'",path.read_text(encoding='utf-8')))
     missing=used-exports
     if missing:raise SystemExit('Unknown MoonLoader native function names: '+', '.join(sorted(missing)))
-    bindings=(root/'lib/mimgui/imgui.lua').read_text()
-    backend=(root/'lib/mimgui/init.lua').read_text()
+    bindings=(root/'lib/mimgui/imgui.lua').read_text(encoding='utf-8')
+    backend=(root/'lib/mimgui/init.lua').read_text(encoding='utf-8')
     valid=set(re.findall(r'(?:function )?M\.([A-Za-z0-9_]+)',bindings))|set(re.findall(r'(?:function )?mimgui\.([A-Za-z0-9_]+)',backend))
-    valid.update(re.findall(r'function mimgui\.([A-Za-z0-9_]+)',Path('src/lib/horizonbase/ui_backend.lua').read_text()))
+    valid.update(re.findall(r'function mimgui\.([A-Za-z0-9_]+)',Path('src/lib/horizonbase/ui_backend.lua').read_text(encoding='utf-8')))
     valid|={'new','ImVec2','ImVec4','Col','WindowFlags','Cond','InputTextFlags','FontSource','FontBaseSize'}
     for path in Path('src').rglob('*.lua'):
         if path.name=='ui_backend.lua':continue
-        missing=set(re.findall(r'\bim\.([A-Za-z0-9_]+)',path.read_text()))-valid
+        missing=set(re.findall(r'\bim\.([A-Za-z0-9_]+)',path.read_text(encoding='utf-8')))-valid
         if missing:raise SystemExit(str(path)+' uses unknown ImGui API names: '+str(missing))
-    events=(root/'lib/samp/events.lua').read_text()
-    callbacks=[name for path in Path('src').rglob('*.lua') for name in re.findall(r'function events\.(\w+)',path.read_text())]
+    events=(root/'lib/samp/events.lua').read_text(encoding='utf-8')
+    callbacks=[name for path in Path('src').rglob('*.lua') for name in re.findall(r'function events\.(\w+)',path.read_text(encoding='utf-8'))]
     missing=[name for name in callbacks if "'"+name+"'" not in events]
     if missing:raise SystemExit('Unknown SAMP.Lua event names: '+str(missing))
     print('PASS native and ImGui API names against the installed runtime')

@@ -1,14 +1,9 @@
 from pathlib import Path
-import subprocess
-import tempfile
 import unittest
+from native_test_tools import run_c_fixture
 
 ROOT=Path(__file__).resolve().parents[1]
 class NativeOwnershipTests(unittest.TestCase):
     def test_reference_ownership_and_server_policy(self):
-        with tempfile.TemporaryDirectory() as directory:
-            output=Path(directory)/'policy-test'
-            subprocess.run(['gcc','-std=c11','-Wall','-Wextra','-Werror','-fsanitize=address,undefined',
-                str(ROOT/'tests/native_visual_policy_test.c'),'-o',str(output)],check=True)
-            result=subprocess.run([str(output)],capture_output=True,text=True,check=True)
-            self.assertIn('PASS native endpoint policy',result.stdout)
+        output=run_c_fixture(ROOT/'tests/native_visual_policy_test.c')
+        self.assertIn('PASS native endpoint policy',output)
