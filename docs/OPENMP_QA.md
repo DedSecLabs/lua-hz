@@ -18,7 +18,7 @@ The v1.6.1 upstream release advertises custom splash screens; upstream issue [39
 
 On 2026-10-13 the owner accepted the isolated open.mp 1.6.1 trial with native client build 6 and verified SA-MP R5: custom loading artwork, centered loading bar, HUD hiding over the F9 browser, and responsive F12 settings. The owner also launched the existing classic SA-MP R5 Base Test and confirmed both work.
 
-The tested Lua files and native helper were promoted into source/player inputs. The existing classic installation was kept unchanged during that initial trial; it used its prior native helper. The subsequent exact RC checklist above covers the combined helper in both installations. No new player ZIP has been published; the published 0.4.0 archive predates these changes.
+The tested Lua files and native helper were promoted into source/player inputs. The existing classic installation was kept unchanged during that initial trial; it used its prior native helper. The subsequent exact RC checklist above covers the combined helper in both installations. These changes are now published in [LuaHZ 0.4.1 — Launcher Choice](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.1). The owner approved the metadata-only repackage after all 694 game files and installer scripts were confirmed identical to the accepted final build.
 
 ## Setup and choice
 

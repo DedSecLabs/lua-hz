@@ -1,8 +1,8 @@
 # Releases and player downloads
 
-The latest published player download is [LuaHZ 0.4.0 — My Car! My F\*\*\*in’ Car!!](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.0), published on 2026-10-12. The owner passed that exact final archive checklist on Linux/Wine. The exact 0.4.1-rc.1 player checklist has also passed on Windows 11 with both open.mp and classic SA-MP R5; the foreign-server black splash reproduces independently of LuaHZ. Historical player releases and checksums are preserved.
+The latest published player download is **[LuaHZ 0.4.1 — Launcher Choice](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.1)**, published on 2026-10-13. Windows owner QA passed with both open.mp and classic SA-MP R5, and release-branch Linux CI passed. Historical releases, tags and checksums are preserved.
 
-The next patch is **0.4.1 — Launcher Choice**. Its Windows checklist/final smoke and Linux CI checks passed. A strict GCC formatting-only correction and publication documentation update preserve all 694 tested game files; the repackaged source metadata still needs owner acceptance under the exact-archive rule below. Preparation does not change the latest stable download.
+For this release, the owner explicitly approved reusing passed final QA for a documentation/source-metadata repackage. All 694 tested game files and install/restore scripts remained byte-identical. The published archive SHA-256 is `60d1ccf9a3e44649f58ac52610bca58757c81d26d946d15a5d7a8507fd1fd405`, from source `e27bc1126390c321ca2287e186c4445b6dbecc8c`. This recorded exception does not change the exact-archive rule for future releases. Published assets remain frozen.
 
 ## Player candidate workflow
 
