@@ -4,7 +4,9 @@ LuaHZ offers launcher choice with the same supported GTA SA 1.0 US, SA-MP 0.3.7 
 
 ## Accepted local Windows result
 
-The owner passed the exact **0.4.1-rc.1** player checklist on 2026-10-13 in both open.mp and classic SA-MP R5 test copies, including the combined helper, feature/input/preferences checks and the server-switching checklist. Archive SHA-256: `7304d4a5faebea65ec18d4a89162e6e23bc26c80ffda94cca7a8fba59af6a6e0`; packaged source: `b948fd6b207cc500aed17bce544903fdf431aeee`. Both installations still match all 694 payload hashes after the comparison below. The final 0.4.1 archive still needs its own smoke check.
+The owner passed the exact **0.4.1-rc.1** player checklist on 2026-10-13 in both open.mp and classic SA-MP R5 test copies, including the combined helper, feature/input/preferences checks and the server-switching checklist. Archive SHA-256: `7304d4a5faebea65ec18d4a89162e6e23bc26c80ffda94cca7a8fba59af6a6e0`; packaged source: `b948fd6b207cc500aed17bce544903fdf431aeee`.
+
+The owner then passed the exact final **0.4.1** smoke check in both copies: archive SHA-256 `ab97c3c3200b29143ce72c20f3fd646ac849f5cc9ba4080eb549d78048385727`, source `ba6d972782c24e63d0234e20494b062780e906eb`. All 694 installed payload hashes remained unchanged after acceptance. Linux CI subsequently passed all source/recovery tests (77 Python tests; only the Win32-specific fixture skipped) and both native builds after a formatting-only GCC warning correction. [Validated Linux run](https://github.com/DedSecLabs/luahz/actions/runs/38485104726).
 
 ### Foreign-server loading baseline
 
@@ -35,9 +37,8 @@ Standalone Lua/native fixtures cover gates, signatures, ownership, sprite initia
 
 ## Remaining owner checks before a player release
 
-1. Prepare and install the exact final 0.4.1 archive, then obtain owner smoke acceptance in both launcher paths. RC acceptance does not certify different final bytes.
-2. Complete Linux release verification; Bash fixtures, ASan/UBSan and the original GCC/MinGW build path were not run on this Windows host.
-3. Retain the foreign-server black-splash baseline limitation above. Further diagnosis is separate from the passed RC checklist.
+1. Verify the publication repackage preserves all 694 tested game files and obtain owner acceptance of the changed documentation/source metadata under the release guide's exact-archive rule.
+2. Retain the foreign-server black-splash baseline limitation above. Further diagnosis is separate from the passed checklist. Linux CI is source/build/recovery verification; Linux/Wine owner gameplay QA remains the previous 0.4.0 result.
 
 ## Primary references
 

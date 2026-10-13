@@ -16,6 +16,8 @@ Read README.md, docs/STATUS.md, docs/ARCHITECTURE.md, docs/DEVELOPMENT.md and do
 
 ## Workflow
 
+Follow docs/DEVELOPMENT_STYLE.md for branch, commit, PR, release and asset names. Each release starts on release/<core-version> before preparation or the first push. Use purpose-based branch names without agent/model prefixes; check the branch, version, tag, title and archive filename together. Preserve historical commits/tags and frozen owner-tested archive bytes.
+
 1. Inspect the module and relevant tests; use rg for search. Keep changes focused and update current docs when behavior changes.
 2. Run `python tools/check.py --luajit /path/to/luajit`. For native changes also build the relevant component and run ownership/policy tests. Optional `--moonloader` checks API names against a locally installed runtime.
 3. Use tools/deploy.py for backed-up Lua deployment. Native installers and artwork updater have their own receipts and recovery paths; see docs/DEVELOPMENT.md. Use the ignored .local/active-qa-target.json only on the owner's machine, never hardcode it into source.

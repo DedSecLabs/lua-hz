@@ -2,9 +2,11 @@
 
 The latest published player download is [LuaHZ 0.4.0 — My Car! My F\*\*\*in’ Car!!](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.0), published on 2026-10-12. The owner passed that exact final archive checklist on Linux/Wine. The exact 0.4.1-rc.1 player checklist has also passed on Windows 11 with both open.mp and classic SA-MP R5; the foreign-server black splash reproduces independently of LuaHZ. Historical player releases and checksums are preserved.
 
-The next patch is **0.4.1 — Launcher Choice**, now prepared as the final version after RC acceptance. It fixes loading, HUD/browser overlap and settings input with optional open.mp compatibility, without adding gameplay features. The final archive still needs its own smoke acceptance and Linux release verification before publication. Preparation does not change the latest stable download.
+The next patch is **0.4.1 — Launcher Choice**. Its Windows checklist/final smoke and Linux CI checks passed. A strict GCC formatting-only correction and publication documentation update preserve all 694 tested game files; the repackaged source metadata still needs owner acceptance under the exact-archive rule below. Preparation does not change the latest stable download.
 
 ## Player candidate workflow
+
+Use `release/<core-version>` for each release, starting before preparation or the first push. Follow [development style](DEVELOPMENT_STYLE.md) for branches, commits, PRs, tags, themes and asset filenames. Check the complete naming set together before pushing.
 
 `tools/package_player.py` builds `LuaHZ-<version>-player.zip` from a clean checked Git revision, maintained source/UI assets and the explicit `player-resources/` directory. Prerequisite software stays separate. The archive includes install and restore scripts for Linux/Wine and PowerShell, installation instructions, release notes and a complete payload hash list. Preferences, saved places, account data and logs are never packaged.
 

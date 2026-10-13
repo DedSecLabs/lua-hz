@@ -35,19 +35,17 @@ It activates only on `samp.hzgaming.net:7777` / `213.32.6.232:7777`. The same SA
 
 Download **[LuaHZ-0.4.1-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.4.1/LuaHZ-0.4.1-player.zip)**.
 
-Release preparation snapshot, 2026-10-13: the 0.4.1 links are planned for publication. Until publication, [0.4.0 remains the stable download](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.0).
-
 ### 1. Prepare the game
 
 Start with classic **GTA San Andreas 1.0 US** and **SA-MP 0.3.7 R5**. Connect to Horizon once before adding mods.
 
 You can use the classic SA-MP browser or optional **[open.mp launcher 1.6.1](https://open.mp/downloads/launcher)** with native client build 6 and the verified **0.3.7 R5** client. Point open.mp at the GTA folder and select R5. Its browser uses F9; open `/luahz` and assign F12 or another free LuaHZ settings shortcut. Existing preferences are preserved. See [setup and QA scope](docs/OPENMP_QA.md).
 
-Close **GTA and the SA-MP browser** before copying files. Your **GTA folder** is the folder that contains `gta_sa.exe`.
+Close **GTA and both multiplayer launchers** before copying files. Your **GTA folder** is the folder that contains `gta_sa.exe`.
 
 ### 2. Install the prerequisites
 
-Install these **in order**, with GTA and SA-MP closed. Use the named **32-bit (x86)** versions even on 64-bit Windows. Open each ZIP and copy its runtime files to the destination below. Keep the complete supplied libraries.
+Install these **in order**, with GTA and both multiplayer launchers closed. Use the named **32-bit (x86)** versions even on 64-bit Windows. Open each ZIP and copy its runtime files to the destination below. Keep the complete supplied libraries.
 
 | Download — tested version | Where it goes |
 |---|---|
@@ -62,7 +60,7 @@ On **Linux/Wine**, install the prerequisites inside the **same Wine prefix** as 
 
 ### 3. Add LuaHZ
 
-Close GTA and the SA-MP browser. Extract the player ZIP outside the GTA folder.
+Close GTA and both multiplayer launchers. Extract the player ZIP outside the GTA folder.
 
 **Windows:** from the extracted folder, run:
 
@@ -80,7 +78,7 @@ bash install.sh "/path/to/GTA San Andreas"
 
 For an existing LuaHZ installation, add `--upgrade`. The path must contain `gta_sa.exe`.
 
-Both installers verify the payload and prerequisites, preserve preferences and saved locations, and print a recovery command. Keep the backup until the new build works. The exact 0.4.1-rc.1 player checklist passed on Windows 11 with both launchers. Final archive smoke acceptance is separate; Linux/Wine owner QA covers 0.4.0. See the [installation guide](docs/INSTALLATION.md#player-installation-and-upgrade).
+Both installers verify the payload and prerequisites, preserve preferences and saved locations, and print a recovery command. Keep the backup until the new build works. The exact 0.4.1 player archive passed owner QA on Windows 11 with both launchers. Linux/Wine owner gameplay QA covers the previous 0.4.0 release. See the [installation guide](docs/INSTALLATION.md#player-installation-and-upgrade).
 
 ### 4. Join Horizon Roleplay
 
@@ -106,7 +104,7 @@ Add `samp.hzgaming.net:7777` in the SA-MP browser and connect. A LuaHZ notice ap
 
 | Control | Action |
 |---|---|
-| **F9** or `/luahz` | Open settings |
+| **F9** (classic default) or `/luahz` | Open settings |
 | **M** | Open Quickmap |
 | **I** | Open Character Status |
 | **U** or `/luahzactions` | Open character Quick Actions |
@@ -115,13 +113,13 @@ Add `samp.hzgaming.net:7777` in the SA-MP browser and connect. A LuaHZ notice ap
 | **Numpad + / −** or **= / −** | Raise or lower the cruise target by 1 mph |
 | **Numpad 1 / 2 / 3** | Cruise at **50 / 80 / 120 mph** |
 
-> Change shortcuts and preset speeds in **F9 → Keybinds → Normal keybinds**. Cruise works while you drive a road vehicle. Brake, or press **X** again, to cancel.
+> Change shortcuts and preset speeds in **LuaHZ settings (`/luahz`) → Keybinds → Normal keybinds**. Cruise works while you drive a road vehicle. Brake, or press **X** again, to cancel.
 
 New screenshots show development build **0.4.0-rc.5**. Unchanged map/HUD/menu images are retained from earlier captures.
 
 ### Settings
 
-Configure the HUD and interface with F9.
+Configure the HUD and interface with `/luahz` or your settings shortcut.
 
 <img src="docs/images/gallery-v03/settings-hud.png" alt="Settings" width="720"><br>
 
@@ -300,7 +298,7 @@ python3 -m venv .venv
 
 Build and deploy steps are in [development](docs/DEVELOPMENT.md). GitHub's automatic source ZIP is this repository, not the player download.
 
-**0.4.1 — Launcher Choice** includes owner-tested Windows support for open.mp 1.6.1 with SA-MP R5: LuaHZ loading artwork/bar and browser/menu coexistence. Classic launcher choice and the F9 default are retained. See [changes](docs/releases/0.4.1.md) and [open.mp QA](docs/OPENMP_QA.md), including the independently reproduced foreign-server black-splash limitation. Final smoke acceptance and Linux release verification remain pending at preparation time.
+**0.4.1 — Launcher Choice** includes owner-tested Windows support for open.mp 1.6.1 with SA-MP R5: LuaHZ loading artwork/bar and browser/menu coexistence. Classic launcher choice and the F9 default are retained. See [changes](docs/releases/0.4.1.md) and [open.mp QA](docs/OPENMP_QA.md), including the independently reproduced foreign-server black-splash limitation. The exact final 0.4.1 archive passed Windows 11 owner QA with both launchers. Source/build verification is recorded separately; Linux/Wine owner gameplay QA covers 0.4.0.
 
 ## Documentation
 

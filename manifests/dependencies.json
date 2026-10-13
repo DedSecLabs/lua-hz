@@ -147,7 +147,7 @@
   },
   "platform_validation": {
     "wine": "Wine 11.0 via GE-Proton11-7 x86_64",
-    "windows_native": "Owner passed the exact 0.4.1-rc.1 player checklist on Windows 11 with open.mp 1.6.1/build 6 + SA-MP R5 and classic SA-MP R5 on 2026-10-13, including the combined helper, features/input/preferences and server switching. Foreign-server black splash reproduces independently of LuaHZ in the minimal control. Final 0.4.1 archive smoke acceptance remains pending."
+    "windows_native": "Owner passed the Windows 11 0.4.1 checklist and final smoke test with open.mp 1.6.1/build 6 + SA-MP R5 and classic SA-MP R5 on 2026-10-13, including the combined helper, features/input/preferences and server switching. Foreign-server black splash reproduces independently of LuaHZ in the minimal control. Publication metadata changes preserve all 694 tested game files; exact archive acceptance is recorded separately."
   },
   "publication_scope": "Source, tests, tools, notices, licensed Lucide assets and the owner-approved README/menu logo",
   "runtime_libraries": {

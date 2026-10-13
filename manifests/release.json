@@ -4,8 +4,7 @@
   "package_kind": "developer-preview",
   "player_installable": false,
   "player_release_blockers": [
-    "This developer preview excludes the full visual resource packs; use the separate complete player ZIP.",
-    "Windows owner QA passed the exact 0.4.1-rc.1 player archive in both launchers. Final 0.4.1 archive smoke acceptance and Linux release verification remain pending."
+    "This developer preview excludes the full visual resource packs; use the separate complete player ZIP."
   ],
   "release_name": "Launcher Choice"
 }

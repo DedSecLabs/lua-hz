@@ -1,5 +1,7 @@
 # Development and reproduction
 
+Branch, commit, PR, release and asset naming follows [development style](DEVELOPMENT_STYLE.md). Start every release on its own `release/<core-version>` branch before preparing or pushing it.
+
 ## Source-only checks
 
 Use Python 3.11+, LuaJIT 2.1 and GCC on Linux. Create a virtual environment and install the pinned tooling requirement:

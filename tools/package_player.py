@@ -138,7 +138,7 @@ The **GTA folder** contains `gta_sa.exe`. The installer verifies the payload and
 powershell -NoProfile -ExecutionPolicy Bypass -File .\\install.ps1 "C:\\Games\\GTA San Andreas"
 ```
 
-To upgrade an existing LuaHZ installation, add `-Upgrade`. Keep the backup until the new build works. The owner passed the exact 0.4.1-rc.1 player checklist on Windows 11 with both open.mp and classic SA-MP R5, including the combined helper, features/input/preferences and server switching. Final archive smoke acceptance is recorded separately. Linux/Wine owner QA covers the previously published 0.4.0 archive; Linux verification of the new release remains pending.
+To upgrade an existing LuaHZ installation, add `-Upgrade`. Keep the backup until the new build works. The owner passed the Windows 11 0.4.1 checklist and final smoke test with both open.mp and classic SA-MP R5, including the combined helper, features/input/preferences and server switching. Linux source, installer/recovery fixtures and both native builds passed CI. Linux/Wine owner gameplay QA covers the previously published 0.4.0 archive. Exact archive hashes and owner acceptance are recorded separately; publication metadata changes preserve the tested game payload.
 
 **Linux/Wine:** from the extracted folder, run:
 
