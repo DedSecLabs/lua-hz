@@ -191,7 +191,10 @@ static int omp_sf_passthrough(int install) {
         if(!readable(sfModule+0x1b816,6) || sfModule[0x1b816]!=0x39 || sfModule[0x1b817]!=0x0d)return 0;
         for(int i=0;i<3;i++)if(!readable(sfModule+offsets[i],4) || value32(sfModule+offsets[i])!=original)return 0;
         for(int i=0;i<3;i++)if(!patch32(sfModule+offsets[i],original,replacement)) {
-            while(i--)patch32(sfModule+offsets[i],replacement,original);return 0;
+            while(i--) {
+                patch32(sfModule+offsets[i],replacement,original);
+            }
+            return 0;
         }
         log_text("SAMPFUNCS splash substitutions bypassed for the verified open.mp renderer.\r\n");return 1;
     }
