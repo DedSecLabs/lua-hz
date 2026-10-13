@@ -4,9 +4,19 @@ LuaHZ offers launcher choice with the same supported GTA SA 1.0 US, SA-MP 0.3.7 
 
 ## Accepted local Windows result
 
+The owner passed the exact **0.4.1-rc.1** player checklist on 2026-10-13 in both open.mp and classic SA-MP R5 test copies, including the combined helper, feature/input/preferences checks and the server-switching checklist. Archive SHA-256: `7304d4a5faebea65ec18d4a89162e6e23bc26c80ffda94cca7a8fba59af6a6e0`; packaged source: `b948fd6b207cc500aed17bce544903fdf431aeee`. Both installations still match all 694 payload hashes after the comparison below. The final 0.4.1 archive still needs its own smoke check.
+
+### Foreign-server loading baseline
+
+The owner observed a black loading screen on a **fresh open.mp launch to another server**. It reproduces with LuaHZ's loading helper, Lua entry point and QA probe disabled. It also reproduces in a minimal control with MoonLoader, SAMPFUNCS, CLEO and the winmm proxy disabled. SilentPatch and the ASI loader remained, so this is not a completely unmodified game. The exact cause in open.mp/base-game/profile/remaining components is undetermined; the symptom is reproducible independently of LuaHZ. All seven parked files were restored byte-for-byte. No change to foreign-server artwork is included in LuaHZ.
+
+The v1.6.1 upstream release advertises custom splash screens; upstream issue [393](https://github.com/openmultiplayer/launcher/issues/393) reports intermittent loading-screen failures. That report is context rather than proof of the cause in this setup.
+
+### Earlier integration trial
+
 On 2026-10-13 the owner accepted the isolated open.mp 1.6.1 trial with native client build 6 and verified SA-MP R5: custom loading artwork, centered loading bar, HUD hiding over the F9 browser, and responsive F12 settings. The owner also launched the existing classic SA-MP R5 Base Test and confirmed both work.
 
-The tested Lua files and native helper are promoted into source/player inputs. The existing classic installation was kept unchanged during the comparison; it used its prior native helper. Running the combined helper in that classic installation, the complete Windows feature checklist, and in-process server switching remain separate QA items. No new player ZIP has been published; the published 0.4.0 archive predates these changes.
+The tested Lua files and native helper were promoted into source/player inputs. The existing classic installation was kept unchanged during that initial trial; it used its prior native helper. The subsequent exact RC checklist above covers the combined helper in both installations. No new player ZIP has been published; the published 0.4.0 archive predates these changes.
 
 ## Setup and choice
 
@@ -25,10 +35,9 @@ Standalone Lua/native fixtures cover gates, signatures, ownership, sprite initia
 
 ## Remaining owner checks before a player release
 
-1. Run the combined helper through classic SA-MP R5, then verify the exact final player archive.
-2. Check native fonts/icons, Quickmap, Character, Quick Actions, Vehicle, input/mouse behavior and preference persistence on Windows.
-3. Switch HZ → another server → HZ using open.mp's browser; verify Lua/native deactivation, original foreign-server visuals, canceled queues and clean reactivation.
-4. Start fresh on another server, then join HZ without restarting; distinguish startup-only artwork from reconnect presentation.
+1. Prepare and install the exact final 0.4.1 archive, then obtain owner smoke acceptance in both launcher paths. RC acceptance does not certify different final bytes.
+2. Complete Linux release verification; Bash fixtures, ASan/UBSan and the original GCC/MinGW build path were not run on this Windows host.
+3. Retain the foreign-server black-splash baseline limitation above. Further diagnosis is separate from the passed RC checklist.
 
 ## Primary references
 
