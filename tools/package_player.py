@@ -126,7 +126,9 @@ def install_notes(version):
 
 One download for Linux and Windows. It contains the HUD font, Quickmap, portraits, native visuals, and loading artwork. GTA, SA-MP, CLEO, SilentPatchSA Build 34.1, MoonLoader, SAMPFUNCS, and mimgui stay separate. The verified SAMP.Lua files are included. Install the tested prerequisites linked in the repository README first.
 
-Close GTA and the SA-MP browser. Extract this ZIP outside the game folder.
+Classic SA-MP 0.3.7 R5 remains supported. Starting with 0.4.1, [open.mp launcher 1.6.1](https://open.mp/downloads/launcher) is an optional alternative with native client build 6 and the verified R5 client. Point it at the GTA folder and select 0.3.7 R5. Other SA-MP versions and unrecognized open.mp client builds are outside the native compatibility scope. open.mp uses F9 for its browser: open `/luahz` and assign F12 or another available settings shortcut. Preferences are not changed automatically.
+
+Close GTA and both multiplayer launchers. Extract this ZIP outside the game folder.
 
 The **GTA folder** contains `gta_sa.exe`. The installer verifies the payload and supported prerequisite hashes, backs up files it replaces, and prints a recovery command. Preferences and saved locations under `moonloader/config` are not included or overwritten.
 
@@ -136,7 +138,7 @@ The **GTA folder** contains `gta_sa.exe`. The installer verifies the payload and
 powershell -NoProfile -ExecutionPolicy Bypass -File .\\install.ps1 "C:\\Games\\GTA San Andreas"
 ```
 
-To upgrade an existing LuaHZ installation, add `-Upgrade`. Keep the backup until the new build works. Native Windows gameplay QA has not been recorded. Linux/Wine owner gameplay results are recorded for each exact packaged build.
+To upgrade an existing LuaHZ installation, add `-Upgrade`. Keep the backup until the new build works. Windows open.mp loading, HUD/browser separation and settings input were owner-tested in a local trial. Full Windows feature/server-switching QA and the new combined helper through classic SA-MP remain pending. Exact archive acceptance is recorded separately; previous Linux/Wine release QA does not certify a new candidate.
 
 **Linux/Wine:** from the extracted folder, run:
 

@@ -352,6 +352,12 @@ function M:content()
         im.TextDisabled('0% = left/top. 100% = right/bottom.')
     elseif self.tab==8 then
         self:section('Changelog')
+        im.TextUnformatted('LuaHZ 0.4.1-rc.1 — Launcher Choice')
+        im.BulletText('Optional open.mp 1.6.1 support with the verified SA-MP R5 client')
+        im.BulletText('Custom loading artwork and centered bar work with open.mp')
+        im.BulletText('HUD hides over the open.mp browser; settings hotkey responds reliably')
+        im.BulletText('Classic SA-MP remains available; shortcuts and preferences are preserved')
+        im.Spacing()
         im.TextUnformatted('LuaHZ 0.4.0')
         im.BulletText('Vehicle menu, dashboard states and ownership badges')
         im.BulletText('Character licenses and profession Quick Actions')
@@ -564,7 +570,7 @@ function M:draw()
     local lineHeight=im.GetFontSize()
     local headingY=40*S-(2*lineHeight+3*S)/2
     im.SetCursorPos(im.ImVec2(headingX,headingY));im.TextColored(im.ImVec4(1,.62,0,1),'LuaHZ')
-    im.SetCursorPos(im.ImVec2(headingX,headingY+lineHeight+3*S));im.TextDisabled('0.4.0')
+    im.SetCursorPos(im.ImVec2(headingX,headingY+lineHeight+3*S));im.TextDisabled('0.4.1-rc.1')
     local sidebarOrder={1,2,3,4,5,6,9,7,8}
     local rowStep=math.min(42,(size.y/S-94-65-34)/(#tabs-1))
     for slot,i in ipairs(sidebarOrder) do

@@ -296,7 +296,7 @@ python3 -m venv .venv
 
 Build and deploy steps are in [development](docs/DEVELOPMENT.md). GitHub's automatic source ZIP is this repository, not the player download.
 
-Unreleased source includes owner-tested Windows support for open.mp 1.6.1 with SA-MP R5: LuaHZ loading artwork/bar and browser/menu coexistence. Classic launcher choice and the F9 default are retained. See [open.mp setup and QA scope](docs/OPENMP_QA.md); the published 0.4.0 ZIP predates this integration.
+The next patch, **0.4.1 — Launcher Choice**, is being prepared as **0.4.1-rc.1**. It includes owner-tested Windows support for open.mp 1.6.1 with SA-MP R5: LuaHZ loading artwork/bar and browser/menu coexistence. Classic launcher choice and the F9 default are retained. See [planned changes](docs/releases/0.4.1.md) and [open.mp setup and QA scope](docs/OPENMP_QA.md). The candidate is not published; the stable download above remains 0.4.0.
 
 ## Documentation
 
