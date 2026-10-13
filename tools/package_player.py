@@ -156,7 +156,7 @@ Download `LuaHZ-{version}-player.zip` to install the mod. The “Source code” 
 
 def release_notes(version, revision, file_count):
     path = ROOT / 'docs/releases' / (version.split('-')[0] + '.md')
-    changes = path.read_text().strip()
+    changes = path.read_text(encoding='utf-8').strip()
     if not changes.startswith('## Mod Changes\n'):
         raise ValueError('Player notes must start with Mod Changes')
     return (changes + '\n\n' + change_notes(version, revision) + '\n'
@@ -206,14 +206,14 @@ def package(output, revision, resources, asi):
     for name in ('LICENSE', 'THIRD_PARTY.md'):
         (work / name).write_bytes((ROOT / name).read_bytes())
     (work / 'SAMP-Lua-LICENSE.txt').write_bytes(license_text)
-    (work / 'FILES.sha256').write_text(''.join(digest + '  ' + name + '\n' for name, digest in files.items()))
-    (work / 'PREREQUISITES.sha256').write_text(prerequisite_checksums(deps))
+    (work / 'FILES.sha256').write_text(''.join(digest + '  ' + name + '\n' for name, digest in files.items()), encoding='utf-8')
+    (work / 'PREREQUISITES.sha256').write_text(prerequisite_checksums(deps), encoding='utf-8')
     for script in ('base_install.sh', 'base_restore.sh', 'base_install.ps1', 'base_restore.ps1'):
         target = script.removeprefix('base_')
         (work / target).write_bytes((ROOT / 'tools' / script).read_bytes())
     (work / 'INSTALL.md').write_bytes(install_notes(version))
-    (work / 'RELEASE_NOTES.md').write_text(notes)
-    (work / 'release-manifest.json').write_text(json.dumps(result, indent=2) + '\n')
+    (work / 'RELEASE_NOTES.md').write_text(notes, encoding='utf-8')
+    (work / 'release-manifest.json').write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
     zip_path = output / (work.name + '.zip')
     with zipfile.ZipFile(zip_path, 'w') as archive:
         for path in sorted(work.rglob('*')):
@@ -221,10 +221,10 @@ def package(output, revision, resources, asi):
                 continue
             mode = zipfile.ZIP_STORED if path.suffix.lower() in {'.txd', '.enc', '.dll', '.asi'} else zipfile.ZIP_DEFLATED
             archive.write(path, path.relative_to(output), compress_type=mode)
-    (output / 'RELEASE_NOTES.md').write_text(notes)
-    (output / 'release-manifest.json').write_text(json.dumps(result, indent=2) + '\n')
+    (output / 'RELEASE_NOTES.md').write_text(notes, encoding='utf-8')
+    (output / 'release-manifest.json').write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
     attached = [zip_path.name, 'RELEASE_NOTES.md', 'release-manifest.json']
-    (output / 'SHA256SUMS.txt').write_text(''.join(sha((output / name).read_bytes()) + '  ' + name + '\n' for name in attached))
+    (output / 'SHA256SUMS.txt').write_text(''.join(sha((output / name).read_bytes()) + '  ' + name + '\n' for name in attached), encoding='utf-8')
     return {'archive': str(zip_path), 'files': len(files), 'bytes': zip_path.stat().st_size, 'tag': result['tag']}
 
 
