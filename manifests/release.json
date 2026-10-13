@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "version": "0.4.1-rc.1",
+  "version": "0.4.1",
   "package_kind": "developer-preview",
   "player_installable": false,
   "player_release_blockers": [
     "This developer preview excludes the full visual resource packs; use the separate complete player ZIP.",
-    "Windows open.mp loading and menu QA is recorded; combined-helper classic SA-MP and exact player-archive QA remain pending."
+    "Windows owner QA passed the exact 0.4.1-rc.1 player archive in both launchers. Final 0.4.1 archive smoke acceptance and Linux release verification remain pending."
   ],
   "release_name": "Launcher Choice"
 }

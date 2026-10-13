@@ -147,7 +147,7 @@
   },
   "platform_validation": {
     "wine": "Wine 11.0 via GE-Proton11-7 x86_64",
-    "windows_native": "Owner accepted Windows 11 open.mp 1.6.1/build 6 + SA-MP R5 loading artwork, centered bar, browser/HUD and settings input on 2026-10-13; unchanged classic R5 installation also tested. Combined-helper classic installation and full feature/server-switch QA remain pending."
+    "windows_native": "Owner passed the exact 0.4.1-rc.1 player checklist on Windows 11 with open.mp 1.6.1/build 6 + SA-MP R5 and classic SA-MP R5 on 2026-10-13, including the combined helper, features/input/preferences and server switching. Foreign-server black splash reproduces independently of LuaHZ in the minimal control. Final 0.4.1 archive smoke acceptance remains pending."
   },
   "publication_scope": "Source, tests, tools, notices, licensed Lucide assets and the owner-approved README/menu logo",
   "runtime_libraries": {

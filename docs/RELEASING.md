@@ -1,8 +1,8 @@
 # Releases and player downloads
 
-The latest published player download is [LuaHZ 0.4.0 — My Car! My F\*\*\*in’ Car!!](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.0), published on 2026-10-12. The owner passed that exact final archive checklist on Linux/Wine. Windows open.mp loading/menu QA is now recorded separately; full Windows feature/server-switching and combined-helper classic SA-MP QA remain pending. Historical player releases and checksums are preserved.
+The latest published player download is [LuaHZ 0.4.0 — My Car! My F\*\*\*in’ Car!!](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.0), published on 2026-10-12. The owner passed that exact final archive checklist on Linux/Wine. The exact 0.4.1-rc.1 player checklist has also passed on Windows 11 with both open.mp and classic SA-MP R5; the foreign-server black splash reproduces independently of LuaHZ. Historical player releases and checksums are preserved.
 
-The next patch is **0.4.1 — Launcher Choice**, currently **0.4.1-rc.1**. It fixes loading, HUD/browser overlap and settings input with optional open.mp compatibility, without adding gameplay features. Its exact player ZIP must pass owner QA before publication; preparing an RC does not change the latest stable download.
+The next patch is **0.4.1 — Launcher Choice**, now prepared as the final version after RC acceptance. It fixes loading, HUD/browser overlap and settings input with optional open.mp compatibility, without adding gameplay features. The final archive still needs its own smoke acceptance and Linux release verification before publication. Preparation does not change the latest stable download.
 
 ## Player candidate workflow
 

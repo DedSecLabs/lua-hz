@@ -1,12 +1,12 @@
 # Installation guide
 
-**Player download:** [LuaHZ 0.4.0](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.0). Use the supplied PowerShell or Linux/Wine installer; existing installations require an explicit upgrade. See [installation and upgrade](#player-installation-and-upgrade). [BASE_INSTALL.md](BASE_INSTALL.md) describes the earlier small preview, which omits the visuals.
+**Player download:** [LuaHZ 0.4.1](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.1). These are planned publication links in this release preparation snapshot; [0.4.0 remains stable](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.0) until 0.4.1 is published. Use the supplied PowerShell or Linux/Wine installer; existing installations require an explicit upgrade. See [installation and upgrade](#player-installation-and-upgrade). [BASE_INSTALL.md](BASE_INSTALL.md) describes the earlier small preview, which omits the visuals.
 
-LuaHZ 0.4.0 targets classic **GTA San Andreas 1.0 US**, **SA-MP 0.3.7 R5** and the prerequisite versions linked in the [README](../README.md#install). This guide documents that prerequisite setup. The repository source ZIP is not the player download.
+LuaHZ 0.4.1 targets classic **GTA San Andreas 1.0 US**, **SA-MP 0.3.7 R5** and the prerequisite versions linked in the [README](../README.md#install). Classic SA-MP and optional open.mp 1.6.1/client build 6 both use that verified R5 client. Point open.mp at the GTA folder and choose R5; use `/luahz` to assign F12 or another settings shortcut because open.mp's browser uses F9. See [open.mp setup and QA](OPENMP_QA.md). The repository source ZIP is not the player download.
 
 ## What you can install today
 
-Install the prerequisites below, then download `LuaHZ-0.4.0-player.zip` from [Releases](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.0). GitHub’s **Code → Download ZIP** contains developer source and cannot replace that package. Python, GCC and LuaJIT build tools are for contributors, not prerequisites players need to install separately.
+Install the prerequisites below, then download `LuaHZ-0.4.1-player.zip` from [Releases](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.1) when published. GitHub’s **Code → Download ZIP** contains developer source and cannot replace that package. Python, GCC and LuaJIT build tools are for contributors, not prerequisites players need to install separately.
 
 ## Find your game folder
 
@@ -37,7 +37,7 @@ Original GTA and SAMPFUNCS files must remain unmodified on disk for LuaHZ's nati
 
 ## SilentPatch configuration
 
-SilentPatch is required for the supported setup to address the original GTA asset-streaming deadlock observed during Horizon login. It is a separate game prerequisite; it can also fix the underlying game on other servers. LuaHZ itself still activates only on Horizon. The owner reported stable gameplay and working menus after installing Build 34.1 on Linux/Wine; native Windows and every mod combination remain unverified. It is downloaded separately, not included in the LuaHZ ZIP.
+SilentPatch is required for the supported setup to address the original GTA asset-streaming deadlock observed during Horizon login. It is a separate game prerequisite; it can also fix the underlying game on other servers. LuaHZ itself still activates only on Horizon. The owner reported stable gameplay and working menus with Build 34.1 on Linux/Wine and passed the Windows 0.4.1-rc.1 checklist with both launchers. This does not certify every mod combination. SilentPatch is downloaded separately, not included in the LuaHZ ZIP.
 
 In the supplied `SilentPatchSA.ini`, set these values under `[SilentPatch]` to reproduce the local setup, leaving the other entries supplied by the author intact:
 
@@ -105,7 +105,7 @@ This is a layout checklist, not a full archive inventory. The prerequisite archi
 
 ## Installing LuaHZ itself
 
-**Player package:** [LuaHZ-0.4.0-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.4.0/LuaHZ-0.4.0-player.zip). Extract outside the GTA folder, then use `install.ps1` on Windows or `install.sh` on Linux/Wine. Follow the [first-install/upgrade commands](#player-installation-and-upgrade) below. Downloads labeled **developer preview** and GitHub’s automatic **Source code** archives are for contributors.
+**Player package:** [LuaHZ-0.4.1-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.4.1/LuaHZ-0.4.1-player.zip), available after publication. Extract outside the GTA folder, then use `install.ps1` on Windows or `install.sh` on Linux/Wine. Follow the [first-install/upgrade commands](#player-installation-and-upgrade) below. Downloads labeled **developer preview** and GitHub’s automatic **Source code** archives are for contributors.
 
 **Source/local testing:** Use [the development guide](DEVELOPMENT.md) to check/build the source and deploy it with backups. Our Lua entry point is historically named `HorizonBase.lua`; it belongs in `moonloader`, and `src/lib/horizonbase` becomes `moonloader/lib/horizonbase`. Use the deployment tools to stage the licensed UI icons and available external resources; copying only that Lua file is insufficient.
 
@@ -164,7 +164,7 @@ The CLEO 4.4.4 and MoonLoader archives were fetched and matched during the earli
 
 ## Player installation and upgrade
 
-The 0.4.0 player ZIP includes guarded installers for Linux/Wine and PowerShell. These commands apply to 0.4.0; the historical 0.2.39 installer has different upgrade behavior. Close GTA and the SA-MP browser; install the prerequisite versions above, including SilentPatchSA 1.1 Build 34.1. Extract the ZIP outside the game folder.
+The 0.4.1 player ZIP includes guarded installers for Linux/Wine and PowerShell. These commands apply to 0.4.1; the historical 0.2.39 installer has different upgrade behavior. Close GTA and both multiplayer launchers; install the prerequisite versions above, including SilentPatchSA 1.1 Build 34.1. Extract the ZIP outside the game folder.
 
 **Linux/Wine, first installation:**
 
@@ -190,4 +190,4 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 "C:\Games\GTA 
 powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 "C:\Games\GTA San Andreas" -Upgrade
 ```
 
-The installers validate supported prerequisites and payload hashes, back up overwritten files, and print a recovery command. Keep that backup until the new build works. Preferences and saved locations under moonloader/config, unrelated mods and unused old resource groups remain untouched. Recovery restores overwritten files and removes newly added ones; it refuses files modified after the installation. A native Windows gameplay report remains pending.
+The installers validate supported prerequisites and payload hashes, back up overwritten files, and print a recovery command. Keep that backup until the new build works. Preferences and saved locations under moonloader/config, unrelated mods and unused old resource groups remain untouched. Recovery restores overwritten files and removes newly added ones; it refuses files modified after the installation. The exact 0.4.1-rc.1 checklist passed on Windows 11 with both launchers; final archive smoke acceptance is separate. Linux/Wine owner QA covers 0.4.0, with Linux verification of the new release pending.

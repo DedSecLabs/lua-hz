@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/DedSecLabs/luahz/releases/tag/v0.4.0"><img src="https://img.shields.io/badge/Release-0.4.0-2563eb" alt="release 0.4.0"></a>
+  <a href="https://github.com/DedSecLabs/luahz/releases/tag/v0.4.1"><img src="https://img.shields.io/badge/Release-0.4.1-2563eb" alt="release 0.4.1"></a>
   <img src="https://img.shields.io/badge/Platform-SA--MP-ff8000" alt="platform SA-MP">
   <a href="https://github.com/DedSecLabs/luahz/actions/workflows/release.yml"><img src="https://img.shields.io/github/actions/workflow/status/DedSecLabs/luahz/release.yml?branch=main&label=Build&color=22c55e" alt="build status"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-64748b" alt="license MIT"></a>
@@ -33,11 +33,15 @@ It activates only on `samp.hzgaming.net:7777` / `213.32.6.232:7777`. The same SA
 
 ## Install
 
-Download **[LuaHZ-0.4.0-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.4.0/LuaHZ-0.4.0-player.zip)**.
+Download **[LuaHZ-0.4.1-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.4.1/LuaHZ-0.4.1-player.zip)**.
+
+Release preparation snapshot, 2026-10-13: the 0.4.1 links are planned for publication. Until publication, [0.4.0 remains the stable download](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.0).
 
 ### 1. Prepare the game
 
 Start with classic **GTA San Andreas 1.0 US** and **SA-MP 0.3.7 R5**. Connect to Horizon once before adding mods.
+
+You can use the classic SA-MP browser or optional **[open.mp launcher 1.6.1](https://open.mp/downloads/launcher)** with native client build 6 and the verified **0.3.7 R5** client. Point open.mp at the GTA folder and select R5. Its browser uses F9; open `/luahz` and assign F12 or another free LuaHZ settings shortcut. Existing preferences are preserved. See [setup and QA scope](docs/OPENMP_QA.md).
 
 Close **GTA and the SA-MP browser** before copying files. Your **GTA folder** is the folder that contains `gta_sa.exe`.
 
@@ -76,7 +80,7 @@ bash install.sh "/path/to/GTA San Andreas"
 
 For an existing LuaHZ installation, add `--upgrade`. The path must contain `gta_sa.exe`.
 
-Both installers verify the payload and prerequisites, preserve preferences and saved locations, and print a recovery command. Keep the backup until the new build works. Linux/Wine gameplay is owner-tested; native Windows gameplay remains unverified. See the [installation guide](docs/INSTALLATION.md#player-installation-and-upgrade).
+Both installers verify the payload and prerequisites, preserve preferences and saved locations, and print a recovery command. Keep the backup until the new build works. The exact 0.4.1-rc.1 player checklist passed on Windows 11 with both launchers. Final archive smoke acceptance is separate; Linux/Wine owner QA covers 0.4.0. See the [installation guide](docs/INSTALLATION.md#player-installation-and-upgrade).
 
 ### 4. Join Horizon Roleplay
 
@@ -296,7 +300,7 @@ python3 -m venv .venv
 
 Build and deploy steps are in [development](docs/DEVELOPMENT.md). GitHub's automatic source ZIP is this repository, not the player download.
 
-The next patch, **0.4.1 — Launcher Choice**, is being prepared as **0.4.1-rc.1**. It includes owner-tested Windows support for open.mp 1.6.1 with SA-MP R5: LuaHZ loading artwork/bar and browser/menu coexistence. Classic launcher choice and the F9 default are retained. See [planned changes](docs/releases/0.4.1.md) and [open.mp setup and QA scope](docs/OPENMP_QA.md). The candidate is not published; the stable download above remains 0.4.0.
+**0.4.1 — Launcher Choice** includes owner-tested Windows support for open.mp 1.6.1 with SA-MP R5: LuaHZ loading artwork/bar and browser/menu coexistence. Classic launcher choice and the F9 default are retained. See [changes](docs/releases/0.4.1.md) and [open.mp QA](docs/OPENMP_QA.md), including the independently reproduced foreign-server black-splash limitation. Final smoke acceptance and Linux release verification remain pending at preparation time.
 
 ## Documentation
 
