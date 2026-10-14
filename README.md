@@ -115,27 +115,49 @@ Add `samp.hzgaming.net:7777` in the SA-MP browser and connect. A LuaHZ notice ap
 
 New screenshots show development build **0.4.0-rc.5**. Unchanged map/HUD/menu images are retained from earlier captures.
 
-### Settings
+### HUD
 
-Configure the HUD and interface with `/luahz` or your settings shortcut.
+The HUD tab controls stamina and oxygen displays and the vehicle dashboard. Configure the HUD with `/luahz`.
 
-<img src="docs/images/gallery-v03/settings-hud.png" alt="Settings" width="720"><br>
+<img src="docs/images/gallery-v03/settings-hud.png" alt="HUD settings" width="720"><br>
 
-**Automation**
+High-resolution HUD fonts and weapon icons keep the time, health, armor and cash readable.
+
+<img src="docs/images/gallery-v04/player-hud.png" alt="High-resolution player HUD"><br>
+
+Vehicle name, speed and health, Personal/Family ownership badges, and readable Doors, Engine, Lights and Window states. Unknown states use neutral icons.
+
+<img src="docs/images/gallery-v04/vehicle-personal.png" alt="Personal vehicle dashboard"><br>
+<img src="docs/images/gallery-v04/vehicle-family.png" alt="Family vehicle dashboard"><br>
+
+Labeled stamina and oxygen bars share the same width as LuaHZ notices. Notices stack above active HUD panels.
+
+<img src="docs/images/gallery-v03/stamina.png" alt="Labeled stamina bar"><br>
+<img src="docs/images/gallery-v03/oxygen.png" alt="Labeled oxygen bar"><br>
+
+### Quickmap
+
+Quickmap with saved locations. Press **M** or **Escape** to close it.
+
+<img src="docs/images/quickmap.jpg" alt="Quickmap with saved locations" width="720"><br>
+
+Adjust map opacity and the locations and overlays shown in Quickmap.
+
+<img src="docs/images/gallery-v03/settings-quickmap.png" alt="Quickmap settings" width="720"><br>
+
+High-resolution game map and map blips with saved locations.
+
+<img src="docs/images/sa-mp-057.png" alt="Game map and map blips with saved locations" width="720"><br>
+
+High-resolution radar map and map blips.
+
+<img src="docs/images/minimap_776_canvas.png" alt="Radar map and map blips"><br>
+
+### Automation
+
+Configure auto-accept limits and detective helpers.
 
 <img src="docs/images/gallery-v03/automation.png" alt="Automation" width="720"><br>
-
-**Performance**
-
-<img src="docs/images/gallery-v03/performance.png" alt="Performance" width="720"><br>
-
-**Interface settings**
-
-<img src="docs/images/gallery-v03/interface-settings.png" alt="Interface settings" width="720"><br>
-
-**Changelog**
-
-<img src="docs/images/gallery-v04/changelog.png" alt="LuaHZ changelog" width="720"><br>
 
 ### Keybinds
 
@@ -143,79 +165,68 @@ Normal shortcuts and command combos have separate tabs. Smart vehicle locking tr
 
 <img src="docs/images/gallery-v04/normal-keybinds.png" alt="Keybinds" width="720"><br>
 
-### Vehicle menu
+### Performance
 
-Press **K** for a compact panel on the right. Trunk opens on foot; Controls opens inside a vehicle. Keep moving or driving while it stays visible; hold **Alt** to click and release it for mouse/camera control. **K** or **Escape** closes it.
+Set separate FPS limits for on-foot, vehicle, swimming and boat situations.
 
-**Controls** use ordinary server commands for engine, lights, window, hood, trunk and locks. Engine, lights, window and hood require the driver; trunk and locks also work nearby on foot. Availability still depends on the server and vehicle.
-
-<img src="docs/images/gallery-v04/vehicle-controls.png" alt="Vehicle controls" width="433"><br>
-
-**Trunk** opens/closes the nearby trunk and shows **Trunk balance** on foot. Menu balance requests stay silent; typing `/trunkbalance` yourself keeps normal chat output.
-
-<img src="docs/images/gallery-v04/vehicle-trunk-balance.png" alt="Trunk balance viewer" width="433"><br>
-
-**My vehicles** opens storage or starts/stops tracking. Choose the vehicle in the server menu; check Spawned/Stored status before confirming. Stored vehicles need spawning before tracking.
-
-<img src="docs/images/gallery-v04/vehicle-my-vehicles.png" alt="Vehicle storage and tracking" width="433"><br>
-
-### Quick Actions
-
-Press U for navigation, skills, job locations and help, plus actions matched to your current jobs. Detective tools appear for detectives. Some actions open a form for a player, price or choice; the server checks requirements.
-
-<img src="docs/images/gallery-v04/quick-actions.png" alt="Quick Actions" width="720"><br>
-
-### Find player
-
-Select an online name or ID. The server checks detective-job access.
-
-<img src="docs/images/gallery-v03/find-player.png" alt="Find player" width="720"><br>
-
-### Server: Families
-
-Search the complete family list, including entries that scroll out of game chat.
-
-<img src="docs/images/gallery-v03/server-families.png" alt="Server: Families" width="720"><br>
-
-### Server: Members
-
-Browse online family members with their rank numbers and names.
-
-<img src="docs/images/gallery-v03/server-members.png" alt="Server: Members" width="720"><br>
-
-### Server: Rules
-
-<img src="docs/images/gallery-v03/server-rules.png" alt="Server rules" width="720"><br>
-
-### Server: Settings
-
-<img src="docs/images/gallery-v03/server-settings.png" alt="Server settings snapshot" width="720"><br>
-
-### Server: Links
-
-**Server links**
-
-<img src="docs/images/gallery-v03/server-links.png" alt="Server links" width="720"><br>
-
-### Server: Status
-
-**Server status**
-
-<img src="docs/images/gallery-v04/server-status.png" alt="Server status" width="720"><br>
+<img src="docs/images/gallery-v03/performance.png" alt="Performance" width="720"><br>
 
 ### Commands
 
 Browse server help in one tab and LuaHZ commands in another.
 
 <img src="docs/images/gallery-v03/server-commands.png" alt="Commands" width="720"><br>
-
-**LuaHZ command reference**
-
 <img src="docs/images/gallery-v04/mod-commands.png" alt="LuaHZ command reference" width="720"><br>
+
+### Server
+
+The Server tab's pages follow their in-game order.
+
+#### Families
+
+Search the complete family list, including entries that scroll out of game chat.
+
+<img src="docs/images/gallery-v03/server-families.png" alt="Server: Families" width="720"><br>
+
+#### Members
+
+Browse online family members with their rank numbers and names.
+
+<img src="docs/images/gallery-v03/server-members.png" alt="Server: Members" width="720"><br>
+
+#### Rules
+
+<img src="docs/images/gallery-v03/server-rules.png" alt="Server rules" width="720"><br>
+
+#### Settings
+
+<img src="docs/images/gallery-v03/server-settings.png" alt="Server settings snapshot" width="720"><br>
+
+Server settings are a snapshot, separate from LuaHZ preferences. Version observations are informational and do not automatically disable features.
+
+#### Links
+
+<img src="docs/images/gallery-v03/server-links.png" alt="Server links" width="720"><br>
+
+#### Status
+
+<img src="docs/images/gallery-v04/server-status.png" alt="Server status" width="720"><br>
+
+### Settings
+
+Set interface scaling and HUD layout.
+
+<img src="docs/images/gallery-v03/interface-settings.png" alt="Interface settings" width="720"><br>
+
+### Changelog
+
+Review the version history from LuaHZ settings.
+
+<img src="docs/images/gallery-v04/changelog.png" alt="LuaHZ changelog" width="720"><br>
 
 ### Character Status
 
-Press I for Character, Work, Finances, Health, Inventory and Licenses tabs.
+Press I for Character, Work, Finances, Health, Inventory and Licenses tabs. The screenshots below follow the tab order.
 
 <img src="docs/images/gallery-v04/character.png" alt="Character Status" width="720"><br>
 
@@ -235,51 +246,37 @@ Press I for Character, Work, Finances, Health, Inventory and Licenses tabs.
 
 <img src="docs/images/gallery-v04/character-inventory.png" alt="Character inventory" width="720"><br>
 
-### Licenses
-
-View the server-received Driver's, Pilot and Boating license statuses; Refresh requests a new snapshot.
+**Licenses** — view the server-received Driver's, Pilot and Boating license statuses; Refresh requests a new snapshot.
 
 <img src="docs/images/gallery-v04/character-licenses.png" alt="Character licenses" width="720"><br>
 
-### Maps
+### Quick Actions
 
-Quickmap with saved locations. Press **M** or **Escape** to close it.
+Press U for navigation, skills, job locations and help, plus actions matched to your current jobs. Detective tools appear for detectives. Some actions open a form for a player, price or choice; the server checks requirements.
 
-<img src="docs/images/quickmap.jpg" alt="Quickmap with saved locations" width="720"><br>
+<img src="docs/images/gallery-v04/quick-actions.png" alt="Quick Actions" width="720"><br>
 
-**Quickmap settings**
+### Find player
 
-<img src="docs/images/gallery-v03/settings-quickmap.png" alt="Quickmap settings" width="720"><br>
+Select an online name or ID. The server checks detective-job access.
 
-High-resolution game map and map blips with saved locations.
+<img src="docs/images/gallery-v03/find-player.png" alt="Find player" width="720"><br>
 
-<img src="docs/images/sa-mp-057.png" alt="Game map and map blips with saved locations" width="720"><br>
+### Vehicle menu
 
-High-resolution radar map and map blips.
+Press **K** for a compact panel on the right. Trunk opens on foot; Controls opens inside a vehicle. Keep moving or driving while it stays visible; hold **Alt** to click and release it for mouse/camera control. **K** or **Escape** closes it.
 
-<img src="docs/images/minimap_776_canvas.png" alt="Radar map and map blips"><br>
+**Controls** use ordinary server commands for engine, lights, window, hood, trunk and locks. Engine, lights, window and hood require the driver; trunk and locks also work nearby on foot. Availability still depends on the server and vehicle.
 
-### High-resolution player HUD
+<img src="docs/images/gallery-v04/vehicle-controls.png" alt="Vehicle controls" width="433"><br>
 
-High-resolution HUD fonts and weapon icons keep the time, health, armor and cash readable.
+**Trunk** opens/closes the nearby trunk and shows **Trunk balance** on foot. Menu balance requests stay silent; typing `/trunkbalance` yourself keeps normal chat output.
 
-<img src="docs/images/gallery-v04/player-hud.png" alt="High-resolution player HUD"><br>
+<img src="docs/images/gallery-v04/vehicle-trunk-balance.png" alt="Trunk balance viewer" width="433"><br>
 
-### Vehicle HUD
+**My vehicles** opens storage or starts/stops tracking. Choose the vehicle in the server menu; check Spawned/Stored status before confirming. Stored vehicles need spawning before tracking.
 
-Vehicle name, speed and health, Personal/Family ownership badges, and readable Doors, Engine, Lights and Window states. Unknown states use neutral icons.
-
-<img src="docs/images/gallery-v04/vehicle-personal.png" alt="Personal vehicle dashboard"><br>
-<img src="docs/images/gallery-v04/vehicle-family.png" alt="Family vehicle dashboard"><br>
-
-### Stamina and oxygen
-
-Labeled bars share the same width as LuaHZ notices. Notices stack above active HUD panels.
-
-<img src="docs/images/gallery-v03/stamina.png" alt="Labeled stamina bar"><br>
-<img src="docs/images/gallery-v03/oxygen.png" alt="Labeled oxygen bar"><br>
-
-Server settings are a snapshot; they are separate from LuaHZ preferences. Version observations are informational and do not automatically disable features.
+<img src="docs/images/gallery-v04/vehicle-my-vehicles.png" alt="Vehicle storage and tracking" width="433"><br>
 
 ## Other servers
 On any other server, LuaHZ menus, HUD, and custom visuals stay inactive. Original game and plugin files remain stock on disk.
