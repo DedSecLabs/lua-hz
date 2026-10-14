@@ -71,7 +71,7 @@ The Horizon first post and short announcement are separate deliverables. In the 
 Prepare one Discord message in the release folder as `discord-announcement-<version>-DRAFT.md`. Follow this structure and tone; replace the example copy with accurate shipped changes and use the release's real URLs:
 
 ```text
-:red_car: **LuaHZ <version> — <release theme>**
+:video_game: **LuaHZ <version> — <release theme>**
 
 LuaHZ <version> is out! <Short summary of the main player-facing changes.>
 
@@ -83,7 +83,7 @@ Also included: <Other notable changes. State clearly when there are no gameplay 
 Already using LuaHZ? Close GTA and the multiplayer browser before upgrading, then use the installer's upgrade option. Your preferences and saved locations are preserved.
 ```
 
-Use Discord's `:red_car:`, `:arrow_down:` and `:clipboard:` emoji codes, bold the release title and link labels, keep the download URL direct to the player ZIP, and link release notes to the GitHub release page. Describe only changes present in the published build. The owner publishes the forum and Discord announcements.
+Choose a Discord emoji that fits the current release; for example, use `:video_game:` for launcher or game compatibility work and reserve `:red_car:` for a vehicle-focused release. Do not carry over an unrelated emoji from the previous announcement. Use `:arrow_down:` and `:clipboard:` for the download and release notes, bold the release title and link labels, keep the download URL direct to the player ZIP, and link release notes to the GitHub release page. Describe only changes present in the published build. The owner publishes the forum and Discord announcements.
 
 ## Earlier preview editions
 
