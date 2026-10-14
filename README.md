@@ -121,6 +121,22 @@ Configure the HUD and interface with `/luahz` or your settings shortcut.
 
 <img src="docs/images/gallery-v03/settings-hud.png" alt="Settings" width="720"><br>
 
+**Automation**
+
+<img src="docs/images/gallery-v03/automation.png" alt="Automation" width="720"><br>
+
+**Performance**
+
+<img src="docs/images/gallery-v03/performance.png" alt="Performance" width="720"><br>
+
+**Interface settings**
+
+<img src="docs/images/gallery-v03/interface-settings.png" alt="Interface settings" width="720"><br>
+
+**Changelog**
+
+<img src="docs/images/gallery-v04/changelog.png" alt="LuaHZ changelog" width="720"><br>
+
 ### Keybinds
 
 Normal shortcuts and command combos have separate tabs. Smart vehicle locking tries the other vehicle type only after a recognized “not nearby” response.
@@ -175,17 +191,49 @@ Browse online family members with their rank numbers and names.
 
 <img src="docs/images/gallery-v03/server-settings.png" alt="Server settings snapshot" width="720"><br>
 
+### Server: Links
+
+**Server links**
+
+<img src="docs/images/gallery-v03/server-links.png" alt="Server links" width="720"><br>
+
+### Server: Status
+
+**Server status**
+
+<img src="docs/images/gallery-v04/server-status.png" alt="Server status" width="720"><br>
+
 ### Commands
 
 Browse server help in one tab and LuaHZ commands in another.
 
 <img src="docs/images/gallery-v03/server-commands.png" alt="Commands" width="720"><br>
 
+**LuaHZ command reference**
+
+<img src="docs/images/gallery-v04/mod-commands.png" alt="LuaHZ command reference" width="720"><br>
+
 ### Character Status
 
 Press I for Character, Work, Finances, Health, Inventory and Licenses tabs.
 
 <img src="docs/images/gallery-v04/character.png" alt="Character Status" width="720"><br>
+
+**Work**
+
+<img src="docs/images/gallery-v04/character-work.png" alt="Character work" width="720"><br>
+
+**Finances**
+
+<img src="docs/images/gallery-v04/character-finances.png" alt="Character finances" width="720"><br>
+
+**Health**
+
+<img src="docs/images/gallery-v04/character-health.png" alt="Character health" width="720"><br>
+
+**Inventory**
+
+<img src="docs/images/gallery-v04/character-inventory.png" alt="Character inventory" width="720"><br>
 
 ### Licenses
 
@@ -198,6 +246,10 @@ View the server-received Driver's, Pilot and Boating license statuses; Refresh r
 Quickmap with saved locations. Press **M** or **Escape** to close it.
 
 <img src="docs/images/quickmap.jpg" alt="Quickmap with saved locations" width="720"><br>
+
+**Quickmap settings**
+
+<img src="docs/images/gallery-v03/settings-quickmap.png" alt="Quickmap settings" width="720"><br>
 
 High-resolution game map and map blips with saved locations.
 
@@ -226,54 +278,6 @@ Labeled bars share the same width as LuaHZ notices. Notices stack above active H
 
 <img src="docs/images/gallery-v03/stamina.png" alt="Labeled stamina bar"><br>
 <img src="docs/images/gallery-v03/oxygen.png" alt="Labeled oxygen bar"><br>
-
-**Server links**
-
-<img src="docs/images/gallery-v03/server-links.png" alt="Server links" width="720"><br>
-
-**Server status**
-
-<img src="docs/images/gallery-v04/server-status.png" alt="Server status" width="720"><br>
-
-**LuaHZ command reference**
-
-<img src="docs/images/gallery-v04/mod-commands.png" alt="LuaHZ command reference" width="720"><br>
-
-**Quickmap settings**
-
-<img src="docs/images/gallery-v03/settings-quickmap.png" alt="Quickmap settings" width="720"><br>
-
-**Automation**
-
-<img src="docs/images/gallery-v03/automation.png" alt="Automation" width="720"><br>
-
-**Performance**
-
-<img src="docs/images/gallery-v03/performance.png" alt="Performance" width="720"><br>
-
-**Interface settings**
-
-<img src="docs/images/gallery-v03/interface-settings.png" alt="Interface settings" width="720"><br>
-
-**Character work**
-
-<img src="docs/images/gallery-v04/character-work.png" alt="Character work" width="720"><br>
-
-**Character finances**
-
-<img src="docs/images/gallery-v04/character-finances.png" alt="Character finances" width="720"><br>
-
-**Character health**
-
-<img src="docs/images/gallery-v04/character-health.png" alt="Character health" width="720"><br>
-
-**Character inventory**
-
-<img src="docs/images/gallery-v04/character-inventory.png" alt="Character inventory" width="720"><br>
-
-**Changelog**
-
-<img src="docs/images/gallery-v04/changelog.png" alt="LuaHZ changelog" width="720"><br>
 
 Server settings are a snapshot; they are separate from LuaHZ preferences. Version observations are informational and do not automatically disable features.
 
