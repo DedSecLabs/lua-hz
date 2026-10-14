@@ -35,30 +35,28 @@ It activates only on `samp.hzgaming.net:7777` / `213.32.6.232:7777`. The same SA
 
 Download **[LuaHZ-0.4.1-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.4.1/LuaHZ-0.4.1-player.zip)**.
 
-### 1. Prepare the game
+### 1. Prepare the game and install prerequisites
 
-Start with classic **GTA San Andreas 1.0 US** and **SA-MP 0.3.7 R5**. Connect to Horizon once before adding mods.
-
-You can use the classic SA-MP browser or optional **[open.mp launcher 1.6.1](https://open.mp/downloads/launcher)** with native client build 6 and the verified **0.3.7 R5** client. Point open.mp at the GTA folder and select R5. Its browser uses F9; open `/luahz` and assign F12 or another free LuaHZ settings shortcut. Existing preferences are preserved. See [setup and QA scope](docs/OPENMP_QA.md).
+Start with **GTA San Andreas 1.0 US** and either the classic **SA-MP 0.3.7 R5** browser or the optional open.mp launcher. Connect to Horizon once before adding mods.
 
 Close **GTA and both multiplayer launchers** before copying files. Your **GTA folder** is the folder that contains `gta_sa.exe`.
 
-### 2. Install the prerequisites
-
-Install these **in order**, with GTA and both multiplayer launchers closed. Use the named **32-bit (x86)** versions even on 64-bit Windows. Open each ZIP and copy its runtime files to the destination below. Keep the complete supplied libraries.
+Install the following prerequisites **in order**, with GTA and both multiplayer launchers closed. Use the named **32-bit (x86)** versions even on 64-bit Windows. Open each ZIP and copy its runtime files to the destination below. Keep the complete supplied libraries.
 
 | Download — tested version | Where it goes |
 |---|---|
-| **1. SA-MP 0.3.7 R5** — [Download](https://hzgaming.net/fullpage.php?id=download). Choose `R5-2-MP`. | Run the installer and select your **GTA folder**. `samp.exe` and `samp.dll` should sit beside `gta_sa.exe`. |
+| **1. Multiplayer launcher** — [SA-MP 0.3.7 R5](https://hzgaming.net/fullpage.php?id=download), choose `R5-2-MP`; or [open.mp launcher 1.6.1](https://open.mp/downloads/launcher). | Install SA-MP into your **GTA folder**; `samp.exe` and `samp.dll` should sit beside `gta_sa.exe`. For open.mp, point the launcher at that same folder and select the verified R5 client. |
 | **2. CLEO 4.4.4 + ASI loader** — [Download](https://github.com/cleolibrary/CLEO4/releases/download/v4.4.4/CLEO4.zip) | Follow the ZIP's README. Use its supplied **Silent's ASI Loader 1.2** (`vorbisFile.dll` and `vorbisHooked.dll`) in your **GTA folder**. |
 | **3. SilentPatchSA 1.1 Build 34.1** — [Official release](https://github.com/CookiePLMonster/SilentPatch/releases/tag/1.1-BUILD34.1-SA) | Download `SilentPatchSA.zip`. Put `SilentPatchSA.asi` and `SilentPatchSA.ini` beside `gta_sa.exe`. Fixes the game's intermittent streaming freeze. Use the [tested configuration](docs/INSTALLATION.md#silentpatch-configuration). |
 | **4. MoonLoader 0.26.5-beta** — [Download](https://blast.hk/moonloader/download.php?archive) | Extract the runtime into your **GTA folder**. Keep `MoonLoader.asi`, the supplied DLLs, and the complete `moonloader/lib` folder. |
 | **5. SAMPFUNCS 5.7.1 rel.25, R5 build** — [Download](https://www.blast.hk/attachments/255877/) | Put `SAMPFUNCS.asi` in your **GTA folder**. Use the **R5** build. |
 | **6. mimgui 1.7.0** — [Download](https://github.com/THE-FYP/mimgui/releases/download/v1.7.0/mimgui-v1.7.0.zip) | Merge its library into **`moonloader/lib`**. `moonloader/lib/mimgui/init.lua` and `mimgui/cimguidx9.dll` should exist. |
 
+**Using open.mp:** Its supported native client is build 6 and it supplies the verified SA-MP R5 client. The LuaHZ prerequisites above still apply. F9 opens the open.mp browser; use `/luahz` to assign F12 or another free LuaHZ settings shortcut. Existing preferences are preserved. See [open.mp setup and QA scope](docs/OPENMP_QA.md).
+
 On **Linux/Wine**, install the prerequisites inside the **same Wine prefix** as this game copy. If Windows asks for missing DirectX or Visual C++ files, use Microsoft's [DirectX June 2010 package](https://www.microsoft.com/en-us/download/details.aspx?id=8109) and [Visual C++ x86 runtime](https://aka.ms/vc14/vc_redist.x86.exe).
 
-### 3. Add LuaHZ
+### 2. Add LuaHZ
 
 Close GTA and both multiplayer launchers. Extract the player ZIP outside the GTA folder.
 
@@ -80,7 +78,7 @@ For an existing LuaHZ installation, add `--upgrade`. The path must contain `gta_
 
 Both installers verify the payload and prerequisites, preserve preferences and saved locations, and print a recovery command. Keep the backup until the new build works. The exact 0.4.1 player archive passed owner QA on Windows 11 with both launchers. Linux/Wine owner gameplay QA covers the previous 0.4.0 release. See the [installation guide](docs/INSTALLATION.md#player-installation-and-upgrade).
 
-### 4. Join Horizon Roleplay
+### 3. Join Horizon Roleplay
 
 Add `samp.hzgaming.net:7777` in the SA-MP browser and connect. A LuaHZ notice appears at the **bottom right**.
 
@@ -169,6 +167,14 @@ Browse online family members with their rank numbers and names.
 
 <img src="docs/images/gallery-v03/server-members.png" alt="Server: Members" width="720"><br>
 
+### Server: Rules
+
+<img src="docs/images/gallery-v03/server-rules.png" alt="Server rules" width="720"><br>
+
+### Server: Settings
+
+<img src="docs/images/gallery-v03/server-settings.png" alt="Server settings snapshot" width="720"><br>
+
 ### Commands
 
 Browse server help in one tab and LuaHZ commands in another.
@@ -221,17 +227,6 @@ Labeled bars share the same width as LuaHZ notices. Notices stack above active H
 <img src="docs/images/gallery-v03/stamina.png" alt="Labeled stamina bar"><br>
 <img src="docs/images/gallery-v03/oxygen.png" alt="Labeled oxygen bar"><br>
 
-<details>
-<summary>More menu screenshots</summary>
-
-**Server rules**
-
-<img src="docs/images/gallery-v03/server-rules.png" alt="Server rules" width="720"><br>
-
-**Server settings snapshot**
-
-<img src="docs/images/gallery-v03/server-settings.png" alt="Server settings snapshot" width="720"><br>
-
 **Server links**
 
 <img src="docs/images/gallery-v03/server-links.png" alt="Server links" width="720"><br>
@@ -279,8 +274,6 @@ Labeled bars share the same width as LuaHZ notices. Notices stack above active H
 **Changelog**
 
 <img src="docs/images/gallery-v04/changelog.png" alt="LuaHZ changelog" width="720"><br>
-
-</details>
 
 Server settings are a snapshot; they are separate from LuaHZ preferences. Version observations are informational and do not automatically disable features.
 

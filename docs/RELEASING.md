@@ -22,6 +22,7 @@ New player tags use `v<version>`, such as `v0.3.0-rc.1` and `v0.3.0`. The archiv
 6. Install the exact candidate with the game/browser closed. The owner launches it and confirms changed behavior. Keep the archive hash and deployment receipt with that result.
 7. After owner QA, prepare the final version as a new archive/commit. Even a version-only rebuild is a different archive: install it and obtain the owner's final smoke-test result before publishing. Changed public bytes always require a new version.
 8. Publish intentionally. Review the four attachments, final notes and tag revision. Update the README and give the owner forum section replacements only after the release/image URLs exist. The owner edits the forum post.
+9. Prepare all player announcements for each release: update the README, a complete Horizon forum first-post copy, a short Horizon forum release announcement, and a Discord announcement. Save drafts under `.local/release-docs/<version>/`; keep copy-paste forum files alongside their review drafts. The owner submits the forum and Discord posts.
 
 ## Local packaging
 
@@ -62,6 +63,27 @@ Upload exactly these four release assets:
 - `SHA256SUMS.txt`
 
 Verify section order, absence of a repeated release title, change interval, agreement with F9, installation steps, revision/file count and all four assets before publication.
+
+### Forum and Discord announcements
+
+The Horizon first post and short announcement are separate deliverables. In the first post's **Installation** list, put both launcher choices with their download links in the first bullet: classic SA-MP 0.3.7 R5 and optional open.mp launcher. Keep the later open.mp setup paragraph informational and link-free. Format the short forum announcement with a `[SIZE=5]` title and `[SIZE=3]` body.
+
+Prepare one Discord message in the release folder as `discord-announcement-<version>-DRAFT.md`. Follow this structure and tone; replace the example copy with accurate shipped changes and use the release's real URLs:
+
+```text
+:red_car: **LuaHZ <version> — <release theme>**
+
+LuaHZ <version> is out! <Short summary of the main player-facing changes.>
+
+Also included: <Other notable changes. State clearly when there are no gameplay changes.>
+
+:arrow_down: **Download:** <direct player ZIP URL>
+:clipboard: **Release notes:** <release page URL>
+
+Already using LuaHZ? Close GTA and the multiplayer browser before upgrading, then use the installer's upgrade option. Your preferences and saved locations are preserved.
+```
+
+Use Discord's `:red_car:`, `:arrow_down:` and `:clipboard:` emoji codes, bold the release title and link labels, keep the download URL direct to the player ZIP, and link release notes to the GitHub release page. Describe only changes present in the published build. The owner publishes the forum and Discord announcements.
 
 ## Earlier preview editions
 

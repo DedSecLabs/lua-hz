@@ -55,6 +55,8 @@ PR titles follow the same format. A complete release PR uses `chore(release): re
 
 Choose one release theme and use it consistently in the release manifest, GitHub title, README release description and Horizon forum announcement. Follow the exact four-asset layout and presentation order in [RELEASING.md](RELEASING.md).
 
+Each player release also includes a full Horizon forum first-post draft, a short Horizon forum announcement, and a Discord announcement draft. Keep them with the release's private editorial drafts and follow the installation/link placement, forum sizing, and Discord message template in [RELEASING.md](RELEASING.md). The owner publishes community announcements.
+
 ## Files and compatibility
 
 New Lua modules use `snake_case.lua`; Python tools use `snake_case.py`; workflow and shell filenames use kebab-case. Public API symbols follow their module's established conventions.
