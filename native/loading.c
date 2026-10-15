@@ -173,8 +173,17 @@ __attribute__((naked)) void hzl_bridge(void) {
     __asm__ volatile("pushl 4(%esp)\n\tpushl %edx\n\tcall _hzl_getter\n\taddl $8, %esp\n\tret");
 }
 
-/* Local QA candidate: exact open.mp build 6 splash renderer; classic path unchanged. */
+/* Local QA: exact open.mp build 6/7 loading layouts; classic path unchanged. */
+typedef struct {
+    U32 build,timestamp,entry,imageSize,splash,bar,barState,savedBar;
+    int savedBarOwner;
+} OmpLayout;
+static const OmpLayout ompLayouts[]={
+    {6,0x69430243,0xb23e4,0x219000,0x427a0,0x42620,0x1bc4a4,0x1d16f8,0},
+    {7,0x6acd5437,0xb84ca,0x224000,0x46ac0,0x46930,0x1c651c,0x1dbdb4,1}
+};
 static Byte *ompModule;
+static const OmpLayout *ompLayout;
 static void *ompDictionary,*ompTexture;
 static Byte *ompBarOriginal;
 static int ompBarHooked,ompBarCustom,ompBarProbe;
@@ -226,15 +235,19 @@ static int omp_camera_ready(void) {
     clip=value32(camera+0x80);
     return clip>=0x00800000 && clip<0x7f800000 && value32(engine+0x18)<0x7f800000;
 }
-static int supported_omp(Byte *module) {
+static const OmpLayout *supported_omp(Byte *module) {
     static const Byte entry[]={0x53,0x8b,0xdc,0x83,0xec,0x08,0x83,0xe4,0xf0,0x83,0xc4,0x04};
     U32 pe;
     if(!readable(module,0x100))return 0;
     pe=value32(module+0x3c);
-    return pe<0x1000 && readable(module+pe,0x80)
-        && value32(module+pe+8)==0x69430243 && value32(module+pe+24+16)==0xb23e4
-        && value32(module+pe+24+56)==0x219000 && readable(module+0x427a0,sizeof(entry))
-        && same(module+0x427a0,entry,sizeof(entry));
+    if(pe>=0x1000 || !readable(module+pe,0x80))return 0;
+    for(U32 i=0;i<sizeof(ompLayouts)/sizeof(ompLayouts[0]);i++) {
+        const OmpLayout *layout=&ompLayouts[i];
+        if(value32(module+pe+8)==layout->timestamp && value32(module+pe+24+16)==layout->entry
+           && value32(module+pe+24+56)==layout->imageSize && readable(module+layout->splash,sizeof(entry))
+           && same(module+layout->splash,entry,sizeof(entry)))return layout;
+    }
+    return 0;
 }
 static int omp_bar_position(int custom) {
     unsigned short x,y;
@@ -257,7 +270,7 @@ static void omp_render_bar(void) {
         HZL_SAVED_BAR_CALL(ompBarOriginal);return;
     }
     if(ompBarCustom)omp_bar_position(0);
-    if(ompModule)HZL_OMP_BAR_CALL(ompModule+0x42620);
+    if(ompModule && ompLayout)HZL_OMP_BAR_CALL(ompModule+ompLayout->bar);
 }
 static int omp_patch_jump(void *address,U32 expected,U32 replacement) {
     U32 old,ignored,observed=expected;
@@ -270,14 +283,18 @@ static int omp_patch_jump(void *address,U32 expected,U32 replacement) {
 static void try_omp_bar_adapter(void) {
     Byte *original;U32 expected;
     static const Byte prologue[]={0x83,0xec,0x10,0x56,0x57};
-    if(!ompHooked || ompBarHooked || !ompModule || !readable(ompModule+0x42620,8)
-       || ompModule[0x42620]!=0x55 || ompModule[0x42621]!=0x8b || ompModule[0x42622]!=0xec
-       || ompModule[0x42623]!=0xa1 || value32(ompModule+0x42624)!=(U32)(ompModule+0x1bc4a4)
+    if(!ompHooked || ompBarHooked || !ompModule || !ompLayout)return;
+    Byte *bar=ompModule+ompLayout->bar;
+    Byte *saved=ompModule+ompLayout->savedBar;
+    if(!readable(bar,8) || bar[0]!=0x55 || bar[1]!=0x8b || bar[2]!=0xec
+       || bar[3]!=0xa1 || value32(bar+4)!=(U32)(ompModule+ompLayout->barState)
        || !readable((void *)0x590370,5) || *(Byte *)0x590370!=0xe9
-       || !readable(ompModule+0x1d16f8,4))return;
-    expected=(U32)(ompModule+0x42620)-0x590375;
+       || !readable(saved,ompLayout->savedBarOwner?8:4))return;
+    expected=(U32)bar-0x590375;
     if(value32((void *)0x590371)!=expected)return;
-    original=*(Byte **)(ompModule+0x1d16f8);
+    /* Build 7 stores {trampoline, target}; require ownership of the GTA bar. */
+    if(ompLayout->savedBarOwner && value32(saved+4)!=0x590370)return;
+    original=*(Byte **)saved;
     if(!ompBarProbe && readable(original,12)) {
         ompBarProbe=1;
         omp_log_value("Saved loading-bar route first bytes=",value32(original));
@@ -343,20 +360,21 @@ static void omp_render(void) {
             return;
         }
     }
-    if(ompModule)((void (*)(void))(ompModule+0x427a0))();
+    if(ompModule && ompLayout)((void (*)(void))(ompModule+ompLayout->splash))();
 }
 static void try_omp_adapter(void) {
     Byte *module=GetModuleHandleA("omp-client.dll");U32 expected,oldProtect,ignored,observed;void *pin=0;
-    if(ompHooked || !supported_omp(module) || !omp_functions_valid() || !readable((void *)0x58ff60,5)
+    const OmpLayout *layout=supported_omp(module);
+    if(ompHooked || !layout || !omp_functions_valid() || !readable((void *)0x58ff60,5)
        || *(Byte *)0x58ff60!=0xe9)return;
-    expected=(U32)(module+0x427a0)-0x58ff65;
+    expected=(U32)(module+layout->splash)-0x58ff65;
     if(value32((void *)0x58ff61)!=expected)return;
-    if(!GetModuleHandleExA(5,(const char *)(module+0x427a0),&pin)
+    if(!GetModuleHandleExA(5,(const char *)(module+layout->splash),&pin)
        || !VirtualProtect((void *)0x58ff61,4,0x40,&oldProtect))return;
     if(!omp_sf_passthrough(1)) {
         VirtualProtect((void *)0x58ff61,4,oldProtect,&ignored);return;
     }
-    ompModule=module;
+    ompModule=module;ompLayout=layout;
     /* This four-byte operand lies within one cache line. A locked compare /
        exchange publishes the complete displacement and verifies ownership. */
     observed=expected;
@@ -366,7 +384,8 @@ static void try_omp_adapter(void) {
     VirtualProtect((void *)0x58ff61,4,oldProtect,&ignored);
     if(observed==expected) {
         ompHooked=1;log_text("Verified open.mp HZ splash adapter installed; original renderer retained for other endpoints.\r\n");
-    } else {ompModule=0;omp_sf_passthrough(0);}
+        omp_log_value("Verified open.mp client build=",layout->build);
+    } else {ompModule=0;ompLayout=0;omp_sf_passthrough(0);}
 }
 
 static U32 WIN worker(void *unused) {

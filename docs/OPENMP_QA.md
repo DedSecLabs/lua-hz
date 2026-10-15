@@ -2,6 +2,16 @@
 
 LuaHZ offers launcher choice with the same supported GTA SA 1.0 US, SA-MP 0.3.7 R5 and verified R5 SAMPFUNCS fingerprints. open.mp launcher versions and SA-MP client versions are separate.
 
+## Accepted build-7 loading integration, 2026-10-15
+
+The owner accepted the exact helper SHA-256 `8e124e0adb82267559737b39a792d4bdbbefec6d3df68565f6ea92ef681d0842` with **open.mp 1.7.0 / native client build 7**, then passed regression checks with **open.mp 1.6.1 / build 6** and **classic SA-MP R5**. The owner reported black loading artwork before the candidate, all other tested behavior working, and positive results after installing the candidate and testing the two older launch configurations. Exact play duration is not inferred.
+
+Runtime logs independently confirm the build-7 and build-6 adapters, decoded artwork, custom splash drawing and centered loading bar. The classic log confirms the original SAMPFUNCS loading path. Only the loading ASI changed in each game copy; other tracked game/plugin files, artwork and preferences were preserved. Local receipts retain the exact candidate, before/after hashes, owner results and backups.
+
+The loading helper now selects separate metadata/signature-checked layouts for builds 6 and 7. The splash and bar callback addresses, bar state and saved trampoline locations differ. Build 7 additionally stores a target alongside its saved trampoline; takeover requires that target to be the exact GTA loading-bar entry. Unknown layouts and foreign hook owners are rejected. Classic loading code and startup selection are unchanged.
+
+This change is **unreleased** and has not replaced the published 0.4.1 archive. The read-only browser-state/key polling adapter still recognizes build 6 only; build 7 keeps its ordinary input/render path, which the owner reported working. This loading fix does not broaden memory access in the Lua adapter or claim support for other SA-MP versions.
+
 ## Accepted local Windows result
 
 The owner passed the exact **0.4.1-rc.1** player checklist on 2026-10-13 in both open.mp and classic SA-MP R5 test copies, including the combined helper, feature/input/preferences checks and the server-switching checklist. Archive SHA-256: `7304d4a5faebea65ec18d4a89162e6e23bc26c80ffda94cca7a8fba59af6a6e0`; packaged source: `b948fd6b207cc500aed17bce544903fdf431aeee`.
@@ -30,18 +40,20 @@ open.mp uses **F9** for its browser. In LuaHZ settings (`/luahz`), choose **F12*
 
 - A read-only, HZ-only adapter recognizes build 6 metadata and the browser flag's exact instruction signature. It hides the HUD while the browser is visible. Unknown builds retain the ordinary input/render path.
 - Windows settings-key polling supplements missing window messages. Both arrival orders are deduplicated, preventing one press from opening and immediately closing settings. Typing, focus, modifiers and browser guards remain in force.
-- The early loading helper retains the classic SAMPFUNCS getter ABI. For the verified open.mp splash hook, it decodes fingerprint-approved artwork into its own dictionary, initializes GTA sprite rendering, and draws without replacing stock/open.mp texture references. Owned SAMPFUNCS substitutions are bypassed for this renderer.
+- The early loading helper retains the classic SAMPFUNCS getter ABI. For the verified build-6/build-7 open.mp splash hooks, it decodes fingerprint-approved artwork into its own dictionary, initializes GTA sprite rendering, and draws without replacing stock/open.mp texture references. Owned SAMPFUNCS substitutions are bypassed for this renderer.
 - The centered bar uses a signature-checked saved GTA trampoline. Foreign/disconnected peers use the retained open.mp renderer and restored bar operands. Fresh foreign/unknown startup starts no loading worker, reads no artwork and installs no patches.
 
 Standalone Lua/native fixtures cover gates, signatures, ownership, sprite initialization, bar restoration, stale operands and both key-arrival orders. They do not prove live graphics or the complete server-switching matrix. Local receipts retain tested hashes and rollback files outside public source.
 
-## Remaining owner checks before a player release
+## Remaining release checks
 
-1. Verify the publication repackage preserves all 694 tested game files and obtain owner acceptance of the changed documentation/source metadata under the release guide's exact-archive rule.
-2. Retain the foreign-server black-splash baseline limitation above. Further diagnosis is separate from the passed checklist. Linux CI is source/build/recovery verification; Linux/Wine owner gameplay QA remains the previous 0.4.0 result.
+The exact loading candidate has positive Windows owner results in all three launcher configurations. Before publication, prepare the next version from the promoted inputs and obtain the owner's smoke-test result for that exact archive. Standalone source/native checks and a rebuilt helper comparison are separate from live gameplay QA. Linux/Wine owner gameplay QA remains the prior 0.4.0 result.
+
+The historical foreign-server black-splash baseline above predates the build-7 candidate. The latest positive checklist does not establish the upstream cause or a completely stock-game loading result.
 
 ## Primary references
 
+- [1.7.0 release notes](https://github.com/openmultiplayer/launcher/releases/tag/v1.7.0)
 - [open.mp launcher downloads and changes](https://open.mp/downloads/launcher)
 - [1.6.1 client selection](https://github.com/openmultiplayer/launcher/blob/v1.6.1/src/utils/game.ts)
 - [1.6.1 R5 checksum](https://github.com/openmultiplayer/launcher/blob/v1.6.1/src/constants/app.ts)

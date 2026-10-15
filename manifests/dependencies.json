@@ -143,11 +143,16 @@
       1024
     ],
     "format": "A8R8G8B8",
-    "helper_sha256": "1015ae9964782df09f2dc2cfec114aa1e4bad083b60005410f624aea11cbfbae"
+    "helper_sha256": "8e124e0adb82267559737b39a792d4bdbbefec6d3df68565f6ea92ef681d0842",
+    "openmp_loading_builds": [
+      6,
+      7
+    ]
   },
   "platform_validation": {
     "wine": "Wine 11.0 via GE-Proton11-7 x86_64",
-    "windows_native": "Owner passed the Windows 11 0.4.1 checklist and final smoke test with open.mp 1.6.1/build 6 + SA-MP R5 and classic SA-MP R5 on 2026-10-13, including the combined helper, features/input/preferences and server switching. Foreign-server black splash reproduces independently of LuaHZ in the minimal control. Publication metadata changes preserve all 694 tested game files; exact archive acceptance is recorded separately."
+    "windows_native": "Owner passed the Windows 11 0.4.1 checklist and final smoke test with open.mp 1.6.1/build 6 + SA-MP R5 and classic SA-MP R5 on 2026-10-13, including the combined helper, features/input/preferences and server switching. Foreign-server black splash reproduces independently of LuaHZ in the minimal control. Publication metadata changes preserve all 694 tested game files; exact archive acceptance is recorded separately.",
+    "windows_native_unreleased_loading": "Owner accepted the exact helper 8e124e0adb82267559737b39a792d4bdbbefec6d3df68565f6ea92ef681d0842 on Windows 11 on 2026-10-15 with open.mp 1.7.0/build 7, open.mp 1.6.1/build 6, and classic SA-MP R5. Runtime logs confirm build-7/build-6 artwork drawing and centered bar, and the classic SAMPFUNCS path. This is unreleased helper QA; a newly packaged release still needs its exact archive smoke test."
   },
   "publication_scope": "Source, tests, tools, notices, licensed Lucide assets and the owner-approved README/menu logo",
   "runtime_libraries": {
@@ -196,7 +201,21 @@
         "entry_rva": "0xb23e4",
         "image_bytes": "0x219000"
       },
-      "settings_binding": "User-configured F12 recommended; classic default F9 retained"
+      "settings_binding": "User-configured F12 recommended; classic default F9 retained",
+      "additional_validated_loading_clients": [
+        {
+          "launcher_version": "1.7.0",
+          "native_client_build": 7,
+          "native_client_md5": "dd705a6c2c9a668c0c0c7ab224e36dc0",
+          "native_client_sha256": "6c73f390a4935d03dd0c4fb15da58a573954121fe7d30924d2ac951db499b7ab",
+          "native_metadata": {
+            "timestamp": "0x6acd5437",
+            "entry_rva": "0xb84ca",
+            "image_bytes": "0x224000"
+          },
+          "validation": "Unreleased loading helper accepted on Windows 11, 2026-10-15; build-6-only browser-state adapter remains unchanged."
+        }
+      ]
     }
   }
 }
