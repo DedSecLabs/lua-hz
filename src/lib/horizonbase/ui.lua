@@ -352,6 +352,11 @@ function M:content()
         im.TextDisabled('0% = left/top. 100% = right/bottom.')
     elseif self.tab==8 then
         self:section('Changelog')
+        im.TextUnformatted('LuaHZ 0.4.2 — Loading Forward')
+        im.BulletText('Restore loading artwork and centered bar with open.mp 1.7.0 / build 7')
+        im.BulletText('Keep open.mp 1.6.1 and classic SA-MP R5 loading compatibility')
+        im.BulletText('No gameplay changes; preferences and key assignments preserved')
+        im.Spacing()
         im.TextUnformatted('LuaHZ 0.4.1 — Launcher Choice')
         im.BulletText('open.mp loading artwork, centered bar and browser/HUD coexistence')
         im.BulletText('Reliable Windows settings shortcut; classic SA-MP choice retained')
@@ -574,7 +579,7 @@ function M:draw()
     local lineHeight=im.GetFontSize()
     local headingY=40*S-(2*lineHeight+3*S)/2
     im.SetCursorPos(im.ImVec2(headingX,headingY));im.TextColored(im.ImVec4(1,.62,0,1),'LuaHZ')
-    im.SetCursorPos(im.ImVec2(headingX,headingY+lineHeight+3*S));im.TextDisabled('0.4.1')
+    im.SetCursorPos(im.ImVec2(headingX,headingY+lineHeight+3*S));im.TextDisabled('0.4.2')
     local sidebarOrder={1,2,3,4,5,6,9,7,8}
     local rowStep=math.min(42,(size.y/S-94-65-34)/(#tabs-1))
     for slot,i in ipairs(sidebarOrder) do

@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/DedSecLabs/luahz/releases/tag/v0.4.1"><img src="https://img.shields.io/badge/Release-0.4.1-2563eb" alt="release 0.4.1"></a>
+  <a href="https://github.com/DedSecLabs/luahz/releases/tag/v0.4.2"><img src="https://img.shields.io/badge/Release-0.4.2-2563eb" alt="release 0.4.2"></a>
   <img src="https://img.shields.io/badge/Platform-SA--MP-ff8000" alt="platform SA-MP">
   <a href="https://github.com/DedSecLabs/luahz/actions/workflows/release.yml"><img src="https://img.shields.io/github/actions/workflow/status/DedSecLabs/luahz/release.yml?branch=main&label=Build&color=22c55e" alt="build status"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-64748b" alt="license MIT"></a>
@@ -33,7 +33,9 @@ It activates only on `samp.hzgaming.net:7777` / `213.32.6.232:7777`. The same SA
 
 ## Install
 
-Download **[LuaHZ-0.4.1-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.4.1/LuaHZ-0.4.1-player.zip)**.
+Download **[LuaHZ-0.4.2-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.4.2/LuaHZ-0.4.2-player.zip)**.
+
+**0.4.2 — Loading Forward:** restores the LuaHZ artwork and centered bar with open.mp 1.7.0, retaining open.mp 1.6.1 and classic R5 compatibility. No gameplay changes.
 
 ### 1. Prepare the game and install prerequisites
 
@@ -45,14 +47,14 @@ Install the following prerequisites **in order**, with GTA and both multiplayer 
 
 | Download — tested version | Where it goes |
 |---|---|
-| **1. Multiplayer launcher** — [SA-MP 0.3.7 R5](https://hzgaming.net/fullpage.php?id=download), choose `R5-2-MP`; or [open.mp launcher 1.6.1](https://open.mp/downloads/launcher). | Install SA-MP into your **GTA folder**; `samp.exe` and `samp.dll` should sit beside `gta_sa.exe`. For open.mp, point the launcher at that same folder and select the verified R5 client. |
+| **1. Multiplayer launcher** — [SA-MP 0.3.7 R5](https://hzgaming.net/fullpage.php?id=download), choose `R5-2-MP`; or [open.mp launcher 1.7.0](https://open.mp/downloads/launcher). | Install SA-MP into your **GTA folder**; `samp.exe` and `samp.dll` should sit beside `gta_sa.exe`. For open.mp, point the launcher at that same folder and select the verified R5 client. |
 | **2. CLEO 4.4.4 + ASI loader** — [Download](https://github.com/cleolibrary/CLEO4/releases/download/v4.4.4/CLEO4.zip) | Follow the ZIP's README. Use its supplied **Silent's ASI Loader 1.2** (`vorbisFile.dll` and `vorbisHooked.dll`) in your **GTA folder**. |
 | **3. SilentPatchSA 1.1 Build 34.1** — [Official release](https://github.com/CookiePLMonster/SilentPatch/releases/tag/1.1-BUILD34.1-SA) | Download `SilentPatchSA.zip`. Put `SilentPatchSA.asi` and `SilentPatchSA.ini` beside `gta_sa.exe`. Fixes the game's intermittent streaming freeze. Use the [tested configuration](docs/INSTALLATION.md#silentpatch-configuration). |
 | **4. MoonLoader 0.26.5-beta** — [Download](https://blast.hk/moonloader/download.php?archive) | Extract the runtime into your **GTA folder**. Keep `MoonLoader.asi`, the supplied DLLs, and the complete `moonloader/lib` folder. |
 | **5. SAMPFUNCS 5.7.1 rel.25, R5 build** — [Download](https://www.blast.hk/attachments/255877/) | Put `SAMPFUNCS.asi` in your **GTA folder**. Use the **R5** build. |
 | **6. mimgui 1.7.0** — [Download](https://github.com/THE-FYP/mimgui/releases/download/v1.7.0/mimgui-v1.7.0.zip) | Merge its library into **`moonloader/lib`**. `moonloader/lib/mimgui/init.lua` and `mimgui/cimguidx9.dll` should exist. |
 
-**Using open.mp:** Its supported native client is build 6 and it supplies the verified SA-MP R5 client. The LuaHZ prerequisites above still apply. F9 opens the open.mp browser; use `/luahz` to assign F12 or another free LuaHZ settings shortcut. Existing preferences are preserved. See [open.mp setup and QA scope](docs/OPENMP_QA.md).
+**Using open.mp:** The tested launcher/client pairs are 1.7.0/build 7 and 1.6.1/build 6; both use the verified SA-MP R5 client. The LuaHZ prerequisites above still apply. F9 opens the open.mp browser; use `/luahz` to assign F12 or another free LuaHZ settings shortcut. Existing preferences are preserved. See [open.mp setup and QA scope](docs/OPENMP_QA.md).
 
 On **Linux/Wine**, install the prerequisites inside the **same Wine prefix** as this game copy. If Windows asks for missing DirectX or Visual C++ files, use Microsoft's [DirectX June 2010 package](https://www.microsoft.com/en-us/download/details.aspx?id=8109) and [Visual C++ x86 runtime](https://aka.ms/vc14/vc_redist.x86.exe).
 
@@ -76,7 +78,7 @@ bash install.sh "/path/to/GTA San Andreas"
 
 For an existing LuaHZ installation, add `--upgrade`. The path must contain `gta_sa.exe`.
 
-Both installers verify the payload and prerequisites, preserve preferences and saved locations, and print a recovery command. Keep the backup until the new build works. The exact 0.4.1 player archive passed owner QA on Windows 11 with both launchers. Linux/Wine owner gameplay QA covers the previous 0.4.0 release. See the [installation guide](docs/INSTALLATION.md#player-installation-and-upgrade).
+Both installers verify the payload and prerequisites, preserve preferences and saved locations, and print a recovery command. Keep the backup until the new build works. The loading helper passed owner QA on Windows 11 with open.mp 1.7.0/build 7, open.mp 1.6.1/build 6 and classic SA-MP R5. Exact release archive acceptance is recorded separately. Linux/Wine owner gameplay QA covers the previous 0.4.0 release. See the [installation guide](docs/INSTALLATION.md#player-installation-and-upgrade).
 
 ### 3. Join Horizon Roleplay
 
@@ -292,7 +294,7 @@ python3 -m venv .venv
 
 Build and deploy steps are in [development](docs/DEVELOPMENT.md). GitHub's automatic source ZIP is this repository, not the player download.
 
-**0.4.1 — Launcher Choice** includes owner-tested Windows support for open.mp 1.6.1 with SA-MP R5: LuaHZ loading artwork/bar and browser/menu coexistence. Classic launcher choice and the F9 default are retained. See [changes](docs/releases/0.4.1.md) and [open.mp QA](docs/OPENMP_QA.md), including the independently reproduced foreign-server black-splash limitation. The exact final 0.4.1 archive passed Windows 11 owner QA with both launchers. Source/build verification is recorded separately; Linux/Wine owner gameplay QA covers 0.4.0.
+**0.4.2 — Loading Forward** restores LuaHZ loading artwork and the centered bar with open.mp 1.7.0/build 7. The loading helper passed owner checks on Windows 11 with that client, open.mp 1.6.1/build 6 and classic SA-MP R5. No gameplay features or server commands changed. See [changes](docs/releases/0.4.2.md) and [open.mp QA](docs/OPENMP_QA.md), including the independently reproduced foreign-server black-splash limitation. Exact release archive acceptance is recorded separately; Linux/Wine owner gameplay QA covers 0.4.0.
 
 ## Documentation
 

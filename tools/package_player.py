@@ -126,7 +126,7 @@ def install_notes(version):
 
 One download for Linux and Windows. It contains the HUD font, Quickmap, portraits, native visuals, and loading artwork. GTA, SA-MP, CLEO, SilentPatchSA Build 34.1, MoonLoader, SAMPFUNCS, and mimgui stay separate. The verified SAMP.Lua files are included. Install the tested prerequisites linked in the repository README first.
 
-Classic SA-MP 0.3.7 R5 remains supported. Starting with 0.4.1, [open.mp launcher 1.6.1](https://open.mp/downloads/launcher) is an optional alternative with native client build 6 and the verified R5 client. Point it at the GTA folder and select 0.3.7 R5. Other SA-MP versions and unrecognized open.mp client builds are outside the native compatibility scope. open.mp uses F9 for its browser: open `/luahz` and assign F12 or another available settings shortcut. Preferences are not changed automatically.
+Classic SA-MP 0.3.7 R5 remains supported. [open.mp launcher 1.7.0](https://open.mp/downloads/launcher) is an optional alternative using verified native client build 7 and the SA-MP R5 client; 1.6.1/build 6 remains supported. Point it at the GTA folder and select 0.3.7 R5. Other SA-MP versions and unrecognized open.mp client builds are outside the native compatibility scope. open.mp uses F9 for its browser: open `/luahz` and assign F12 or another available settings shortcut. Preferences are not changed automatically.
 
 Close GTA and both multiplayer launchers. Extract this ZIP outside the game folder.
 
@@ -138,7 +138,7 @@ The **GTA folder** contains `gta_sa.exe`. The installer verifies the payload and
 powershell -NoProfile -ExecutionPolicy Bypass -File .\\install.ps1 "C:\\Games\\GTA San Andreas"
 ```
 
-To upgrade an existing LuaHZ installation, add `-Upgrade`. Keep the backup until the new build works. The owner passed the Windows 11 0.4.1 checklist and final smoke test with both open.mp and classic SA-MP R5, including the combined helper, features/input/preferences and server switching. Linux source, installer/recovery fixtures and both native builds passed CI. Linux/Wine owner gameplay QA covers the previously published 0.4.0 archive. Exact archive hashes and owner acceptance are recorded separately; publication metadata changes preserve the tested game payload.
+To upgrade an existing LuaHZ installation, add `-Upgrade`. Keep the backup until the new build works. The loading helper passed owner QA on Windows 11 with open.mp 1.7.0/build 7, open.mp 1.6.1/build 6 and classic SA-MP R5. Exact release archive acceptance is recorded separately. Linux/Wine owner gameplay QA covers the previous 0.4.0 release.
 
 **Linux/Wine:** from the extracted folder, run:
 

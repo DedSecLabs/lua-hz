@@ -19,3 +19,5 @@ jobs:
       - run: python tools/build_native_visuals.py --toolchain /usr
       - name: Native loading source build
         run: python tools/build_native_loading.py --toolchain /usr --asset-fnv "$(python -c 'import json; print(json.load(open("manifests/dependencies.json"))["native_loading_artifact"]["resource_fnv32"])')"
+      - name: Exported source fresh-clone verification
+        run: python tools/verify_source_clone.py --luajit /usr/bin/luajit --toolchain /usr

@@ -14,7 +14,7 @@ native/visuals.c builds LuaHZVisuals.dll. native_visuals.lua loads it with LuaJI
 
 native/loading.c builds LuaHZLoading.asi, a minimal early selector through the existing ASI loader. loading_policy.h parses an unambiguous launch endpoint. Other/unknown launches return without resources, worker or patches. On HZ it validates supported binaries and the artwork fingerprint, redirects the SAMPFUNCS resource call with the verified EDX/stack ABI, selects full-screen rendering and adjusts the native live bar in memory. Live peer monitoring disables custom rendering after leaving. Original GTA/SAMPFUNCS files stay stock. No native game/plugin code is bundled.
 
-For the verified open.mp client build 6, the loading helper adapts owned splash/bar hooks, retains a private texture dictionary, initializes GTA sprite rendering, and restores the retained open.mp path for foreign/disconnected peers. openmp_compat.lua lazily reads that build's browser state only on HZ and supplements settings key messages with deduplicated Windows polling. It never changes preferences or open.mp state. See OPENMP_QA.md for the accepted local result and remaining release checks.
+For the verified open.mp client builds 6 and 7, the loading helper adapts owned splash/bar hooks, retains a private texture dictionary, initializes GTA sprite rendering, and restores the retained open.mp path for foreign/disconnected peers. openmp_compat.lua lazily reads build 6's browser state only on HZ; build 7 retains ordinary input/render handling. It supplements settings key messages with deduplicated Windows polling. It never changes preferences or open.mp state. See OPENMP_QA.md for the accepted local result and remaining release checks.
 
 ## Tooling and ownership
 

@@ -210,3 +210,8 @@ The final player archive requires an owner report for its exact ZIP hash and sou
 
 
 On 2026-10-12 the owner reported “All works as intended, tests pass” for the exact installed 0.4.0 archive, SHA-256 `a52c95aefd680a059580742a27d5208ede5e3d81305b99100d165ff6410782ff`, source `27b27c5819f749016070fa777facebe905d95a70`. This accepts the final checklist on Linux/Wine. All 693 installed payload hashes and four draft asset digests were rechecked unchanged after the report. Native Windows gameplay remains unverified.
+
+
+## 0.4.2 exact archive smoke test
+
+The owner accepted the helper with open.mp 1.7.0/build 7, 1.6.1/build 6 and classic SA-MP R5 before packaging. After installing the exact 0.4.2 final ZIP, confirm its version, Horizon loading artwork and centered bar, login/movement, the open.mp F9 browser, LuaHZ settings shortcut and I/M/U/K menus. Restart once and confirm preferences and saved locations persist. Repeat a fresh launch with 1.6.1 and classic R5. Retain other-server inactivity and the historical foreign black-splash limitation. Record the archive hash, all installed payload hashes, backups and owner result; publication waits for this exact-archive acceptance.

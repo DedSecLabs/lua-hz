@@ -1,12 +1,12 @@
 # Installation guide
 
-**Player download:** [LuaHZ 0.4.1](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.1). Use the supplied PowerShell or Linux/Wine installer; existing installations require an explicit upgrade. See [installation and upgrade](#player-installation-and-upgrade). [BASE_INSTALL.md](BASE_INSTALL.md) describes the earlier small preview, which omits the visuals.
+**Player download:** [LuaHZ 0.4.2](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.2). Use the supplied PowerShell or Linux/Wine installer; existing installations require an explicit upgrade. See [installation and upgrade](#player-installation-and-upgrade). [BASE_INSTALL.md](BASE_INSTALL.md) describes the earlier small preview, which omits the visuals.
 
-LuaHZ 0.4.1 targets classic **GTA San Andreas 1.0 US**, **SA-MP 0.3.7 R5** and the prerequisite versions linked in the [README](../README.md#install). Classic SA-MP and optional open.mp 1.6.1/client build 6 both use that verified R5 client. Point open.mp at the GTA folder and choose R5; use `/luahz` to assign F12 or another settings shortcut because open.mp's browser uses F9. See [open.mp setup and QA](OPENMP_QA.md). The repository source ZIP is not the player download.
+LuaHZ 0.4.2 targets classic **GTA San Andreas 1.0 US**, **SA-MP 0.3.7 R5** and the prerequisite versions linked in the [README](../README.md#install). Classic SA-MP and optional open.mp 1.7.0/client build 7 or 1.6.1/client build 6 both use that verified R5 client. Point open.mp at the GTA folder and choose R5; use `/luahz` to assign F12 or another settings shortcut because open.mp's browser uses F9. See [open.mp setup and QA](OPENMP_QA.md). The repository source ZIP is not the player download.
 
 ## What you can install today
 
-Install the prerequisites below, then download `LuaHZ-0.4.1-player.zip` from [Releases](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.1) when published. GitHub’s **Code → Download ZIP** contains developer source and cannot replace that package. Python, GCC and LuaJIT build tools are for contributors, not prerequisites players need to install separately.
+Install the prerequisites below, then download `LuaHZ-0.4.2-player.zip` from [Releases](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.2) when published. GitHub’s **Code → Download ZIP** contains developer source and cannot replace that package. Python, GCC and LuaJIT build tools are for contributors, not prerequisites players need to install separately.
 
 ## Find your game folder
 
@@ -23,9 +23,9 @@ When extracting a ZIP, open it first and look for the runtime files described be
 
 ## Prerequisite installation order
 
-Use the exact links in the [README prerequisite table](../README.md#2-install-the-prerequisites).
+Use the exact links in the [README prerequisite table](../README.md#1-prepare-the-game-and-install-prerequisites).
 
-1. **SA-MP 0.3.7 R5:** Use Horizon's download page and select the `sa-mp-0.3.7-R5-2-MP-install.exe` installer. Select the folder containing `gta_sa.exe` when installing. A different installer carrying the R5 label has not been validated as equivalent; compare the installed `samp.dll` fingerprint in the manifest.
+1. **Multiplayer launcher:** use [open.mp launcher 1.7.0](https://open.mp/downloads/launcher) (tested client build 7; 1.6.1/build 6 also retained) with the verified R5 client, or classic **[SA-MP 0.3.7 R5](https://hzgaming.net/fullpage.php?id=download)**. For classic SA-MP, use Horizon's download page and select the `sa-mp-0.3.7-R5-2-MP-install.exe` installer. Select the folder containing `gta_sa.exe` when installing. A different installer carrying the R5 label has not been validated as equivalent; compare the installed `samp.dll` fingerprint in the manifest.
 2. **CLEO 4.4.4 and its ASI loader:** Extract the official `CLEO4.zip`. Install its runtime files into the GTA folder using the included README. Our tested loader is **Silent's ASI Loader 1.2**, supplied in this ZIP as `vorbisFile.dll` and `vorbisHooked.dll`. The separate download on [Silent's site](https://silentsblog.com/mods/gta-sa/#asiloader) is a different version; it is not the pinned baseline. Developer SDK and demonstration files are not required to play.
 3. **SilentPatchSA 1.1 Build 34.1:** Download `SilentPatchSA.zip` from the [official release](https://github.com/CookiePLMonster/SilentPatch/releases/tag/1.1-BUILD34.1-SA). Copy `SilentPatchSA.asi` and `SilentPatchSA.ini` beside `gta_sa.exe`, then apply the configuration below. The ASI loader from step 2 loads this separate stability prerequisite. Build 34.1 fixes an SA-MP startup regression in Build 34; use the pinned hotfix.
 4. **MoonLoader 0.26.5-beta:** Extract the author’s archive into the same GTA folder. Keep `MoonLoader.asi`, its supplied runtime DLLs and the complete `moonloader/lib` directory. Do not install only the ASI. The archive's `vkeys`, `windows.message`, encoding and other helper modules are part of this setup.
@@ -105,7 +105,7 @@ This is a layout checklist, not a full archive inventory. The prerequisite archi
 
 ## Installing LuaHZ itself
 
-**Player package:** [LuaHZ-0.4.1-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.4.1/LuaHZ-0.4.1-player.zip), available after publication. Extract outside the GTA folder, then use `install.ps1` on Windows or `install.sh` on Linux/Wine. Follow the [first-install/upgrade commands](#player-installation-and-upgrade) below. Downloads labeled **developer preview** and GitHub’s automatic **Source code** archives are for contributors.
+**Player package:** [LuaHZ-0.4.2-player.zip](https://github.com/DedSecLabs/luahz/releases/download/v0.4.2/LuaHZ-0.4.2-player.zip), available after publication. Extract outside the GTA folder, then use `install.ps1` on Windows or `install.sh` on Linux/Wine. Follow the [first-install/upgrade commands](#player-installation-and-upgrade) below. Downloads labeled **developer preview** and GitHub’s automatic **Source code** archives are for contributors.
 
 **Source/local testing:** Use [the development guide](DEVELOPMENT.md) to check/build the source and deploy it with backups. Our Lua entry point is historically named `HorizonBase.lua`; it belongs in `moonloader`, and `src/lib/horizonbase` becomes `moonloader/lib/horizonbase`. Use the deployment tools to stage the licensed UI icons and available external resources; copying only that Lua file is insufficient.
 
@@ -164,7 +164,7 @@ The CLEO 4.4.4 and MoonLoader archives were fetched and matched during the earli
 
 ## Player installation and upgrade
 
-The 0.4.1 player ZIP includes guarded installers for Linux/Wine and PowerShell. These commands apply to 0.4.1; the historical 0.2.39 installer has different upgrade behavior. Close GTA and both multiplayer launchers; install the prerequisite versions above, including SilentPatchSA 1.1 Build 34.1. Extract the ZIP outside the game folder.
+The 0.4.2 player ZIP includes guarded installers for Linux/Wine and PowerShell. These commands apply to 0.4.2; the historical 0.2.39 installer has different upgrade behavior. Close GTA and both multiplayer launchers; install the prerequisite versions above, including SilentPatchSA 1.1 Build 34.1. Extract the ZIP outside the game folder.
 
 **Linux/Wine, first installation:**
 
@@ -190,4 +190,4 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 "C:\Games\GTA 
 powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 "C:\Games\GTA San Andreas" -Upgrade
 ```
 
-The installers validate supported prerequisites and payload hashes, back up overwritten files, and print a recovery command. Keep that backup until the new build works. Preferences and saved locations under moonloader/config, unrelated mods and unused old resource groups remain untouched. Recovery restores overwritten files and removes newly added ones; it refuses files modified after the installation. The 0.4.1 checklist and final smoke test passed on Windows 11 with both launchers. Linux source/build/installer checks passed CI; Linux/Wine owner gameplay QA covers 0.4.0. Exact archive hashes and publication-metadata acceptance are recorded separately.
+The installers validate supported prerequisites and payload hashes, back up overwritten files, and print a recovery command. Keep that backup until the new build works. Preferences and saved locations under moonloader/config, unrelated mods and unused old resource groups remain untouched. Recovery restores overwritten files and removes newly added ones; it refuses files modified after the installation. The loading helper passed owner QA on Windows 11 with open.mp 1.7.0/build 7, open.mp 1.6.1/build 6 and classic SA-MP R5. Exact release archive acceptance is recorded separately. Linux/Wine owner gameplay QA covers the previous 0.4.0 release.
