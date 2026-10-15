@@ -20,6 +20,18 @@ def artwork_fingerprint(asset=None,asset_fingerprint=None):
         fingerprint=asset_fingerprint
     return fingerprint
 
+def pe_assembly(text):
+    """Expand ELF common storage without changing the surrounding section."""
+    lines=[]
+    for line in text.splitlines():
+        if re.match(r'\s*\.(type|size|local|section\s+\.note\.GNU-stack)',line):continue
+        common=re.match(r'\s*\.comm\s+([^,]+),(\d+),(\d+)',line)
+        if common:
+            name,size,alignment=common.groups()
+            lines+=['.pushsection .bss','.balign '+alignment,name+':','.zero '+size,'.popsection']
+        else:lines.append(line)
+    return '\n'.join(lines)+'\n'
+
 def build(toolchain,asset=None,cc='gcc',asset_fingerprint=None):
     fingerprint=artwork_fingerprint(asset,asset_fingerprint)
     out=ROOT/'build/native';out.mkdir(parents=True,exist_ok=True)
@@ -29,14 +41,7 @@ def build(toolchain,asset=None,cc='gcc',asset_fingerprint=None):
         '-fno-unwind-tables','-fno-ident','-fno-merge-constants','-fno-tree-loop-distribute-patterns',
         '-fno-strict-aliasing','-mno-sse','-Wall','-Wextra','-Werror',
         '-DEXPECTED_SPLASH_FNV='+hex(fingerprint)+'u','-S',str(ROOT/'native/loading.c'),'-o',str(asm)],check=True)
-    lines=[]
-    for line in asm.read_text().splitlines():
-        if re.match(r'\s*\.(type|size|local|section\s+\.note\.GNU-stack)',line):continue
-        common=re.match(r'\s*\.comm\s+([^,]+),(\d+),(\d+)',line)
-        if common:
-            name,size,alignment=common.groups();lines+=['.bss','.balign '+alignment,name+':','.zero '+size]
-        else:lines.append(line)
-    peasm.write_text('\n'.join(lines)+'\n')
+    peasm.write_text(pe_assembly(asm.read_text()))
     subprocess.run([str(toolchain/'bin/i686-w64-mingw32-as'),str(peasm),'-o',str(obj)],check=True)
     subprocess.run([str(toolchain/'bin/i686-w64-mingw32-ld'),'-shared','--entry','_DllMain@12',
         '--enable-reloc-section','--no-insert-timestamp','--image-base','0x69000000',
