@@ -21,15 +21,16 @@ def artwork_fingerprint(asset=None,asset_fingerprint=None):
     return fingerprint
 
 def pe_assembly(text):
-    """Expand ELF common storage without changing the surrounding section."""
-    lines=[]
+    """Emit ELF common storage last so it cannot capture initialized data."""
+    lines=[];storage=[]
     for line in text.splitlines():
         if re.match(r'\s*\.(type|size|local|section\s+\.note\.GNU-stack)',line):continue
         common=re.match(r'\s*\.comm\s+([^,]+),(\d+),(\d+)',line)
         if common:
             name,size,alignment=common.groups()
-            lines+=['.pushsection .bss','.balign '+alignment,name+':','.zero '+size,'.popsection']
+            storage+=['.balign '+alignment,name+':','.zero '+size]
         else:lines.append(line)
+    if storage:lines+=['.bss']+storage
     return '\n'.join(lines)+'\n'
 
 def build(toolchain,asset=None,cc='gcc',asset_fingerprint=None):
