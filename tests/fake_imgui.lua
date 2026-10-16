@@ -64,7 +64,7 @@ function im.PushStyleVarVec2(_,value)assert(type(value.x)=='number')end
 function im.PopStyleVar()end
 function im.BeginCombo()im.stack=im.stack+1;return true end
 function im.EndCombo()im.stack=im.stack-1 end
-function im.Selectable(label,selected,flags,size)assert(size.y>0);return clicked(label)end
+function im.Selectable(label,selected,flags,size)assert(not size or size.y>0);return clicked(label)end
 function im.SetItemDefaultFocus()end
 function im.ComboStr(_,ptr,items)
     assert(type(ptr)=='cdata' and type(items)=='string','ComboStr requires a NUL-separated string')
