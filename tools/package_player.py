@@ -14,11 +14,18 @@ import zipfile
 from package_base import ROOT, base_payload, prerequisite_checksums, sha
 
 GROUPS = (
-    'fonts', 'sa_map', 'weaponicons', 'hud-v0218', 'dashboard-v031', 'vehicle-v040',
+    'fonts', 'sa_map', 'weaponicons', 'hud-v0218', 'hud-science-gothic-v042',
+    'hud-pricedown-v042', 'dashboard-v031', 'vehicle-v040', 'vehicle-v042',
     'portraits-v0222', 'ui-v0212', 'native-v0232', 'loading-v0233',
 )
 REQUIRED = (
-    'moonloader/resource/horizonbase/hud-v0218/hud-font.png',
+    'moonloader/resource/horizonbase/hud-science-gothic-v042/font.png',
+    'moonloader/resource/horizonbase/hud-science-gothic-v042/OFL.txt',
+    'moonloader/resource/horizonbase/hud-science-gothic-v042/ATTRIBUTION.txt',
+    'moonloader/resource/horizonbase/hud-pricedown-v042/font.png',
+    'moonloader/resource/horizonbase/hud-pricedown-v042/read_me.html',
+    'moonloader/resource/horizonbase/hud-pricedown-v042/ATTRIBUTION.txt',
+    'moonloader/resource/horizonbase/hud-v0218/wanted-star.png',
     'moonloader/resource/horizonbase/dashboard-v031/car-door-lock.png',
     'moonloader/resource/horizonbase/dashboard-v031/car-door-lock-open.png',
     'moonloader/resource/horizonbase/dashboard-v031/car-gear.png',
@@ -32,6 +39,9 @@ REQUIRED = (
     'moonloader/resource/horizonbase/vehicle-v040/key.png',
     'moonloader/resource/horizonbase/vehicle-v040/users.png',
     'moonloader/resource/horizonbase/vehicle-v040/garage.png',
+    'moonloader/resource/horizonbase/vehicle-v042/garage.png',
+    'moonloader/resource/horizonbase/vehicle-v042/ATTRIBUTION.txt',
+    'moonloader/resource/horizonbase/vehicle-v042/CC0-1.0.txt',
     'moonloader/resource/horizonbase/sa_map/1.jpg',
     'moonloader/resource/horizonbase/sa_map/36.jpg',
     'moonloader/resource/horizonbase/ui-v0212/radar_centre.png',
@@ -51,6 +61,9 @@ def add_visuals(payload, resources, asi):
             raise ValueError('Missing current resource group: ' + group)
         for path in sorted(folder.rglob('*')):
             if path.is_symlink() or not path.is_file() or path.name.endswith('SOURCE.json'):
+                continue
+            # Retain historical inputs on disk; the accepted fonts use separate atlases.
+            if group == 'hud-v0218' and path.name == 'hud-font.png':
                 continue
             relative = 'moonloader/resource/horizonbase/' + path.relative_to(resources).as_posix()
             if not relative.startswith('moonloader/resource/horizonbase/' + group + '/'):
@@ -149,6 +162,8 @@ bash install.sh "/path/to/GTA San Andreas"
 To upgrade, run `bash install.sh "/path/to/GTA San Andreas" --upgrade`. Existing resource groups not used by this build are left in place; recovery restores overwritten files and removes files added by this installation. Install SilentPatchSA Build 34.1 separately before upgrading from 0.2.39.
 
 Join samp.hzgaming.net:7777. F9 opens settings, I opens Character Status, M opens Quickmap, U opens character Quick Actions, K opens Vehicle, and X toggles cruise while driving. Hold Alt to click the Vehicle panel; release Alt for mouse/camera control. K or Escape closes it. Shortcuts are configurable in F9; existing key assignments are preserved.
+
+The Vehicle menu also shows contextual shortcuts for its active tab: Controls E/L/O/U/H/B; Trunk B/C; My vehicles V/R. Brackets change tabs. Configured settings/menu bindings take priority, and vehicle shortcuts pause while typing or using native dialogs. Existing action eligibility and server confirmations apply.
 
 Download `LuaHZ-{version}-player.zip` to install the mod. The “Source code” archives are for developers.
 '''.encode()

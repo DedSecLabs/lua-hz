@@ -1,0 +1,6 @@
+Pricedown Regular 3.200 (2004) by Ray Larabie. Copyright 1998 Ray Larabie.
+https://www.gta-sanandreas.com/downloads/gtafont.zip
+Original Larabie Fonts software-product license is retained in read_me.html.
+The original TTF and its alphanumeric designs are unchanged; this is a raster rendering.
+Characters use separate advances; original pair kerning is not applied.
+The Pricedown bitmap adaptation retains its original name and Larabie license, not LuaHZ MIT.

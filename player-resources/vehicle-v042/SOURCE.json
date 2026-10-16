@@ -1,0 +1,13 @@
+{
+  "author": "Quincy Morgan / Pinhead contributors",
+  "collection": "Pinhead Map Icons",
+  "icon": "garage",
+  "license": "CC0-1.0",
+  "source": "https://raw.githubusercontent.com/waysidemapping/pinhead/v15.25.0/icons/buildings/garage.svg",
+  "source_page": "https://github.com/waysidemapping/pinhead/blob/v15.25.0/icons/buildings/garage.svg",
+  "owner_reference": "https://allsvgicons.com/pack/pinhead/#garage",
+  "original_sha256": "f983a6ec0329d2d550c3aae4aa1c571b67a6b3093a7ff8878f1187fd6068f181",
+  "license_source": "https://raw.githubusercontent.com/waysidemapping/pinhead/v15.25.0/LICENSE",
+  "conversion": "Unchanged vector geometry, white fill, 128 x 128 transparent PNG for runtime tint.",
+  "png_sha256": "2e5d468aa8e9640793444330c80c61f0215f966b5f8cf44d03a3637aafa7cd86"
+}

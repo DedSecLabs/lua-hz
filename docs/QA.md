@@ -1,3 +1,9 @@
+# LuaHZ 0.4.2 combined Windows acceptance — 2026-10-16
+
+The owner explicitly confirmed Both passed for the same consolidated 718-file source/resource payload on classic SA-MP R5 and open.mp 1.7.0. This includes stable font resource names after the earlier visual/input trials; the requested check covered loading artwork, fonts/maps, themes, Changelog and the vehicle menu. Optional dual-job and individual theme persistence/reset cases are not separately itemized. The payload fingerprint and exact per-file installation/recovery records are retained privately. All 51 staged Lua files compile; no behavioral suites or automated gameplay ran during consolidation.
+
+This acceptance covers the combined game payload, not a final public ZIP. The final archive must identify a clean source commit, retain identical payload hashes, be installed using its own scripts and receive a separate owner smoke test before publication. No VERIFIED submission has been sent.
+
 # QA and accepted coverage
 
 ## Local 0.2.54 Quick Actions alignment

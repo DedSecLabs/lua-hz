@@ -186,7 +186,7 @@ if ok then
     end,function()guard('Quick Actions',function()app.actions:draw()end)end)
     app.actionsFrame.HideCursor=false;app.actionsFrame.LockPlayer=true
     app.vehicleFrame=im.OnFrame(function()
-        return sessionActive() and app.server.loginSeen and app.game.sample.ready and app.game.sample.alive and app.focused and app.vehicleUI.open[0] and not Game.call('sampIsChatInputActive',false) and not Game.call('sampIsDialogActive',false) and not isPauseMenuActive()
+        return sessionActive() and app.server.loginSeen and app.game.sample.ready and app.game.sample.alive and app.focused and app.vehicleUI.open[0] and not app.externalBrowserOpen and not app.ui.open[0] and not app.status.open[0] and not app.actions.open[0] and not app.overlay.mapOpen and not Game.call('sampIsChatInputActive',false) and not Game.call('sampIsDialogActive',false) and not isPauseMenuActive()
     end,function()guard('Vehicle',function()app.vehicleUI:draw()end)end)
     app.vehicleFrame.HideCursor=true;app.vehicleFrame.LockPlayer=false;app.vehicleFrame.PassKeyboard=true
 else
@@ -203,6 +203,34 @@ local function blocked(allowMap,allowVehicle)
         app.status and app.status.open[0] or
         app.ui and (app.ui.open[0] or app.ui.capture or getGameTimer()<(app.ui.ignoreKeysUntil or 0)) or
         not allowMap and app.overlay and app.overlay.mapOpen
+end
+-- Vehicle shortcuts use fresh window presses, never asynchronous command polling.
+-- A held key is latched across chat/dialog/overlay interruptions until released.
+local vehicleKeyCodes={66,67,69,72,76,79,82,85,86,219,221}
+local vehicleHeld,vehicleSwallowed={},{}
+local vehicleKeyboardWasReady=false
+local function vehicleKeyboardReady()
+    return sessionActive() and app.vehicleUI and not app.faults.Vehicle and app.vehicleUI.open[0]
+        and app.server.loginSeen and app.game.sample.ready and not blocked(false,true)
+        and not app.vehicleUI.cursor and Keys.modifiers()==0
+end
+local function syncVehicleKeyboard(force)
+    local ready=vehicleKeyboardReady()
+    for _,key in ipairs(vehicleKeyCodes)do
+        local down=Game.call('isKeyDown',false,key)
+        if force or not ready or not vehicleKeyboardWasReady then vehicleHeld[key]=down
+        elseif not down then vehicleHeld[key]=false end
+    end
+    vehicleKeyboardWasReady=ready
+end
+local function vehicleShortcut(key)
+    if not vehicleKeyboardReady() or not app.vehicleUI:ownsKey(key)then return false end
+    vehicleSwallowed[key]=true
+    if not vehicleHeld[key]then
+        vehicleHeld[key]=true
+        guard('Vehicle',function()app.vehicleUI:shortcut(key)end)
+    end
+    return true
 end
 local function toggleMenu()
     if not app.ui or app.faults.Menu then notify('Settings UI unavailable. Use /hbdebug for the recorded error.');return end
@@ -234,6 +262,7 @@ local function toggleVehicle()
     if not app.vehicleUI or app.faults.Vehicle or not app.server.loginSeen or not app.game.sample.ready or not app.game.sample.alive or not app.focused or isPauseMenuActive() then return end
     local opening=not app.vehicleUI.open[0];app.vehicleUI:reset();app.vehicleUI.open[0]=opening
     if opening then app.vehicleUI.page=app.vehicle.current and 1 or 2 end
+    syncVehicleKeyboard(true)
     if app.actions then app.actions:reset()end
     if app.status then app.status.open[0]=false end
     if app.ui then app.ui.open[0]=false;app.ui.capture=nil end
@@ -245,6 +274,7 @@ local function window(msg,key,lparam)
     if not sessionActive() then return end
     if msg==0x0008 or msg==0x001C and key==0 then
         app.focused=false;app.game:cleanup()
+        vehicleHeld={};vehicleSwallowed={};vehicleKeyboardWasReady=false
         if app.vehicleUI then app.vehicleUI:reset()end
         app.vehicle.pending=nil
         app.server:cancelSequence()
@@ -257,8 +287,16 @@ local function window(msg,key,lparam)
         if app.overlay then app.overlay.mapOpen=false end
         return
     elseif msg==0x0007 or msg==0x001C and key~=0 then app.focused=true end
+    if msg==0x0101 or msg==0x0105 then
+        vehicleHeld[key]=false
+        if vehicleSwallowed[key]then vehicleSwallowed[key]=nil;consumeWindowMessage(true,true,true)end
+        return
+    end
     if not app.started or (msg~=0x0100 and msg~=0x0104) then return end
-    if require('bit').band(lparam,0x40000000)~=0 then return end
+    if require('bit').band(lparam,0x40000000)~=0 then
+        if vehicleSwallowed[key] and vehicleKeyboardReady()then consumeWindowMessage(true,true,true)end
+        return
+    end
     local mods=Keys.modifiers()
     if msg==0x0104 and require('bit').band(lparam,0x20000000)~=0 then mods=require('bit').bor(mods,4) end
     if app.ui and app.ui.capture and app.ui:captureKey(key,getGameTimer(),mods) then
@@ -288,6 +326,8 @@ local function window(msg,key,lparam)
     if Keys.matches(prefs.keybinds.settingsPanel,prefs.modifiers.settingsPanel,key,mods) then toggleMenu();consumeWindowMessage(true,true,true)
     elseif app.vehicleUI and app.ui and app.overlay and app.server.loginSeen and app.game.sample.ready and app.game.sample.alive and Keys.matches(prefs.keybinds.vehicleMenu,prefs.modifiers.vehicleMenu,key,mods) and not app.ui.open[0] and not(app.status and app.status.open[0]) and not(app.actions and app.actions.open[0]) and not app.overlay.mapOpen then
         toggleVehicle();consumeWindowMessage(true,true,true)
+    elseif mods==0 and vehicleShortcut(key)then
+        consumeWindowMessage(true,true,true)
     elseif not(app.vehicleUI and app.vehicleUI.open[0]) and app.actions and app.ui and app.overlay and app.server.loginSeen and app.game.sample.ready and app.game.sample.alive and Keys.matches(prefs.keybinds.quickActions,prefs.modifiers.quickActions,key,mods) and not app.ui.open[0] and not(app.status and app.status.open[0]) and not app.overlay.mapOpen then
         if not (app.actions and app.actions.open[0] and app.actions.findMode) then toggleActions();consumeWindowMessage(true,true,true)end
     elseif not(app.vehicleUI and app.vehicleUI.open[0]) and app.status and app.game.sample.alive and not (app.ui and app.ui.open[0]) and not(app.actions and app.actions.open[0]) and Keys.matches(prefs.keybinds.characterStatus,prefs.modifiers.characterStatus,key,mods) then
@@ -297,7 +337,14 @@ local function window(msg,key,lparam)
     end
 end
 
-local function keyPressed(code,mods) return Keys.pressed(code,mods) end
+local function keyPressed(code,mods)
+    if app.vehicleUI and app.vehicleUI.open[0]then
+        if (mods or 0)==0 and app.vehicleUI:ownsKey(code)then return false end
+        if Keys.matches(prefs.keybinds.vehicleMenu,prefs.modifiers.vehicleMenu,code,mods or 0) or
+            Keys.matches(prefs.keybinds.settingsPanel,prefs.modifiers.settingsPanel,code,mods or 0)then return false end
+    end
+    return Keys.pressed(code,mods)
+end
 local function hotkeys()
     if blocked(false,true) then app.server:cancelSequence();return end
     if app.vehicleUI and app.vehicleUI.open[0] and app.vehicleUI.cursor then return end
@@ -691,6 +738,7 @@ end
 
 local function stop()
     ompCompat.reset();app.externalBrowserOpen=false
+    vehicleHeld={};vehicleSwallowed={};vehicleKeyboardWasReady=false
     if not app.started then return end
     if app.saveDue then pcall(save) end
     app.started=false
@@ -757,9 +805,11 @@ local function tick()
         end)
         guard('Vehicle',function()app.vehicle:update(app.game.sample,app.focused and not isPauseMenuActive())end)
         if app.vehicleUI then
-            app.vehicleUI.cursor=app.vehicleUI.open[0] and app.focused and not isTyping() and not isPauseMenuActive() and Keys.modifiers()==4
+            app.vehicleUI.queued=app.quickRequest~=nil or app.server.commandSequence~=nil
+            app.vehicleUI.cursor=app.vehicleUI.open[0] and not blocked(false,true) and Keys.modifiers()==4
             app.vehicleFrame.HideCursor=not app.vehicleUI.cursor
         end
+        syncVehicleKeyboard(false)
         if app.vehicleUI and (not app.game.sample.ready or not app.game.sample.alive)then app.vehicleUI:reset();app.quickRequest=nil end
         if app.observations.active and app.observations.mode=='vehicles' then
             guard('Observations',function()

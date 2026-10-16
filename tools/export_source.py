@@ -8,7 +8,7 @@ import shutil
 
 ROOT=Path(__file__).resolve().parents[1]
 DIRECTORIES={'src','native','tools','tests','assets','docs','manifests','.github'}
-FILES={'README.md','AGENTS.md','CONTRIBUTING.md','LICENSE','THIRD_PARTY.md','.gitignore','requirements-dev.txt'}
+FILES={'README.md','AGENTS.md','CONTRIBUTING.md','LICENSE','THIRD_PARTY.md','.gitignore','.gitattributes','requirements-dev.txt'}
 APPROVED_BRANDING={
     'assets/branding/luahz-logo.png': '62d16ff2d1dec2a44e6dc75eac91cc66644a12a6a61981c54cc8ccd969a40dc5',
     'assets/branding/luahz-hzheader.png': '62d16ff2d1dec2a44e6dc75eac91cc66644a12a6a61981c54cc8ccd969a40dc5',

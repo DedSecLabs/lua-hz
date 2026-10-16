@@ -1,0 +1,29 @@
+Proper Radar v1.3 — LuaHZ Map Adaptation
+
+Proper Radar: Junior_Djjr
+Base: Grove Street Games (GTA Trilogy), Jéssica Natália
+LuaHZ adaptation: LuaHZ contributors — Quickmap conversion and packaging
+
+Original release: https://www.mixmods.com.br/2022/07/proper-radar/
+Original package: https://sharemods.com/eenyrp1bklvj/Proper_Radar.7z.html
+Source project: https://sharemods.com/8cxnu0k4xtdu/Proper_Radar_-_Source_Project.7z.html
+
+This variation retains the original credits and Proper Radar name. It uses
+the author's original v1.3 PC 512 tiles. LuaHZ assembles and resizes them
+with bilinear resampling, then splits the result into 36 512x512 JPEGs for
+its 6x6 Quickmap (3072x3072 combined). The 144 native radar tiles and the
+map-only overview in ../native-v0232 retain the author's original pixels.
+Unrelated frontend/menu backgrounds from the downloaded pack are excluded.
+
+The original source-project readme describes publishing alternative
+versions with the original credits, Proper Radar name, variation name and
+latest version. Those custom terms apply to the artwork; LuaHZ's MIT code
+license does not replace them. Preserve these notices with the resources.
+See PROPER-RADAR-SOURCE-README-EN.txt and its Portuguese counterpart for the
+original instructions/terms, and PROPER-RADAR-README-EN.txt / -PT.txt for
+the original classic-package readmes.
+
+Original classic archive SHA-256:
+a490e2e7cb4f4e04ac609c5f9d7bd402aeb13aec73cfbe469e58b1537cc2506c
+Original source-project archive SHA-256:
+d44f3dbbd656d6476c188462feda2c5f6449b1407d87597a9c5ce662986e86ae

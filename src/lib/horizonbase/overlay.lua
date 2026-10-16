@@ -1,3 +1,4 @@
+local palette=require 'horizonbase.palette'
 local logic=require 'horizonbase.logic'
 local mapIcons=require 'horizonbase.map_icons'
 local M={};M.__index=M
@@ -24,7 +25,8 @@ function M:texture(rel)
 end
 
 function M:initialize()
-    self:texture('hud-v0218/hud-font.png');self:texture('hud-v0218/wanted-star.png')
+    self:texture('hud-science-gothic-v042/font.png');self:texture('hud-pricedown-v042/font.png')
+    self:texture('hud-v0218/wanted-star.png')
     self:texture('ui-v0212/radar_centre.png')
     -- Upload optional assets one per rendered frame, rather than blocking the
     -- first interface frame with every map tile, weapon and radar sprite.
@@ -243,10 +245,9 @@ function M:hud()
     end
     self:dashboard(dl,s,scale,w,h,staminaShown,oxygenShown)
     if self.server.find.active then
-        dl:AddText(im.ImVec2(30,h-130),im.U32(1,.70,.18,1),'Tracking '..self.server.find.name)
+        dl:AddText(im.ImVec2(30,h-130),palette.u32(im,'accent'),'Tracking '..self.server.find.name)
         dl:AddText(im.ImVec2(30,h-109),im.U32(.95,.95,.95,1),self.server.find.description or 'Requesting location...')
     end
-    if self.server.track.active then dl:AddText(im.ImVec2(30,h-82),im.U32(1,.70,.18,1),'Vehicle tracker active') end
 end
 
 function M:map()

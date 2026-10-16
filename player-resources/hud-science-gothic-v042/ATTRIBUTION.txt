@@ -1,0 +1,4 @@
+Science Gothic. Copyright 2024 Font Detective LLC. SIL OFL 1.1; no Reserved Font Name.
+Design: Thomas Phinney, Vassil Kateliev and Brandon Buerkle.
+https://github.com/googlefonts/science-gothic
+LuaHZ bitmap adaptation: weight 500, width 100, contrast 0, slant 0.

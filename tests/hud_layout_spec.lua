@@ -27,7 +27,7 @@ local game={sample=sample,cruise={active=true,target=120}}
 local prefs=Config.copy(Config.defaults)
 local o=Overlay.new(im,prefs,game,server)
 o.texture=function(_,rel)
-    if rel=='hud-v0218/hud-font.png'then return 1 end
+    if rel=='hud-pricedown-v042/font.png' or rel=='hud-science-gothic-v042/font.png'then return 1 end
     if rel=='weaponicons/0.png'then return 2 end
     if rel=='hud-v0218/wanted-star.png'then return 3 end
     if rel:find('dashboard%-v031/')then return 4 end

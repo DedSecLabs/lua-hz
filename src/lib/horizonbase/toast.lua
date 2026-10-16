@@ -1,3 +1,4 @@
+local palette=require 'horizonbase.palette'
 -- Small load/status notification drawn using the existing ImGui renderer.
 local M={};M.__index=M
 function M.new(im,clock)
@@ -75,10 +76,10 @@ function M:draw()
         end
     end
     y=math.max(margin,y)
-    dl:AddRectFilled(im.ImVec2(x,y),im.ImVec2(x+w,y+height),im.U32(.08,.085,.095,.94*alpha),12*S)
+    dl:AddRectFilled(im.ImVec2(x,y),im.ImVec2(x+w,y+height),palette.u32(im,'sidebar',.94*alpha),12*S)
     local error=item.kind=='error'
     local centerY=y+height/2
-    dl:AddCircleFilled(im.ImVec2(x+28*S,centerY),12*S,im.U32(error and 1 or .36,error and .59 or .75,error and .15 or .98,alpha),18)
+    dl:AddCircleFilled(im.ImVec2(x+28*S,centerY),12*S,error and im.U32(1,.59,.15,alpha) or palette.u32(im,'accent',alpha),18)
     local icon=self.overlay and self.overlay:texture('ui-v0212/'..(error and 'triangle-alert' or 'check')..'.png')
     if icon then dl:AddImage(icon,im.ImVec2(x+18*S,centerY-10*S),im.ImVec2(x+38*S,centerY+10*S),im.ImVec2(0,0),im.ImVec2(1,1),im.U32(1,1,1,alpha)) end
     for i,line in ipairs(lines)do

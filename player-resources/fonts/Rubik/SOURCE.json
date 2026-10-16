@@ -1,0 +1,11 @@
+{
+  "name": "Rubik Regular",
+  "version": "2.300;gftools[0.9.30]",
+  "copyright": "Copyright 2015 The Rubik Project Authors (https://github.com/googlefonts/rubik)",
+  "license": "OFL-1.1",
+  "source": "https://github.com/googlefonts/rubik",
+  "notice_revision": "e337a5f69a9bea30e58d05bd40184d79cc099628",
+  "font_sha256": "7839aacdcb2c000467353ab4bdf313e87f813ec8e2beb4f5d42fdbcd8b6edd6c",
+  "modifications": "Existing unmodified font retained; upstream license/author notices added.",
+  "verification_scope": "Embedded font identity/license metadata matches upstream Rubik copyright and OFL. This record does not assert a byte-match to a newly downloaded upstream font."
+}

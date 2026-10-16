@@ -1,0 +1,16 @@
+Proper Radar v1.3 — LuaHZ Map Adaptation
+
+Proper Radar: Junior_Djjr
+Base: Grove Street Games (GTA Trilogy), Jéssica Natália
+LuaHZ adaptation: LuaHZ contributors — map-only overview extraction and packaging
+
+Original release: https://www.mixmods.com.br/2022/07/proper-radar/
+
+These credits cover radar000.txd through radar143.txd and overview.txd.
+All 144 radar dictionaries and the map-only overview dictionary are
+byte-identical to the corresponding original Proper Radar v1.3 content.
+They do not cover this directory's separate font/icon resources or DLL.
+
+The complete original readmes, alternative-version terms and conversion
+credits accompany the matching Quickmap in ../sa_map/.
+See ../sa_map/ATTRIBUTION.txt and PROPER-RADAR-SOURCE-README-EN.txt.

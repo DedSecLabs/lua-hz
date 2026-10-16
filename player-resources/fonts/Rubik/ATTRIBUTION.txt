@@ -1,0 +1,16 @@
+Rubik Regular
+
+Copyright 2015 The Rubik Project Authors
+https://github.com/googlefonts/rubik
+
+Design credits include Philipp Hubert and Sebastian Fischer (Hubert and
+Fischer), Meir Sadan, and the Cyreal Fonts Team. The upstream AUTHORS.txt
+is included alongside the complete SIL Open Font License 1.1 in OFL.txt.
+
+LuaHZ retains its existing unmodified Rubik-Regular.ttf, whose embedded
+metadata identifies Rubik version 2.300, the copyright above and OFL 1.1.
+This notice update changes no glyphs, font metrics or font bytes.
+The font remains under OFL 1.1, independently of LuaHZ's MIT code license.
+
+Notice source, pinned revision:
+https://github.com/googlefonts/rubik/tree/e337a5f69a9bea30e58d05bd40184d79cc099628

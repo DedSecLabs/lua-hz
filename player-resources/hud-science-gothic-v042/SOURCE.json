@@ -1,0 +1,12 @@
+{
+  "name": "Science Gothic",
+  "license": "OFL-1.1",
+  "source": "https://github.com/googlefonts/science-gothic",
+  "revision": "6e2b703b3df79fecf04cadc9c54ea68459856e50",
+  "font_sha256": "246e4d33a6fcb3846094e5c4c034616f83e9ae10100316df32e2436362deab3d",
+  "license_sha256": "f7f605ce3c63baa5533afdcf02278d604d9f981cf5a3270b021107f65f553c06",
+  "atlas_sha256": "65f468dad1045cf63205117b0babfc02bf95c14a4990456cceb13e7b10acd096",
+  "glyph_count": 49,
+  "font_size": 169,
+  "modifications": "Fresh bitmap rendering; original font file unmodified; no pair kerning."
+}

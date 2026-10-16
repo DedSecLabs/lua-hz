@@ -1,3 +1,4 @@
+local palette=require 'horizonbase.palette'
 local M={};M.__index=M
 function M.new(im,ui,server)
     return setmetatable({im=im,ui=ui,server=server,open=im.new.bool(false),tab=1},M)
@@ -17,7 +18,7 @@ function M:draw()
         im.WindowFlags.NoResize+im.WindowFlags.NoScrollbar+im.WindowFlags.NoScrollWithMouse)
     im.SetWindowFontScale(1)
     im.SetCursorPos(im.ImVec2(22*S,18*S))
-    self.ui:title('Character Status',im.ImVec4(1,.62,0,1))
+    self.ui:title('Character Status',palette.vec4(im,'accent'))
     im.SetCursorPos(im.ImVec2(22*S,46*S));im.TextUnformatted(c.name or self.server.characterName or 'Your character')
     im.SetCursorPos(im.ImVec2((panelWidth-35)*S,10*S))
     local p=im.GetCursorScreenPos()
@@ -25,13 +26,13 @@ function M:draw()
     local icon=self.ui.overlay and self.ui.overlay:texture('ui-v0212/x.png')
     if icon then
         im.GetWindowDrawList():AddImage(icon,im.ImVec2(p.x+3*S,p.y+3*S),im.ImVec2(p.x+22*S,p.y+22*S),
-            im.ImVec2(0,0),im.ImVec2(1,1),im.IsItemHovered() and im.U32(1,.62,0,1) or im.U32(.68,.70,.74,1))
+            im.ImVec2(0,0),im.ImVec2(1,1),im.IsItemHovered() and palette.u32(im,'accent') or palette.u32(im,'muted'))
     end
     local origin=im.GetWindowPos();local dl=im.GetWindowDrawList()
     local skin=sample.ready and sample.skin
     local dimensions=skin and require('horizonbase.skin_portraits')[skin]
     local portrait=dimensions and overlay:texture('portraits-v0222/'..skin..'.png')
-    dl:AddRectFilled(im.ImVec2(origin.x+22*S,origin.y+90*S),im.ImVec2(origin.x+164*S,origin.y+346*S),im.U32(.08,.09,.11,1),8*S)
+    dl:AddRectFilled(im.ImVec2(origin.x+22*S,origin.y+90*S),im.ImVec2(origin.x+164*S,origin.y+346*S),palette.u32(im,'sidebar'),8*S)
     if portrait then
         local factor=math.min(126/dimensions[1],240/dimensions[2])*S
         local pw,ph=dimensions[1]*factor,dimensions[2]*factor
@@ -50,7 +51,7 @@ function M:draw()
     end
     local tabs={'Character','Work','Finances','Health','Inventory','Licenses'}
     local tabStep=contentWidth/#tabs;local tabWidth=tabStep-6
-    dl:AddLine(im.ImVec2(origin.x+184*S,origin.y+121*S),im.ImVec2(origin.x+(panelWidth-22)*S,origin.y+121*S),im.U32(.20,.21,.24,1),S)
+    dl:AddLine(im.ImVec2(origin.x+184*S,origin.y+121*S),im.ImVec2(origin.x+(panelWidth-22)*S,origin.y+121*S),palette.u32(im,'border'),S)
     for i,label in ipairs(tabs)do
         im.SetCursorPos(im.ImVec2((184+(i-1)*tabStep)*S,90*S))
         local row=im.GetCursorScreenPos()
@@ -59,7 +60,7 @@ function M:draw()
             if i==6 and not self.server.info.pages.licenses.updatedAt then self.server:requestInfo('licenses')end
         end
         local selected=self.tab==i
-        local color=selected and im.U32(1,.62,0,1) or im.IsItemHovered() and im.U32(1,1,1,1) or im.U32(.64,.66,.70,1)
+        local color=selected and palette.u32(im,'accent') or im.IsItemHovered() and im.U32(1,1,1,1) or palette.u32(im,'muted')
         local text=im.CalcTextSize(label)
         dl:AddText(im.ImVec2(row.x+(tabWidth*S-text.x)/2,row.y+(30*S-text.y)/2),color,label)
         if selected then dl:AddLine(im.ImVec2(row.x,row.y+31*S),im.ImVec2(row.x+tabWidth*S,row.y+31*S),color,3*S)end

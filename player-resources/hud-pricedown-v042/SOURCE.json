@@ -1,0 +1,13 @@
+{
+  "name": "Pricedown Regular",
+  "version": "3.200 (2004)",
+  "license": "Original Larabie Fonts software-product agreement",
+  "source": "https://www.gta-sanandreas.com/downloads/gtafont.zip",
+  "archive_sha256": "b9e5e5384157e4afac3a3b37f24600590eec1033da7362c27da604f529ed0095",
+  "font_sha256": "973c5294ea6e0fe07e58b986b38c0393244bc835cc65889ca9f7b39b8c89ba1e",
+  "license_sha256": "c92ac4471e5d8772a9d0456cfdc9ca5b87eacca41e155e29be4ce3fddbb83fe0",
+  "atlas_sha256": "aad3e39ef703584f61d8050027997294e5ffe1bab960a1355cfc22855a867c06",
+  "glyph_count": 14,
+  "font_size": 378,
+  "modifications": "Fresh bitmap rendering; original font file unmodified; no pair kerning."
+}

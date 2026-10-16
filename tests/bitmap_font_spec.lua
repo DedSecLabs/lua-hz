@@ -7,7 +7,7 @@ function dl:AddImage(tex,a,b,uv1,uv2,color)
     assert(uv1.x>=0 and uv1.y>=0 and uv2.x<=1 and uv2.y<=1)
     calls[#calls+1]={a=a,b=b}
 end
-local font=Bitmap.new(im,function(path)assert(path=='hud-v0218/hud-font.png');return 17 end)
+local font=Bitmap.new(im,function(path)assert(path=='hud-pricedown-v042/font.png' or path=='hud-science-gothic-v042/font.png');return 17 end)
 assert(font:width('22:56',48,'pricedown')>0)
 assert(font:width('1234',64,'pricedown')==2*font:width('1234',32,'pricedown'))
 assert(font:width('Tornado',32,'gothic')==font:width('TORNADO',32,'gothic'))

@@ -17,10 +17,13 @@ OWNED = ("HorizonBase.lua", "lib/horizonbase", "resource/horizonbase")
 RESOURCE_GROUPS = ("fonts", "sa_map", "weaponicons", "mapicons")
 UI_ASSETS = "resource/horizonbase/ui-v0212"
 HUD_ASSETS = "resource/horizonbase/hud-v0218"
+HUD_FONT_ASSETS = ("resource/horizonbase/hud-science-gothic-v042", "resource/horizonbase/hud-pricedown-v042")
 DASH_ASSETS = "resource/horizonbase/dashboard-v031"
 VEHICLE_ASSETS = "resource/horizonbase/vehicle-v040"
+VEHICLE_EXTRA_ASSETS = ("resource/horizonbase/vehicle-v042",)
 PORTRAIT_ASSETS = "resource/horizonbase/portraits-v0222"
 NATIVE_ASSETS = "resource/horizonbase/native-v0232"
+VISUAL_ASSETS = (UI_ASSETS,HUD_ASSETS,*HUD_FONT_ASSETS,DASH_ASSETS,VEHICLE_ASSETS,*VEHICLE_EXTRA_ASSETS,PORTRAIT_ASSETS,NATIVE_ASSETS)
 
 
 def verify_target(root: Path) -> None:
@@ -83,9 +86,11 @@ def stage(target: Path) -> dict:
     logo=PROJECT / "assets/branding/luahz-logo.png"
     if not logo.is_file():logo=PROJECT / "branding/luahz-menu-icon-hz-v4.png"
     if logo.is_file():shutil.copy2(logo,ui_assets/'luahz-logo.png')
-    for relative in (HUD_ASSETS,DASH_ASSETS,VEHICLE_ASSETS,PORTRAIT_ASSETS,NATIVE_ASSETS):
+    for relative in (HUD_ASSETS,*HUD_FONT_ASSETS,DASH_ASSETS,VEHICLE_ASSETS,*VEHICLE_EXTRA_ASSETS,PORTRAIT_ASSETS,NATIVE_ASSETS):
         prepared=PROJECT / ".local" / "prepared-hud" / Path(relative).name
         asset_source=prepared if prepared.is_dir() else target / relative
+        if relative in (*HUD_FONT_ASSETS,*VEHICLE_EXTRA_ASSETS) and not asset_source.is_dir():
+            asset_source=PROJECT / "player-resources" / Path(relative).name
         if asset_source.is_dir():shutil.copytree(asset_source, output / relative)
     manifest = {"build": VERSION, "target": str(target), "staged": str(output),
                 "files": files_under(output), "resources_from": str(resource_source),
@@ -177,7 +182,7 @@ def update(target: Path, live: bool = False) -> dict:
         paths=list(OWNED[:2])
         # During live updates, add a new versioned folder or keep identical
         # existing files. Never replace a loaded texture.
-        for asset_path in (UI_ASSETS,HUD_ASSETS,DASH_ASSETS,VEHICLE_ASSETS,PORTRAIT_ASSETS,NATIVE_ASSETS):
+        for asset_path in VISUAL_ASSETS:
             existing=target / asset_path
             staged=PROJECT / "build" / "moonloader" / asset_path
             if staged.is_dir() and (not existing.exists() or files_under(existing)!=files_under(staged)):
@@ -189,13 +194,13 @@ def update(target: Path, live: bool = False) -> dict:
             destination = prepared / relative
             destination.parent.mkdir(parents=True, exist_ok=True)
             if source.is_dir():
-                if relative not in (UI_ASSETS,HUD_ASSETS,DASH_ASSETS,VEHICLE_ASSETS,PORTRAIT_ASSETS,NATIVE_ASSETS) and any(p.is_file() and p.suffix != '.lua' for p in source.rglob('*')):
+                if relative not in VISUAL_ASSETS and any(p.is_file() and p.suffix != '.lua' for p in source.rglob('*')):
                     raise ValueError("Source update includes a non-Lua file; use a closed-game installation.")
                 shutil.copytree(source, destination)
             else:
                 shutil.copy2(source, destination)
         # Commit modules before the entry point with same-filesystem renames.
-        for relative in [p for p in (UI_ASSETS,HUD_ASSETS,DASH_ASSETS,VEHICLE_ASSETS,PORTRAIT_ASSETS,NATIVE_ASSETS) if p in paths] + ["lib/horizonbase", "HorizonBase.lua"]:
+        for relative in [p for p in VISUAL_ASSETS if p in paths] + ["lib/horizonbase", "HorizonBase.lua"]:
             old = target / relative
             if old.exists():
                 saved = backup / relative

@@ -1,3 +1,4 @@
+local palette=require 'horizonbase.palette'
 local M={}
 function M.mod(ui)
     local self=ui;local im=ui.im
@@ -29,7 +30,7 @@ function M.mod(ui)
         for _,group in ipairs(groups) do
             self:section(group[1])
             for _,row in ipairs(group[2]) do
-                im.TextColored(im.ImVec4(1,.62,0,1),row[1]);im.TextWrapped(row[2]);im.Spacing()
+                im.TextColored(palette.vec4(im,'accent'),row[1]);im.TextWrapped(row[2]);im.Spacing()
             end
             if group[1]=='Auto-Accept' then
                 im.TextDisabled('Set offer price limits in Automation.');im.Spacing()
@@ -39,13 +40,13 @@ end
 function M.draw(ui)
     local im=ui.im;local S=ui.scale;local origin=im.GetCursorScreenPos()
     local width=ui:availableWidth();local tabWidth=width/2;local dl=im.GetWindowDrawList()
-    dl:AddLine(im.ImVec2(origin.x,origin.y+31*S),im.ImVec2(origin.x+width,origin.y+31*S),im.U32(.20,.21,.24,1),S)
+    dl:AddLine(im.ImVec2(origin.x,origin.y+31*S),im.ImVec2(origin.x+width,origin.y+31*S),palette.u32(im,'border'),S)
     for i,label in ipairs({'Server commands','LuaHZ commands'})do
         local x=origin.x+(i-1)*tabWidth
         im.SetCursorScreenPos(im.ImVec2(x,origin.y))
         if im.InvisibleButton(label..'##commandTab'..i,im.ImVec2(tabWidth-4*S,30*S))then ui.commandPage=i;ui.infoNotice=nil end
         local selected=ui.commandPage==i
-        local color=selected and im.U32(1,.62,0,1) or im.U32(.64,.66,.70,1)
+        local color=selected and palette.u32(im,'accent') or palette.u32(im,'muted')
         local size=im.CalcTextSize(label)
         dl:AddText(im.ImVec2(x+(tabWidth-size.x)/2,origin.y+(30*S-size.y)/2),color,label)
         if selected then dl:AddLine(im.ImVec2(x,origin.y+31*S),im.ImVec2(x+tabWidth-4*S,origin.y+31*S),color,3*S)end
