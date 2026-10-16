@@ -78,7 +78,7 @@ bash install.sh "/path/to/GTA San Andreas"
 
 For an existing LuaHZ installation, add `--upgrade`. The path must contain `gta_sa.exe`.
 
-Both installers verify the payload and prerequisites, preserve preferences and saved locations, and print a recovery command. Keep the backup until the new build works. The loading helper passed owner QA on Windows 11 with open.mp 1.7.0/build 7, open.mp 1.6.1/build 6 and classic SA-MP R5. Exact release archive acceptance is recorded separately. Linux/Wine owner gameplay QA covers the previous 0.4.0 release. See the [installation guide](docs/INSTALLATION.md#player-installation-and-upgrade).
+Both installers verify the payload and prerequisites, preserve preferences and saved locations, and print a recovery command. Keep the backup until the new build works. The loading helper passed owner QA on Windows 11 with open.mp 1.7.0/build 7, open.mp 1.6.1/build 6 and classic SA-MP R5. The owner passed the exact published archive in both classic SA-MP R5 and open.mp 1.7.0 on Windows 11. Linux/Wine owner gameplay QA covers the previous 0.4.0 release. See the [installation guide](docs/INSTALLATION.md#player-installation-and-upgrade).
 
 ### 3. Join Horizon Roleplay
 
@@ -324,7 +324,7 @@ python3 -m venv .venv
 
 Build and deploy steps are in [development](docs/DEVELOPMENT.md). GitHub's automatic source ZIP is this repository, not the player download.
 
-**0.4.2 — Loading Forward** combines the open.mp 1.7.0 loading fix with three selectable themes, compact Quick Actions and job headings, Science Gothic HUD/dashboard labels, legacy Pricedown cash/clock lettering, a sharper Proper Radar Quickmap and the Changelog tab crash fix. The loading helper passed owner checks on Windows 11 with open.mp 1.7.0/build 7, open.mp 1.6.1/build 6 and classic SA-MP R5. The newer themes, compact Trucker layout, fonts and map appearance were accepted in the open.mp test copy; the owner subsequently passed the combined source snapshot on classic SA-MP R5 and open.mp 1.7.0, including the stable font resource paths. Exact release archive acceptance is recorded separately before publication. No gameplay features or server commands changed. See [changes](docs/releases/0.4.2.md) and [open.mp QA](docs/OPENMP_QA.md), including the independently reproduced foreign-server black-splash limitation. Linux/Wine owner gameplay QA covers 0.4.0.
+**0.4.2 — Loading Forward** combines the open.mp 1.7.0 loading fix with three selectable themes, compact Quick Actions and job headings, Science Gothic HUD/dashboard labels, legacy Pricedown cash/clock lettering, a sharper Proper Radar Quickmap and the Changelog tab crash fix. The loading helper passed owner checks on Windows 11 with open.mp 1.7.0/build 7, open.mp 1.6.1/build 6 and classic SA-MP R5. The newer themes, compact Trucker layout, fonts and map appearance were accepted in the open.mp test copy; the owner subsequently passed the combined source snapshot on classic SA-MP R5 and open.mp 1.7.0, including the stable font resource paths. The owner passed the exact published archive in both classic SA-MP R5 and open.mp 1.7.0 on Windows 11. No gameplay features or server commands changed. See [changes](docs/releases/0.4.2.md) and [open.mp QA](docs/OPENMP_QA.md), including the independently reproduced foreign-server black-splash limitation. Linux/Wine owner gameplay QA covers 0.4.0.
 
 ## Documentation
 

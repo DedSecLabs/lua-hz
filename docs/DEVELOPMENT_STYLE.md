@@ -38,7 +38,7 @@ Examples:
 
 Use the same types as branch prefixes. Use an optional lowercase kebab-case scope when it makes the subject clearer. Avoid personal names, agent labels, vague subjects and unrelated changes in one commit. Preserve the actual author identity.
 
-PR titles follow the same format. A complete release PR uses `chore(release): release 0.4.1 — Launcher Choice`; its body identifies the exact tested source, archive hash, QA result and CI result.
+PR titles follow the same format. A complete release PR uses `chore(release): release 0.4.1 — Launcher Choice`; its body identifies the exact tested source, archive hash, QA result and CI result. After publication and live-link verification, merge the release PR into `main` with a merge commit so the published source remains an ancestor of the default branch. Include the publication record and updated README/gallery; verify main CI and the repository homepage before reporting the release complete. Preserve the published tag and asset bytes.
 
 ## Releases and assets
 

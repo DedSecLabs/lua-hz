@@ -1,8 +1,10 @@
 # Releases and player downloads
 
-The latest published player download is **[LuaHZ 0.4.1 — Launcher Choice](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.1)**, published on 2026-10-13. Windows owner QA passed with both open.mp and classic SA-MP R5, and release-branch Linux CI passed. Historical releases, tags and checksums are preserved.
+The latest published player download is **[LuaHZ 0.4.2 — Loading Forward](https://github.com/DedSecLabs/luahz/releases/tag/v0.4.2)**, published on 2026-10-16. The owner passed exact-archive smoke tests on Windows 11 with classic SA-MP R5 and open.mp 1.7.0. Release-branch source/native/export CI passed, and all four public release assets were verified after publication.
 
-For this release, the owner explicitly approved reusing passed final QA for a documentation/source-metadata repackage. All 694 tested game files and install/restore scripts remained byte-identical. The published archive SHA-256 is `60d1ccf9a3e44649f58ac52610bca58757c81d26d946d15a5d7a8507fd1fd405`, from source `e27bc1126390c321ca2287e186c4445b6dbecc8c`. This recorded exception does not change the exact-archive rule for future releases. Published assets remain frozen.
+The published ZIP contains 718 payload files, with SHA-256 `b5e9eb121410799b0258b7673329eeb0b810c3a471ceb4e982519b915434ded2`, from source [`cffa739`](https://github.com/DedSecLabs/luahz/commit/cffa73962e140d30cb9452bfbdc5c3b29307aceb). The published tag and assets remain frozen; subsequent publication documentation does not rebuild them.
+
+For 0.4.1, the owner explicitly approved reusing passed final QA for a documentation/source-metadata repackage. All 694 tested game files and install/restore scripts remained byte-identical. Its published archive SHA-256 is `60d1ccf9a3e44649f58ac52610bca58757c81d26d946d15a5d7a8507fd1fd405`, from source `e27bc1126390c321ca2287e186c4445b6dbecc8c`. This historical exception does not change the exact-archive rule for future releases.
 
 ## Player candidate workflow
 
@@ -21,7 +23,7 @@ New player tags use `v<version>`, such as `v0.3.0-rc.1` and `v0.3.0`. The archiv
 5. Build to a new directory and verify `SHA256SUMS.txt`. Test upgrade from the previously published archive, preserving settings, saved locations, unrelated mods and rollback.
 6. Install the exact candidate with the game/browser closed. The owner launches it and confirms changed behavior. Keep the archive hash and deployment receipt with that result.
 7. After owner QA, prepare the final version as a new archive/commit. Even a version-only rebuild is a different archive: install it and obtain the owner's final smoke-test result before publishing. Changed public bytes always require a new version.
-8. Publish intentionally. Review the four attachments, final notes and tag revision. Update the README and give the owner forum section replacements only after the release/image URLs exist. The owner edits the forum post.
+8. Publish intentionally. Review the four attachments, final notes and tag revision. After verifying the live release/image URLs, merge `release/<core-version>` into `main` through the release PR, preserving the published commit ancestry with a merge commit. Do not squash, rebase or move the published tag. Include publication/QA records and the current README/gallery in that integration, then verify successful main-branch CI and the default-branch README/image links. Publication is complete only when the published source is an ancestor of `main` and the repository homepage shows the current release. Give the owner forum section replacements; the owner edits the forum post. Published assets remain frozen.
 9. Prepare all player announcements for each release: update the README, a complete Horizon forum first-post copy, a short Horizon forum release announcement, and a Discord announcement. Save drafts under `.local/release-docs/<version>/`; keep copy-paste forum files alongside their review drafts. The owner submits the forum and Discord posts.
 
 ## Local packaging
