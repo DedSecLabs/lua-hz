@@ -1,3 +1,4 @@
+local palette=require 'horizonbase.palette'
 local ffi=require 'ffi'
 local M={}
 local kinds={'families','members','rules','settings','info'}
@@ -65,13 +66,13 @@ function M.draw(ui)
     local tabLabels={'Families','Members','Rules','Settings','Links','Status'}
     local origin=im.GetCursorScreenPos();local width=ui:availableWidth();local tabWidth=width/#tabLabels;local S=ui.scale
     local dl=im.GetWindowDrawList()
-    dl:AddLine(im.ImVec2(origin.x,origin.y+31*S),im.ImVec2(origin.x+width,origin.y+31*S),im.U32(.20,.21,.24,1),S)
+    dl:AddLine(im.ImVec2(origin.x,origin.y+31*S),im.ImVec2(origin.x+width,origin.y+31*S),palette.u32(im,'border'),S)
     for i,label in ipairs(tabLabels)do
         local x=origin.x+(i-1)*tabWidth
         im.SetCursorScreenPos(im.ImVec2(x,origin.y))
         if im.InvisibleButton(label..'##serverTab'..i,im.ImVec2(tabWidth-4*S,30*S))then ui.horizonPage[0]=i-1;ui.infoNotice=nil end
         local selected=ui.horizonPage[0]==i-1
-        local color=selected and im.U32(1,.62,0,1) or im.IsItemHovered() and im.U32(1,1,1,1) or im.U32(.64,.66,.70,1)
+        local color=selected and palette.u32(im,'accent') or im.IsItemHovered() and im.U32(1,1,1,1) or palette.u32(im,'muted')
         local size=im.CalcTextSize(label)
         dl:AddText(im.ImVec2(x+(tabWidth-size.x)/2,origin.y+(30*S-size.y)/2),color,label)
         if selected then dl:AddLine(im.ImVec2(x,origin.y+31*S),im.ImVec2(x+tabWidth-4*S,origin.y+31*S),color,3*S)end
@@ -120,7 +121,7 @@ function M.content(ui,index)
                 im.Separator()
                 for _,row in ipairs(rows)do
                     im.TextWrapped(row.name)
-                    im.PushStyleColor(im.Col.Text,im.ImVec4(.55,.57,.60,1));im.TextWrapped(row.title);im.PopStyleColor()
+                    im.PushStyleColor(im.Col.Text,palette.vec4(im,'muted'));im.TextWrapped(row.title);im.PopStyleColor()
                     im.NextColumn();cell(im,row.rank);cell(im,row.label)
                 end
             end)

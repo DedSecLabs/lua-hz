@@ -1,0 +1,3 @@
+# Release payloads must retain the exact bytes accepted in the game.
+src/** -text
+player-resources/** -text

@@ -72,7 +72,7 @@ class PlayerPackageTests(unittest.TestCase):
 
     def test_required_names_cover_the_player_visible_files(self):
         self.assertIn('LuaHZLoading.asi', REQUIRED)
-        self.assertTrue(any(name.endswith('hud-font.png') for name in REQUIRED))
+        self.assertIn('moonloader/resource/horizonbase/hud-pricedown-v042/font.png', REQUIRED)
         self.assertTrue(any(name.endswith('loading.enc') for name in REQUIRED))
 
 

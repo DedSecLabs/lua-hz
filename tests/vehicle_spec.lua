@@ -38,10 +38,11 @@ panel.open[0]=true;panel.cursor=true;im.clicks['Engine##vehicleAction']=true;pan
 sample.alive=true;sample.driver=true;v:update(sample,true)
 panel.open[0]=true;panel.cursor=true;im.clicks['Engine##vehicleAction']=true;panel:draw();assert(actions[1][1]=='vehicleControl' and actions[1][2]=='engine' and panel.open[0])
 panel.open[0]=true;panel.cursor=true;im.clicks['My vehicles##vehicleTab3']=true;panel:draw();assert(panel.page==3 and #actions==1)
-im.clicks['Storage##vehicleAction']=true;panel:draw();assert(actions[2][1]=='storage')
-panel.open[0]=true;panel.cursor=true;im.clicks['Track vehicle##vehicleAction']=true;panel:draw();assert(actions[3][1]=='track')
-server.track.active=true;panel.open[0]=true;panel.cursor=true;im.clicks['Stop tracking##vehicleAction']=true;panel:draw();assert(actions[4][1]=='track')
-panel.open[0]=true;panel.cursor=true;panel.perform=function()return false,'Rejected action'end;im.clicks['Storage##vehicleAction']=true;panel:draw();assert(panel.open[0] and panel.notice=='Rejected action')
+-- This fake dispatcher completes immediately; runtime normally clears queued.
+panel.queued=false;im.clicks['Storage##vehicleAction']=true;panel:draw();assert(actions[2][1]=='storage')
+panel.queued=false;panel.open[0]=true;panel.cursor=true;im.clicks['Track vehicle##vehicleAction']=true;panel:draw();assert(actions[3][1]=='track')
+panel.queued=false;server.track.active=true;panel.open[0]=true;panel.cursor=true;im.clicks['Stop tracking##vehicleAction']=true;panel:draw();assert(actions[4][1]=='track')
+panel.queued=false;panel.open[0]=true;panel.cursor=true;panel.perform=function()return false,'Rejected action'end;im.clicks['Storage##vehicleAction']=true;panel:draw();assert(panel.open[0] and panel.notice=='Rejected action')
 panel.perform=function()error('Injected vehicle UI failure')end;im.clicks['Storage##vehicleAction']=true;assert(not pcall(panel.draw,panel) and im.stack==0)
 for _,size in ipairs({{640,480},{1280,720},{1920,1080}})do
  function getScreenResolution()return size[1],size[2]end

@@ -1,0 +1,335 @@
+{
+  "name": "HQ Weapon Icons for San Andreas",
+  "author": "Zera",
+  "source": "https://www.gtagarage.com/mods/show.php?id=21062",
+  "archive_sha256": "871e6c64d196603e74f4c358a5041cef58e12ba7a074a269ad5e3c12f4d33140",
+  "terms": "Custom mod-use permission with author credit; standalone rehosting restricted. Original readmes included.",
+  "modifications": "Original PNG bytes unchanged; filenames mapped to weapon IDs.",
+  "mapping": [
+    {
+      "installed_name": "0.png",
+      "sha256": "5ea3650e1505ad81562c8e3ab7bb2bf88b6e29c73710e3e2dc7037042c259c4e",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/fist.png"
+      ]
+    },
+    {
+      "installed_name": "1.png",
+      "sha256": "2f17f1bf8e63cc2ffd5964a0f5382168d4dafebca8b3f5830209cc412bd89489",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/BRASSKNUCKLEicon.png"
+      ]
+    },
+    {
+      "installed_name": "10.png",
+      "sha256": "7fbf20c2b079fc3d3c94059f471b657e9cf1c8dda20c7cdba766dfe398c5ffe6",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/gun_dildo1icon.png"
+      ]
+    },
+    {
+      "installed_name": "11.png",
+      "sha256": "dd8009977485ef6f65166d19df7bd455f6e0d4da1826b0b2d9576c78593ccd23",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/gun_vibe2icon.png"
+      ]
+    },
+    {
+      "installed_name": "12.png",
+      "sha256": "d0038530130c2cfd7764f1b32b429a54fa4fe4155d195f737e8f305defffe8b2",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/gun_vibe1icon.png"
+      ]
+    },
+    {
+      "installed_name": "13.png",
+      "sha256": "762343220f113a818171f6eeb8ca79a8fbadca6426c3de2a024b28643675d4cf",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/gun_dildo2icon.png"
+      ]
+    },
+    {
+      "installed_name": "14.png",
+      "sha256": "845cbf35af3eea2e2c6efe9d2496a4a47390159ff931c91b28dca6aa13f835ee",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/floweraicon.png",
+        "HD_icons_SA_by_Zera/flowerbicon.png"
+      ]
+    },
+    {
+      "installed_name": "15.png",
+      "sha256": "ab14e96657f44567c28366f54b7adefa391251949c9305cd2194839b0f5f667c",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/gun_caneicon.png"
+      ]
+    },
+    {
+      "installed_name": "16.png",
+      "sha256": "2fe27d219556e1d77d45724998c01522625522bb6a536116bd242fce889ae03c",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/grenadeicon.png"
+      ]
+    },
+    {
+      "installed_name": "17.png",
+      "sha256": "d275ca2344775504f91d0f0dce4475350427a13a620c297a28d20130590e2847",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/TearGasicon.png"
+      ]
+    },
+    {
+      "installed_name": "18.png",
+      "sha256": "39fe4f0d2fa1c8105596d63caf6f2fb26a5a082fe5530113024cc5812ea31e9a",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/molotovicon.png"
+      ]
+    },
+    {
+      "installed_name": "2.png",
+      "sha256": "611bb775e613adf0d6e438af598a2d7caaf6f3815a4894f4cfac65ded3154676",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/golfclubicon.png"
+      ]
+    },
+    {
+      "installed_name": "21.png",
+      "sha256": "8e67a5920718e7c26a04600894d1aae940470deb2f2c78b71606a6524a83c04d",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/jetpackicon.png"
+      ]
+    },
+    {
+      "installed_name": "22.png",
+      "sha256": "3a0453c34a8d684bde33b75699236c550a7e91764797a7e511e9a693c6251f20",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/colt45icon.png"
+      ]
+    },
+    {
+      "installed_name": "23.png",
+      "sha256": "40d1d535fc43ef2e7eb3d33e70c39ced93f870f3ff4fe913e2d5f07240f8fa6b",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/silencedicon.png"
+      ]
+    },
+    {
+      "installed_name": "24.png",
+      "sha256": "2b926b355e962a82141f0b17c1008fd32dbb47fe79cd0784c3748a36db2ff4af",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/desert_eagleicon.png"
+      ]
+    },
+    {
+      "installed_name": "25.png",
+      "sha256": "54716d98753bf9750e2b6205916db4f4dc3cf9e570e42bf9202f1d9ca38a7b62",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/chromegunicon.png"
+      ]
+    },
+    {
+      "installed_name": "26.png",
+      "sha256": "c2dd8dfd521d92fec67020a94d22a62b4649b56fa418dd6805c4622d821a8935",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/sawnofficon.png"
+      ]
+    },
+    {
+      "installed_name": "27.png",
+      "sha256": "e471491f511464f4a4a5b78723d3a2e3eeede993204007d59896ea87d2b7d4b3",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/shotgspaicon.png"
+      ]
+    },
+    {
+      "installed_name": "28.png",
+      "sha256": "c8e1e8131c0e481af0e9e81a184d4e733779ea53d1281ff1a01fbc2e9b4dce00",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/micro_uziicon.png"
+      ]
+    },
+    {
+      "installed_name": "29.png",
+      "sha256": "b9efdfd1255138d9e143559fb44431172b15534c9fd8d1a05612acc6479be360",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/mp5lngicon.png"
+      ]
+    },
+    {
+      "installed_name": "3.png",
+      "sha256": "1cb08ec753f8b6c0e405027721003c5e674efe568bef168b0c93a11d5a8534f1",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/nitestickicon.png"
+      ]
+    },
+    {
+      "installed_name": "30.png",
+      "sha256": "e834d3d8e6c473fe4ef404a4a6af1d799a7810af75065b7b0f181b14e25788b7",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/ak47icon.png"
+      ]
+    },
+    {
+      "installed_name": "31.png",
+      "sha256": "5ab6b509ed231e2a6a96560ed0abe51c20aa0596e1cd5fa029150bcfa76c1d06",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/M4icon.png"
+      ]
+    },
+    {
+      "installed_name": "32.png",
+      "sha256": "817a1ae0670dbb74923a1add6309e242b296b346b1ee15bc693a5e6cce07af33",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/tec9icon.png"
+      ]
+    },
+    {
+      "installed_name": "33.png",
+      "sha256": "fae40525e2b88ab65d01c03a51a8b0eafae2986442e5056374a660166a16abde",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/cuntgunicon.png"
+      ]
+    },
+    {
+      "installed_name": "34.png",
+      "sha256": "ef7df1f183311c3ffecb2c3b209cb3cd0d3a228af53448084f0a4878225230ea",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/SNIPERicon.png"
+      ]
+    },
+    {
+      "installed_name": "35.png",
+      "sha256": "3b55b1bc1edd1144df1f06da532b8c5790599bb5491fd5d9b44472a3d01a3221",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/rocketlaicon.png"
+      ]
+    },
+    {
+      "installed_name": "36.png",
+      "sha256": "e4c9511c825bb8bc4305677e9135d2e0f2af69534491b3aa71fad3ee05e7ec49",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/heatseekicon.png"
+      ]
+    },
+    {
+      "installed_name": "37.png",
+      "sha256": "ef82fb6924a8eb91375f3fe41d89c806c30ce44aa7b14614bb881c87ce65e991",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/flameicon.png"
+      ]
+    },
+    {
+      "installed_name": "38.png",
+      "sha256": "5cbbb6f4a8e2b9790282f9b3cae38c45ff5feddd38a6b5ca71a654f70fc9fa3f",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/minigunicon.png"
+      ]
+    },
+    {
+      "installed_name": "39.png",
+      "sha256": "567983ef283e83d103cc113d4f20ad9baacdc37e48090f50edc577076ccc2eaf",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/satchelicon.png"
+      ]
+    },
+    {
+      "installed_name": "4.png",
+      "sha256": "4199bc9f6d773b530d5eb0479cb771ad3edf247f0061ef45ff378f4dabd429e1",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/knifecuricon.png"
+      ]
+    },
+    {
+      "installed_name": "40.png",
+      "sha256": "9750ca26c17febce42e0632671decdfb1b38089fd2458e4fb599159e31c5c01f",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/bombicon.png"
+      ]
+    },
+    {
+      "installed_name": "41.png",
+      "sha256": "d9852d3e9a18713c59a43b8cf4cf690812fb75126deaf36dd2ba3fc5ece8f69d",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/SPRAYCANicon.png"
+      ]
+    },
+    {
+      "installed_name": "42.png",
+      "sha256": "57fef3c5f5ba04f0c8683b3d340a831216217e62c57f51eebf45e1bdb94a307a",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/fire_exicon.png"
+      ]
+    },
+    {
+      "installed_name": "43.png",
+      "sha256": "e6f122911fe433d72abe78f29e076ec152202a1fcd8376bfad81bf643e04f42c",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/Cameraicon.png"
+      ]
+    },
+    {
+      "installed_name": "44.png",
+      "sha256": "31f41c94ce48eb683cbc7f5525e8b359f227143c4103735d972f0da3ff0ada2d",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/irgogglesicon.png",
+        "HD_icons_SA_by_Zera/nvgogglesicon.png"
+      ]
+    },
+    {
+      "installed_name": "45.png",
+      "sha256": "31f41c94ce48eb683cbc7f5525e8b359f227143c4103735d972f0da3ff0ada2d",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/irgogglesicon.png",
+        "HD_icons_SA_by_Zera/nvgogglesicon.png"
+      ]
+    },
+    {
+      "installed_name": "46.png",
+      "sha256": "b4d7bf14a30ccde56bc63bf65a22cbedbacd547db949deabdc3a44a2268daee2",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/gun_paraicon.png"
+      ]
+    },
+    {
+      "installed_name": "5.png",
+      "sha256": "4cc14aca319cb13c16449390e9026238de355da1660d74f94e199d6d65b0c817",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/baticon.png"
+      ]
+    },
+    {
+      "installed_name": "6.png",
+      "sha256": "a3c7ae35caf4459397a90589e266dcba5e273633d568c3b9e9548eba59b32ca7",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/shovelicon.png"
+      ]
+    },
+    {
+      "installed_name": "7.png",
+      "sha256": "4332293577dfdae917c13d73269eddbba3f2b6c4c8ddcf9116a7b2c919e90279",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/poolcueicon.png"
+      ]
+    },
+    {
+      "installed_name": "8.png",
+      "sha256": "782339b3fe7be7a0dbe74ce9a25adabd2f5519452a145725fa3bdd3d6e0d6850",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/katanaicon.png"
+      ]
+    },
+    {
+      "installed_name": "9.png",
+      "sha256": "70d8372abc71143635e7fc7d23c0771c4f3a491279434cfd0655f09aac388a90",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/chnsawicon.png"
+      ]
+    },
+    {
+      "installed_name": "cellphoneicon.png",
+      "sha256": "aa9e7e11e4355718b1c062cc5534f85995684ece9d0f79a8dd9d010d98206d67",
+      "original_author_files": [
+        "HD_icons_SA_by_Zera/cellphoneicon.png"
+      ]
+    }
+  ]
+}

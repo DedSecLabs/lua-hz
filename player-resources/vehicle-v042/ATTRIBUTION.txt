@@ -1,0 +1,5 @@
+Storage garage icon: Quincy Morgan / Pinhead contributors.
+Pinhead Map Icons, garage, v15.25.0. CC0-1.0.
+https://github.com/waysidemapping/pinhead/blob/v15.25.0/icons/buildings/garage.svg
+Original vector geometry retained; white fill rendered as a 128 x 128 transparent PNG for runtime tint.
+Full upstream license: CC0-1.0.txt.

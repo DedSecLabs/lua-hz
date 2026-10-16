@@ -1,3 +1,9 @@
+# LuaHZ 0.4.2 combined Windows acceptance — 2026-10-16
+
+The owner explicitly confirmed Both passed for the same consolidated 718-file source/resource payload on classic SA-MP R5 and open.mp 1.7.0. This includes stable font resource names after the earlier visual/input trials; the requested check covered loading artwork, fonts/maps, themes, Changelog and the vehicle menu. Optional dual-job and individual theme persistence/reset cases are not separately itemized. The payload fingerprint and exact per-file installation/recovery records are retained privately. All 51 staged Lua files compile; no behavioral suites or automated gameplay ran during consolidation.
+
+This acceptance covers the combined game payload, not a final public ZIP. The final archive must identify a clean source commit, retain identical payload hashes, be installed using its own scripts and receive a separate owner smoke test before publication. No VERIFIED submission has been sent.
+
 # QA and accepted coverage
 
 ## Local 0.2.54 Quick Actions alignment
@@ -210,3 +216,8 @@ The final player archive requires an owner report for its exact ZIP hash and sou
 
 
 On 2026-10-12 the owner reported “All works as intended, tests pass” for the exact installed 0.4.0 archive, SHA-256 `a52c95aefd680a059580742a27d5208ede5e3d81305b99100d165ff6410782ff`, source `27b27c5819f749016070fa777facebe905d95a70`. This accepts the final checklist on Linux/Wine. All 693 installed payload hashes and four draft asset digests were rechecked unchanged after the report. Native Windows gameplay remains unverified.
+
+
+## 0.4.2 exact archive smoke test
+
+The owner accepted the helper with open.mp 1.7.0/build 7, 1.6.1/build 6 and classic SA-MP R5 before packaging. After installing the exact 0.4.2 final ZIP, confirm its version, Horizon loading artwork and centered bar, login/movement, the open.mp F9 browser, LuaHZ settings shortcut and I/M/U/K menus. Restart once and confirm preferences and saved locations persist. Repeat a fresh launch with 1.6.1 and classic R5. Retain other-server inactivity and the historical foreign black-splash limitation. Record the archive hash, all installed payload hashes, backups and owner result; publication waits for this exact-archive acceptance.

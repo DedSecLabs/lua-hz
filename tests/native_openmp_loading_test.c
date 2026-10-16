@@ -3,6 +3,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+/* Metadata/offsets independently verified from official client DLLs. */
+#ifndef QA_OMP_BUILD
+#define QA_OMP_BUILD 6
+#endif
+#if QA_OMP_BUILD == 6
+#define QA_OMP_IMAGE 0x219000
+#define QA_OMP_TIMESTAMP 0x69430243
+#define QA_OMP_ENTRY 0xb23e4
+#define QA_OMP_SPLASH 0x427a0
+#define QA_OMP_BAR 0x42620
+#define QA_OMP_BAR_STATE 0x1bc4a4
+#define QA_OMP_SAVED_BAR 0x1d16f8
+#elif QA_OMP_BUILD == 7
+#define QA_OMP_IMAGE 0x224000
+#define QA_OMP_TIMESTAMP 0x6acd5437
+#define QA_OMP_ENTRY 0xb84ca
+#define QA_OMP_SPLASH 0x46ac0
+#define QA_OMP_BAR 0x46930
+#define QA_OMP_BAR_STATE 0x1c651c
+#define QA_OMP_SAVED_BAR 0x1dbdb4
+#else
+#error Unsupported fixture client build
+#endif
+
 typedef unsigned int U32;
 static void *qa_open(int,int,void *);
 static int qa_find(void *,U32,void *,void *);
@@ -42,7 +66,7 @@ void *WIN qa_module(const char *name) {
     return 0;
 }
 int WIN qa_pin(U32 flags,const char *address,void **out) {
-    assert(flags==5 && address==(const char *)fakeOmp+0x427a0);
+    assert(flags==5 && address==(const char *)fakeOmp+QA_OMP_SPLASH);
     *out=fakeOmp;pins++;return 1;
 }
 static void qa_fallback(void){fallbacks++;}
@@ -70,7 +94,7 @@ static void qa_stock_bar(void *p) {
     assert(p==savedBar && *(unsigned short *)0x5903ca==0x8f80 && *(unsigned short *)0x5903e8==0x8fe8);centeredBars++;
 }
 static void qa_omp_bar(void *p) {
-    assert(p==fakeOmp+0x42620 && *(unsigned short *)0x5903ca==0x8b40 && *(unsigned short *)0x5903e8==0x8a10);originalBars++;
+    assert(p==fakeOmp+QA_OMP_BAR && *(unsigned short *)0x5903ca==0x8b40 && *(unsigned short *)0x5903e8==0x8a10);originalBars++;
 }
 static void reset_texture(void) {
     memset(dictionary,0,sizeof(dictionary));memset(texture,0,sizeof(texture));memset(raster,0,sizeof(raster));
@@ -86,12 +110,12 @@ int main(int argc,char **argv) {
     U32 pages[]={0x580000,0x590000,0x720000,0x7e0000,0xc10000,0xc80000,0xc90000},old;
     for(int i=0;i<7;i++)assert(VirtualProtect((void *)pages[i],0x10000,0x40,&old));
     puts("fixture: pages mapped");
-    fakeOmp=VirtualAlloc(0,0x219000,0x3000,0x40);assert(fakeOmp);
+    fakeOmp=VirtualAlloc(0,QA_OMP_IMAGE,0x3000,0x40);assert(fakeOmp);
     printf("fixture: omp=%p\n",fakeOmp);
-    put32(fakeOmp+0x3c,0x80);put32(fakeOmp+0x88,0x69430243);
-    put32(fakeOmp+0xa8,0xb23e4);put32(fakeOmp+0xd0,0x219000);
+    put32(fakeOmp+0x3c,0x80);put32(fakeOmp+0x88,QA_OMP_TIMESTAMP);
+    put32(fakeOmp+0xa8,QA_OMP_ENTRY);put32(fakeOmp+0xd0,QA_OMP_IMAGE);
     const Byte entry[]={0x53,0x8b,0xdc,0x83,0xec,0x08,0x83,0xe4,0xf0,0x83,0xc4,0x04};
-    memcpy(fakeOmp+0x427a0,entry,12);
+    memcpy(fakeOmp+QA_OMP_SPLASH,entry,12);
     puts("fixture: OMP metadata copied");
     const Byte draw[]={0x8b,0x44,0x24,0x08,0x56,0x50,0x50,0x50};
     const Byte open[]={0xa1,0x24,0x7b,0xc9,0x00,0x8b,0x0d,0x2c};
@@ -110,9 +134,9 @@ int main(int argc,char **argv) {
     jump((Byte *)0x58ff60,qa_fallback);U32 foreign=value32((void *)0x58ff61);
     try_omp_adapter();assert(!ompHooked && value32((void *)0x58ff61)==foreign);
     puts("fixture: foreign hook retained");
-    jump((Byte *)0x58ff60,fakeOmp+0x427a0);
-    fakeOmp[0x427a0]=0x90;try_omp_adapter();assert(!ompHooked);fakeOmp[0x427a0]=0x53;
-    put32(fakeOmp+0x88,1);try_omp_adapter();assert(!ompHooked);put32(fakeOmp+0x88,0x69430243);
+    jump((Byte *)0x58ff60,fakeOmp+QA_OMP_SPLASH);
+    fakeOmp[QA_OMP_SPLASH]=0x90;try_omp_adapter();assert(!ompHooked);fakeOmp[QA_OMP_SPLASH]=0x53;
+    put32(fakeOmp+0x88,1);try_omp_adapter();assert(!ompHooked);put32(fakeOmp+0x88,QA_OMP_TIMESTAMP);
     *(Byte *)0x728350=0x90;try_omp_adapter();assert(!ompHooked);*(Byte *)0x728350=0x8b;
     puts("fixture: install owned hook");
     try_omp_adapter();assert(ompHooked && ompModule==fakeOmp && pins==1);
@@ -121,7 +145,7 @@ int main(int argc,char **argv) {
     assert(value32(sfModule+0x1b9fc)==(U32)&ompStockSprite && ompStockSprite==0);
     assert(value32((void *)0x58ff61)==(U32)&omp_render-0x58ff65);
     try_omp_adapter();assert(pins==1);
-    puts("fixture: artwork and rendering");jump(fakeOmp+0x427a0,qa_fallback);
+    puts("fixture: artwork and rendering");jump(fakeOmp+QA_OMP_SPLASH,qa_fallback);
     /* Synthetic header/pixels only: no game, artwork or account is required. */
     encodedLength=8388776;encoded=malloc(encodedLength);assert(encoded);
     Byte *plain=calloc(encodedLength,1);assert(plain);
@@ -153,16 +177,22 @@ int main(int argc,char **argv) {
     put32(camera+0x80,0);omp_render();assert(draws==4 && inits==4);
     put32(camera+0x80,0x7f800000);omp_render();assert(draws==4 && inits==4);
     put32(camera+0x80,0x3f000000);
-    const Byte barCode[]={0x55,0x8b,0xec,0xa1};memcpy(fakeOmp+0x42620,barCode,4);
-    put32(fakeOmp+0x42624,(U32)(fakeOmp+0x1bc4a4));
+    const Byte barCode[]={0x55,0x8b,0xec,0xa1};memcpy(fakeOmp+QA_OMP_BAR,barCode,4);
+    put32(fakeOmp+(QA_OMP_BAR+4),(U32)(fakeOmp+QA_OMP_BAR_STATE));
     const Byte barPrologue[]={0x83,0xec,0x10,0x56,0x57};memcpy(savedBar,barPrologue,5);
-    jump(savedBar+5,(void *)0x590375);put32(fakeOmp+0x1d16f8,(U32)savedBar);
+    jump(savedBar+5,(void *)0x590375);put32(fakeOmp+QA_OMP_SAVED_BAR,(U32)savedBar);
     const Byte barX[]={0xd9,0x05,0x40,0x8b,0x85,0};const Byte barY[]={0xd8,0x0d,0x10,0x8a,0x85,0};
     memcpy((void *)0x5903c8,barX,6);memcpy((void *)0x5903e6,barY,6);
     jump((Byte *)0x590370,qa_fallback);U32 otherBar=value32((void *)0x590371);
     try_omp_bar_adapter();assert(!ompBarHooked && value32((void *)0x590371)==otherBar);
-    jump((Byte *)0x590370,fakeOmp+0x42620);savedBar[0]=0x90;
+    jump((Byte *)0x590370,fakeOmp+QA_OMP_BAR);savedBar[0]=0x90;
     try_omp_bar_adapter();assert(!ompBarHooked);savedBar[0]=0x83;
+#if QA_OMP_BUILD == 7
+    /* Build 7's {trampoline,target} must own the exact GTA loading-bar entry. */
+    put32(fakeOmp+QA_OMP_SAVED_BAR+4,0x590371);
+    try_omp_bar_adapter();assert(!ompBarHooked);
+    put32(fakeOmp+QA_OMP_SAVED_BAR+4,0x590370);
+#endif
     try_omp_bar_adapter();assert(ompBarHooked && ompBarOriginal==savedBar);
     assert(value32((void *)0x590371)==(U32)&omp_render_bar-0x590375);
     omp_render_bar();assert(centeredBars==1 && originalBars==0);

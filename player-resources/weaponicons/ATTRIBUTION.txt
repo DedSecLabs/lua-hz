@@ -1,0 +1,18 @@
+HQ Weapon Icons for San Andreas — Zera
+
+Original author: Zera
+Original release: https://www.gtagarage.com/mods/show.php?id=21062
+
+LuaHZ uses 46 unmodified 256x256 PNGs from Zera's original icon pack.
+LuaHZ renames the files to its weapon-ID resource names; the original-to-ID
+mapping and exact hashes are recorded in this directory's SOURCE.json in
+the source repository. Zera's artwork is separate from LuaHZ's MIT code.
+
+Zera's original readmes permit use in another mod with author credit and
+restrict rehosting the standalone mod without permission. The original
+English and Portuguese notices accompany these files as ZERA-README-EN.txt
+and ZERA-README-PT.txt. This is inclusion in LuaHZ under that mod-use grant,
+not a standalone mirror or a claim that LuaHZ created these icons.
+
+Original archive SHA-256:
+871e6c64d196603e74f4c358a5041cef58e12ba7a074a269ad5e3c12f4d33140

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Prepare a local bitmap-font atlas from the user-supplied DJDARKO PNG sources.
+"""Legacy preparation of a bitmap-font atlas from supplied DJDARKO PNG sources.
+
+Current accepted custom HUD fonts use prepare_hud_fonts.py. This older tool is
+retained for historical recovery and wanted-star provenance investigation.
 
 Requires Pillow only for asset preparation, not in the game. Originals are read
 only; generated third-party images remain in ignored local output.

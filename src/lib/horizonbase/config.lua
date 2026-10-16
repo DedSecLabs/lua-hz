@@ -12,6 +12,7 @@ M.defaults = {
                      preset1Speed = 50, preset2Speed = 80, preset3Speed = 120},
     fps = {onfoot = 0, invehicle = 0, swimming = 0, inboat = 0},
     interface = {scale = 100},
+    appearance = {theme = 'graphite'},
     hud = {scale = 100, x = 100, y = 5},
     modifiers = {settingsPanel=0, quickmap=0, siren=0, reload=0, characterStatus=0,quickActions=0,vehicleMenu=0, toggleKey=0, preset1Key=0, preset2Key=0, preset3Key=0},
     custombinds = {},
@@ -107,6 +108,9 @@ function M.validate(raw)
     number('settings', 'vdb', 0, 2)
     number('quickmap', 'opacity', 0, 100)
     number('interface', 'scale', 80, 200)
+    if out.appearance.theme~='graphite' and out.appearance.theme~='midnight' and out.appearance.theme~='carbon' then
+        out.appearance.theme=M.defaults.appearance.theme
+    end
     number('hud', 'scale', 50, 200)
     number('hud', 'x', 0, 100)
     number('hud', 'y', 0, 100)

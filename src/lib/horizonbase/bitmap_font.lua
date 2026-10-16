@@ -1,4 +1,4 @@
-local data=require 'horizonbase.hud_glyphs'
+local data={fonts={pricedown=require 'horizonbase.pricedown_glyphs',gothic=require 'horizonbase.science_gothic_glyphs'}}
 local M={};M.__index=M
 function M.new(im,texture)
     return setmetatable({im=im,texture=texture},M)
@@ -18,7 +18,7 @@ function M:width(text,height,kind)
 end
 function M:draw(dl,text,x,y,height,kind,color,outline,slant)
     slant=slant or 0
-    local tex=self.texture(data.atlas)
+    local tex=self.texture(data.fonts[kind].atlas or data.atlas)
     if not tex then return false end
     local im=self.im;local font=data.fonts[kind];local scale=height/font.height
     text=self:normalize(text,kind)

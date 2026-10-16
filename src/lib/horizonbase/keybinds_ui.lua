@@ -1,3 +1,4 @@
+local palette=require 'horizonbase.palette'
 local M={}
 function M.normal(ui)
     local im=ui.im
@@ -17,7 +18,7 @@ end
 function M.draw(ui)
     local im=ui.im;local S=ui.scale;local origin=im.GetCursorScreenPos()
     local width=ui:availableWidth();local tabWidth=width/2;local dl=im.GetWindowDrawList()
-    dl:AddLine(im.ImVec2(origin.x,origin.y+31*S),im.ImVec2(origin.x+width,origin.y+31*S),im.U32(.20,.21,.24,1),S)
+    dl:AddLine(im.ImVec2(origin.x,origin.y+31*S),im.ImVec2(origin.x+width,origin.y+31*S),palette.u32(im,'border'),S)
     for i,label in ipairs({'Normal keybinds','Command combos'})do
         local x=origin.x+(i-1)*tabWidth
         im.SetCursorScreenPos(im.ImVec2(x,origin.y))
@@ -26,7 +27,7 @@ function M.draw(ui)
             ui.keybindPage=i
         end
         local selected=ui.keybindPage==i
-        local color=selected and im.U32(1,.62,0,1) or im.U32(.64,.66,.70,1)
+        local color=selected and palette.u32(im,'accent') or palette.u32(im,'muted')
         local size=im.CalcTextSize(label)
         dl:AddText(im.ImVec2(x+(tabWidth-size.x)/2,origin.y+(30*S-size.y)/2),color,label)
         if selected then dl:AddLine(im.ImVec2(x,origin.y+31*S),im.ImVec2(x+tabWidth-4*S,origin.y+31*S),color,3*S)end

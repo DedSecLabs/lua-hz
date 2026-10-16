@@ -27,7 +27,7 @@ local game={sample=sample,cruise={active=true,target=120}}
 local prefs=Config.copy(Config.defaults)
 local o=Overlay.new(im,prefs,game,server)
 o.texture=function(_,rel)
-    if rel=='hud-v0218/hud-font.png'then return 1 end
+    if rel=='hud-pricedown-v042/font.png' or rel=='hud-science-gothic-v042/font.png'then return 1 end
     if rel=='weaponicons/0.png'then return 2 end
     if rel=='hud-v0218/wanted-star.png'then return 3 end
     if rel:find('dashboard%-v031/')then return 4 end
@@ -117,19 +117,20 @@ for _,mode in ipairs({1,2})do
     prefs.settings.vdb=mode;sample.vehicle=1
     for _,state in ipairs({'locked','unlocked','unknown'})do
         if state=='locked' then sample.locked=true elseif state=='unlocked' then sample.locked=false else sample.locked=nil end
+        game.vehicleInfo={current={handle=sample.vehicle,id=sample.networkVehicleId},state=function()return nil end}
         images={};rects={};texts={};Dashboard.draw(o,dl,sample,1,1920,1080,false,false)
-        local label=state~='unknown' and texts[2] or nil;local icon;for _,image in ipairs(images)do if image.tex==4 then icon=image;break end end
-        if label then assert(label.text==(state=='locked' and 'Locked' or 'Unlocked'))end
-        for _,row in ipairs(texts)do assert(row.text~='Unknown','Neutral color replaces unknown-state captions')end
+        local label=texts[2];local icon;for _,image in ipairs(images)do if image.tex==4 then icon=image;break end end
+        assert(label.text==(state=='locked' and 'Locked' or state=='unlocked' and 'Unlocked' or 'Unknown'))
         assert(icon.b.x-icon.a.x==44 and icon.b.y-icon.a.y==44)
-        assert(icon.color[4]==1 and math.max(icon.color[1],icon.color[2],icon.color[3])>=.90,'Lock state must never turn black or transparent')
+        local expected=require('horizonbase.palette').colors[state=='unlocked' and 'accent' or 'muted']
+        for channel=1,4 do assert(icon.color[channel]==expected[channel],'Lock state must use the shared accent/muted theme role')end
         if label then assert(label.pos.y>=icon.b.y and label.size==15,'Lock label must be readable below the icon')end
         for _,rect in ipairs(rects)do assert(rect.color[4]~=.96,'Lock indicator must share the dashboard background without a separate plate')end
         local box=Dashboard.layout(1920,1080,1,mode==1 and 'full' or 'minimal')
         if label then assert(label.pos.y+label.size<box.y+(mode==1 and 136 or 100),'Lock label must not overlap the health bar')end
     end
 end
-print('PASS larger vehicle icons and bright locked/unlocked/unknown labels sharing the dashboard background')
+print('PASS larger vehicle icons and themed locked/unlocked/unknown labels sharing the dashboard background')
 local originalTexture=o.texture
 o.texture=function(self,path)if path:find('vehicle-v040/',1,true)then return 5 end;return originalTexture(self,path)end
 sample.networkVehicleId=20
@@ -139,11 +140,11 @@ for _,mode in ipairs({1,2})do
         game.vehicleInfo={current={handle=sample.vehicle,id=20,ownership=owner},state=function()return nil end}
         texts={};images={};Dashboard.draw(o,dl,sample,1,1920,1080,false,false)
         local badge
-        for _,row in ipairs(texts)do if row.text==(owner=='personal' and 'Personal' or 'Family')then badge=row end end
+        for _,row in ipairs(texts)do if row.text==(owner=='personal' and 'Personal Vehicle' or 'Family Vehicle')then badge=row end end
         local box=Dashboard.layout(1920,1080,1,mode==1 and 'full' or 'minimal')
         assert(badge and badge.pos.y+badge.size<=box.y+box.height,'Ownership label must fit both dashboard modes')
         game.vehicleInfo.current.id=21;texts={};Dashboard.draw(o,dl,sample,1,1920,1080,false,false)
-        for _,row in ipairs(texts)do assert(row.text~='Personal' and row.text~='Family','Stale vehicle identity must not retain a badge')end
+        for _,row in ipairs(texts)do assert(row.text~='Personal Vehicle' and row.text~='Family Vehicle','Stale vehicle identity must not retain a badge')end
     end
 end
 o.texture=originalTexture;game.vehicleInfo=nil

@@ -1,0 +1,70 @@
+{
+  "name": "Proper Radar v1.3 - LuaHZ Map Adaptation",
+  "author": "Junior_Djjr",
+  "base_credits": [
+    "Grove Street Games (GTA Trilogy)",
+    "Jéssica Natália"
+  ],
+  "adaptation_credit": "LuaHZ contributors: Quickmap conversion and resource packaging",
+  "source": "https://www.mixmods.com.br/2022/07/proper-radar/",
+  "archive_sha256": "a490e2e7cb4f4e04ac609c5f9d7bd402aeb13aec73cfbe469e58b1537cc2506c",
+  "source_project_archive_sha256": "d44f3dbbd656d6476c188462feda2c5f6449b1407d87597a9c5ce662986e86ae",
+  "terms": "Custom original source-project alternative-version terms; retain credits, Proper Radar name, variation name and latest version. See included original readmes.",
+  "conversion": {
+    "source_tile_size": 512,
+    "source_grid": [
+      12,
+      12
+    ],
+    "quickmap_tile_size": 512,
+    "quickmap_grid": [
+      6,
+      6
+    ],
+    "quickmap_world": [
+      3072,
+      3072
+    ],
+    "resampling": "bilinear",
+    "jpeg_quality": 97,
+    "jpeg_chroma_subsampling": 0
+  },
+  "files": {
+    "1.jpg": "49715bf9f690c124a722b0c2d03626692377d2d3b978b9e898453af4d0f208b1",
+    "10.jpg": "527b69f75f06d452ea4f86f58c7836b93ca1b14fddef91c5c44e1792d66ebc1a",
+    "11.jpg": "5a0eda4b69ea2b80602695281f92201be4875242a49bc69a8904de647e366ad2",
+    "12.jpg": "6672149d2224e114d3eb40b36dff0fcc5b2fff1295a21f4addd79dad6adc7b8d",
+    "13.jpg": "ee4f8844665e260935dccf41d5233245f8fae85622d65ee6e93f3834c8341e9d",
+    "14.jpg": "315b31d53b455fd0fa44d943e863ec2d14d32210af20ea7d768deb0a20db895e",
+    "15.jpg": "ce6e90bd04d9e76751cb0ebe937c9cd6049ce3583242f047310f0b7639db87fd",
+    "16.jpg": "1dc7cad6f1d7c1a0e088d2f7a22ebdba19e2e15f171fb87e062c7f0d8e09c13e",
+    "17.jpg": "62779680e0757e9cb2072a3f54c2387a132d8f31460f8d2be8fc508933755c7e",
+    "18.jpg": "442d35393b6ca07d58d3be8100dd7da2062cb3cacc87477dad624fd5cd18c52a",
+    "19.jpg": "814402c2005cc14c124305c9ef2d610c06453332a7f67b2b186b8626f040b7cb",
+    "2.jpg": "3c42dc9e4f35ccb12a8709208a523ec1688cba2be635ac4cde58ba571b0edfb4",
+    "20.jpg": "e46552162f35ea8f999ddae72cfa35d84a75e4ce378063f827201447f997ca52",
+    "21.jpg": "22c3ad5371306f6b60825f8637376e5dcf61801116fa62ab3c09fd1cd97d34b7",
+    "22.jpg": "c89643c1b11f110f81f0a2b479bb1d63e315a1256de89dabb01d2034ed5d0d61",
+    "23.jpg": "7e315c3bad940d873fa9af4ddd99a4c5e41aacfc79729cc8e4fcbfe6319949b3",
+    "24.jpg": "32f889746541e687f40a0931ea25c59436f63d477e89e67579cbe23556744946",
+    "25.jpg": "8cb8e1828bb71ac341cad67bfcab1cb365ecb7bf0123ec22c88a46126f85bd12",
+    "26.jpg": "97cf25d66f77f049046ab5cb01f7eecee91c3d2d47367f75c289b9eafd8b073a",
+    "27.jpg": "394f3f06f0d9327c7e382e55c00b37dbe83d15c9f79f5c9dc68a7c8a2943cc02",
+    "28.jpg": "0bbf00e6a37ae887a7f3952a4ac47a13f6a872b1437dcfb6aa2ca68063dd64af",
+    "29.jpg": "1d17d1b06736056938fbfd3ae003b937e1b2bc4e360b757cc995fc43d1ae4533",
+    "3.jpg": "a88297cf725248b7a0fd66c003cc8cac444aa026ee7b8da0fcd0c62cbe75ea41",
+    "30.jpg": "12b5c10b985523f1c243f681d9c584d5fbb8762fc5e654e158c8fcb89e23ae55",
+    "31.jpg": "47492b4445d0364cee0095276426773e84c2fcd4ab7f1e621ca4f59e8c7bf8e0",
+    "32.jpg": "0422673e85f007b7f88b880337de043955b36eb7ddcdb3415f1e5de6103a86fe",
+    "33.jpg": "d662a481187aedbcfa08278dca756c1e36fdc0a4db0de24b6ea556fd3a2ec344",
+    "34.jpg": "2d09c7a49e4735844b92a8bb4f55e00f53f65c0fe1809096f577f62d3d677e19",
+    "35.jpg": "687548826014da3f08a6d2e0c9dbccfba6262e230e9f76572ee69e1be995c32b",
+    "36.jpg": "4f70d1757bc3b5226b3e219b7aae3ddfe77a49614d7a7fb7b3bd69519594102d",
+    "4.jpg": "b6a33ef28dc6db5d083e98d11c8aae142635c44f64ff205d46061115628704be",
+    "5.jpg": "087f7dc29fca45a70ff4cf69c6da0e7cc180eb53ce2823cfd0e42c7133806ce2",
+    "6.jpg": "3d159db3796d4e815aa3ecace63b75404fe3982933248e610144bf0d9e5e4452",
+    "7.jpg": "1dbae5e78cea978b38f585855ea4a40152987084275a7e6c7a6667de119c1184",
+    "8.jpg": "3996bb3018ae398bb06a617b21be74df0935f931f8c613310a8a7aeb177525ae",
+    "9.jpg": "66f9902c2c70b01f1eec24a7c65864bc98cb45355d6009e7b15d66088741c272"
+  }
+}

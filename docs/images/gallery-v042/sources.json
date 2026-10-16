@@ -1,0 +1,901 @@
+{
+  "captured_build": "0.4.2",
+  "captured_date": "2026-10-16",
+  "method": "Owner-authorized Python crops and alpha masks only; native-resolution RGB/text/version pixels preserved exactly. No generative editing, color changes or retouching. Captured translucent panels and HUD backdrop retained. Matching canvases within groups.",
+  "images": [
+    {
+      "file": "docs/images/gallery-v042/hud-settings.png",
+      "source": "hud-settings-0.4.2-20261016.png",
+      "source_sha256": "c7a35417a8aef3a8a5bdcbb04063ecdd3316585e97a434ce13019a2ce0b35c9c",
+      "output_sha256": "24b9b63d742ccbb700b33f404e3a3307563b2dd315b034a9cc1e25b8a959a482",
+      "crop": [
+        443,
+        245,
+        1523,
+        893
+      ],
+      "radius": 17,
+      "offset": [
+        12,
+        12
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": "Current HUD tab capture; rounded corners masked. Native-resolution RGB preserved."
+    },
+    {
+      "file": "docs/images/gallery-v042/settings-quickmap.png",
+      "source": "sa-mp-0000015.png",
+      "source_sha256": "1f83df5455a8d32b0bc73b0daef35256a72ad85c2a800ce22de02c2726847f2c",
+      "output_sha256": "a52e55bd4e15c3f5016e6f62ad99a169fd9ecc424723419c975d48f1df7b4f8a",
+      "crop": [
+        444,
+        246,
+        1522,
+        892
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/automation.png",
+      "source": "sa-mp-0000032.png",
+      "source_sha256": "883fa41c53d7833b2d4bac81d2658d77f72e9f4d38c028819b3f44d97fa2e612",
+      "output_sha256": "09a026f863a2e90df60cc93a7cbd3dc620050bbe6788ecdbcb5410d4db11809c",
+      "crop": [
+        444,
+        246,
+        1522,
+        892
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/normal-keybinds.png",
+      "source": "sa-mp-0000037.png",
+      "source_sha256": "e43f5ae6797eced09dad525c0a5272d3fa5b294a6fdb3e6ca24f4f4215e9f40f",
+      "output_sha256": "19e4bc9b9c50fbe924dd08274c5369a9574192baafa20c09352991e7618d947f",
+      "crop": [
+        444,
+        246,
+        1522,
+        892
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/command-combos.png",
+      "source": "sa-mp-0000038.png",
+      "source_sha256": "00a44ae19a5e35ae78c8c9892b2db37c969bf2dcdade56686eda72ae19309d46",
+      "output_sha256": "54ba5dcf0db19596e44a0a10c6b98836f4f8ec9b4902e27bd97d469f4e99ce9e",
+      "crop": [
+        444,
+        246,
+        1522,
+        892
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/performance.png",
+      "source": "sa-mp-0000039.png",
+      "source_sha256": "463dc4b5e2424032a840ed81f9946d9aa5395a6a71774b3950b274f34671ddc8",
+      "output_sha256": "c8bb070e41ca5ecb487730182b77325dec871b835ae1a7a36bbee0bfd0a21327",
+      "crop": [
+        444,
+        246,
+        1522,
+        892
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/server-commands.png",
+      "source": "sa-mp-0000040.png",
+      "source_sha256": "bc339ca1ed51a01872f5307e248f503ea637fd31c08cfc259b1a8ed8f07775c1",
+      "output_sha256": "420c99905df3a5e3c0f3d346d2112d95d29e8bbf46c8ca3778c1ac0b6b55168a",
+      "crop": [
+        444,
+        246,
+        1522,
+        892
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": "Captured incomplete-response warning is retained as-is."
+    },
+    {
+      "file": "docs/images/gallery-v042/mod-commands.png",
+      "source": "sa-mp-0000041.png",
+      "source_sha256": "00eeecf11c5a5068a73f234a2d1f7d6cc09058407838e07d045ec2c70f8fd644",
+      "output_sha256": "130d584d4ddad143ee0bdc177325b5e7acc8b3273dc3c66b0b4135ab807220a2",
+      "crop": [
+        444,
+        246,
+        1522,
+        892
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/server-families.png",
+      "source": "sa-mp-0000043.png",
+      "source_sha256": "362740d724519cf3f911fb3e99141f0a7362669c6f33dccbd98aa7b58c613cef",
+      "output_sha256": "d1d2a646453088635379d2a838ebee83a18ca0a702383271d63a13590d4a2593",
+      "crop": [
+        444,
+        246,
+        1522,
+        892
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/server-members.png",
+      "source": "sa-mp-0000044.png",
+      "source_sha256": "389c489eeb9d707dad30a018a72ee0893573613c1e33bdf58a34bfe414bc37d5",
+      "output_sha256": "269d72cc1cffe1afc174e5840cfa6831963db3564182b18ed826164f9bd4341f",
+      "crop": [
+        444,
+        246,
+        1522,
+        892
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/server-rules.png",
+      "source": "sa-mp-0000045.png",
+      "source_sha256": "b15c8baf9f173600486c2c3365f4e89fc488a6c093aae6b4a12802bf77d7c6e7",
+      "output_sha256": "de6ad1ce49fd2a4a38c8ab0114b27533aa13048da2d978361dcd78676a1cb903",
+      "crop": [
+        444,
+        246,
+        1522,
+        892
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/server-settings.png",
+      "source": "sa-mp-0000046.png",
+      "source_sha256": "d48a3424ef782cf3983364ee7b9328f0923537ffe4a2525ad3dc555b56b9bfe8",
+      "output_sha256": "2108c44ae8c4513297f8f46cb96d6b2a493aa38bb50fc265d58eb07e3492824d",
+      "crop": [
+        444,
+        246,
+        1522,
+        892
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/server-links.png",
+      "source": "sa-mp-0000047.png",
+      "source_sha256": "54fdad62bc2f7f7d6d798b1e068ee6537e88e8de4896ead7b452d099b72206ed",
+      "output_sha256": "56339c941b1bf51ff9bf94a8b83a1659d2101e63a88c989fd9612d00279a5e7e",
+      "crop": [
+        444,
+        246,
+        1522,
+        892
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/server-status.png",
+      "source": "sa-mp-0000048.png",
+      "source_sha256": "db29025d0f701d9d7f0c499dd66d01c2ca6304560429489b53c4e6f0e785cb09",
+      "output_sha256": "5850797a5cf1b6e4152cf5bf59af80de6292a8bd4bddef610ec09b5affff0fd3",
+      "crop": [
+        444,
+        246,
+        1522,
+        892
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/interface-settings.png",
+      "source": "sa-mp-0000066.png",
+      "source_sha256": "45355865bb36b6b2692f257d8679f0f3399502ca4594a5a7894108304eebe861",
+      "output_sha256": "ccfedd3758a440a5e0fa6814f93db7cda06db2b69cc87f68c413e626e78d33f2",
+      "crop": [
+        444,
+        246,
+        1522,
+        892
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/changelog.png",
+      "source": "sa-mp-0000050.png",
+      "source_sha256": "02e2db726e32dac6d19464cf6ec74b641457c672d780b572a8cb5cf4aab252c3",
+      "output_sha256": "4186e5f8c53e1709e409578ff7981443faf6470c996fa4607b7a8aa222dec4a2",
+      "crop": [
+        444,
+        246,
+        1522,
+        892
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/theme-midnight.png",
+      "source": "sa-mp-0000067.png",
+      "source_sha256": "4d56bb60dc4926b665c6212b112a2655b90cfea82a2489a1de454d3904579a37",
+      "output_sha256": "76eb7e00a7a2b2fb556a3df50b7d16ba629a7a6708d95e53dfac20ae60d38bf0",
+      "crop": [
+        444,
+        246,
+        1522,
+        892
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "midnight",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/theme-carbon.png",
+      "source": "sa-mp-0000068.png",
+      "source_sha256": "94556c096cce4ab9a845822cdc245651c86f95e1f3b7109ffea879ba918ac453",
+      "output_sha256": "f03c3c0e021d830f19a58374a596bc4fd307a6003ce09711478d1657c2ebcc24",
+      "crop": [
+        444,
+        246,
+        1522,
+        892
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "carbon",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/character.png",
+      "source": "sa-mp-0000052.png",
+      "source_sha256": "c5e270e6c12b0c8e991368d65445b041c47bccd373b578cec4e4c49f7e4f63bf",
+      "output_sha256": "6836409a39c5f6bdcf3a571a0ef870847daf62a215d8f6a55a4a0cac05326c81",
+      "crop": [
+        421,
+        217,
+        1499,
+        863
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/character-work.png",
+      "source": "sa-mp-0000053.png",
+      "source_sha256": "b4b9086c5918ab7a68d1cbe8f47134ffb6518590bb9c980f9cfdd904e45baff9",
+      "output_sha256": "91a924d20b4014c10e39c5f01833fb63ab274841e7e4cfcf7f489fd54afc1281",
+      "crop": [
+        421,
+        217,
+        1499,
+        863
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/character-finances.png",
+      "source": "sa-mp-0000054.png",
+      "source_sha256": "820eb383a30dce935dc2ec2f7512a12a87a494eb543dbb1b7fd708b41f112eb0",
+      "output_sha256": "fce30664d1c542c559993dea28eb22672593dbf88724a893a17981207128744b",
+      "crop": [
+        421,
+        217,
+        1499,
+        863
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/character-health.png",
+      "source": "sa-mp-0000055.png",
+      "source_sha256": "b40a5cd39be2f2f8e149835cf8269b4f5631ac587a309fb151e21754b2eadb7f",
+      "output_sha256": "ad5ba92a1feed661fae6bd4fca9c0180411a68ad1ee16dbb762d8b74db40ecf4",
+      "crop": [
+        421,
+        217,
+        1499,
+        863
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/character-inventory.png",
+      "source": "sa-mp-0000056.png",
+      "source_sha256": "2041d21c6319391863936274f29e9927de1a232518050da20773a77313aa76a3",
+      "output_sha256": "d10fd7305996231c71a496816fe91cfadb0017825516644c788ecf3cd85c245b",
+      "crop": [
+        421,
+        217,
+        1499,
+        863
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/character-licenses.png",
+      "source": "sa-mp-0000057.png",
+      "source_sha256": "8d9187ca330c9cd39f08e8e4ed9b86922876fc6a43d288778bc049483d6da622",
+      "output_sha256": "d05e5cefea60defa9e54548e7336c62966d4171e1f1942d9862298f398fb6aac",
+      "crop": [
+        421,
+        217,
+        1499,
+        863
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/quick-actions.png",
+      "source": "sa-mp-0000051.png",
+      "source_sha256": "cb2830ac83e69e058ba5a6a5d585cae4aa3ae27804afa701f00070fe1a13fe35",
+      "output_sha256": "d33f9fead201fa8d70862618e73b922d032e97756e0367a284f0d8bd04a8a84f",
+      "crop": [
+        601,
+        257,
+        1319,
+        823
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        744,
+        592
+      ],
+      "group": "quick-actions",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/vehicle-controls.png",
+      "source": "vehicle-personal-20261016.png",
+      "source_sha256": "404ae023a103150d19ee1a1a8b733dfb96b96cd7a129019e51a50793602eda06",
+      "output_sha256": "1455acdfe9899f7117dbbb2662300b9ce044b0af0acfd9d2f92fd101e515e398",
+      "crop": [
+        1461,
+        328,
+        1907,
+        712
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        472,
+        410
+      ],
+      "group": "vehicle-menu",
+      "theme": "graphite",
+      "note": "Owner-accepted vehicle UX captures; original RGB retained. Rounded surroundings masked; no text retouching."
+    },
+    {
+      "file": "docs/images/gallery-v042/vehicle-controls-family.png",
+      "source": "vehicle-family-20261016.png",
+      "source_sha256": "3d99b98ac5432ddea030d1fa8a3c35ea68bb2e5ccb5c6604ee03b09afcf1052e",
+      "output_sha256": "425b477ff807b761206c02b7297cbcce819dfc9fb950a40a67b0bf3236d9a904",
+      "crop": [
+        1461,
+        328,
+        1907,
+        712
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        472,
+        410
+      ],
+      "group": "vehicle-menu",
+      "theme": "graphite",
+      "note": "Owner-accepted vehicle UX captures; original RGB retained. Rounded surroundings masked; no text retouching."
+    },
+    {
+      "file": "docs/images/gallery-v042/vehicle-controls-onfoot.png",
+      "source": "vehicle-onfoot-20261016.png",
+      "source_sha256": "18cb8cc635e69e5395d7c1288e56859853e8872f9a604a3178efef35e3a6fa60",
+      "output_sha256": "4140d24fe7cce9b747755c15c1bdd9c54bce5e925917d57789c61b829f46437a",
+      "crop": [
+        1461,
+        328,
+        1907,
+        712
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        472,
+        410
+      ],
+      "group": "vehicle-menu",
+      "theme": "graphite",
+      "note": "Owner-accepted vehicle UX captures; original RGB retained. Rounded surroundings masked; no text retouching."
+    },
+    {
+      "file": "docs/images/gallery-v042/vehicle-trunk.png",
+      "source": "vehicle-trunk-20261016.png",
+      "source_sha256": "7d6b8bcb0392581432a6b4b76209cc0cac36af6767fe8b03a867a7bc01a98539",
+      "output_sha256": "758129cb7d4a1326766766592710c6676584c198a0edec2812bd7e295a74174d",
+      "crop": [
+        1461,
+        328,
+        1907,
+        712
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        472,
+        410
+      ],
+      "group": "vehicle-menu",
+      "theme": "graphite",
+      "note": "Owner-accepted vehicle UX captures; original RGB retained. Rounded surroundings masked; no text retouching."
+    },
+    {
+      "file": "docs/images/gallery-v042/vehicle-my-vehicles.png",
+      "source": "vehicle-storage-20261016.png",
+      "source_sha256": "2ad05c302463d8ececdfc0bac023a235f77de631cd1a525ecc3f0cb5e92d645a",
+      "output_sha256": "18b1071f5355ea3f2926f8408408f4b5af224f2e5e34e4775823cad81cea61e6",
+      "crop": [
+        1461,
+        328,
+        1907,
+        712
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        472,
+        410
+      ],
+      "group": "vehicle-menu",
+      "theme": "graphite",
+      "note": "Owner-accepted vehicle UX captures; original RGB retained. Rounded surroundings masked; no text retouching."
+    },
+    {
+      "file": "docs/images/gallery-v042/vehicle-tracking-dialog.png",
+      "source": "sa-mp-0000061.png",
+      "source_sha256": "20e6f4fe210f9d87f5df1b014e5f0514f198face552cead9c8c600a718e28936",
+      "output_sha256": "3271c8b94200c24901584500790f2eb76d307604327e6c26ac45fb0cf022a8c9",
+      "crop": [
+        760,
+        320,
+        1160,
+        760
+      ],
+      "radius": 0,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        426,
+        466
+      ],
+      "group": "native-dialog",
+      "theme": "graphite",
+      "note": "Native server selection dialog, not a LuaHZ-created panel."
+    },
+    {
+      "file": "docs/images/gallery-v042/vehicle-personal.png",
+      "source": "vehicle-personal-20261016.png",
+      "source_sha256": "404ae023a103150d19ee1a1a8b733dfb96b96cd7a129019e51a50793602eda06",
+      "output_sha256": "f44b22bac8e6b94e2d0cb36b972f2468bb15cb172b165f493a0ddebf67db52d8",
+      "crop": [
+        1461,
+        829,
+        1907,
+        1059
+      ],
+      "radius": 10,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        472,
+        256
+      ],
+      "group": "dashboard",
+      "theme": "graphite",
+      "note": "Owner-accepted vehicle UX captures; original RGB retained. Captured translucent dashboard tint retained."
+    },
+    {
+      "file": "docs/images/gallery-v042/vehicle-family.png",
+      "source": "vehicle-family-20261016.png",
+      "source_sha256": "3d99b98ac5432ddea030d1fa8a3c35ea68bb2e5ccb5c6604ee03b09afcf1052e",
+      "output_sha256": "1667a0f809a80721de13d5cf96d58431e0459fc604328079a456556386d4e9ca",
+      "crop": [
+        1461,
+        829,
+        1907,
+        1059
+      ],
+      "radius": 10,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        472,
+        256
+      ],
+      "group": "dashboard",
+      "theme": "graphite",
+      "note": "Owner-accepted vehicle UX captures; original RGB retained. Captured translucent dashboard tint retained."
+    },
+    {
+      "file": "docs/images/gallery-v042/player-hud.png",
+      "source": "sa-mp-0000065.png",
+      "source_sha256": "737fc377cba13d5b9a462a87c8519d9a59efff9a9cf44ee85f60395f1025f291",
+      "output_sha256": "d44eed2888c3093971747bf9a5e8344effda8ebf9d1967e1b2f08d3fde24949a",
+      "crop": [
+        1568,
+        55,
+        1907,
+        262
+      ],
+      "radius": 0,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        365,
+        233
+      ],
+      "group": "player-hud",
+      "theme": "graphite",
+      "note": "Captured backdrop retained, as in the earlier HUD gallery."
+    },
+    {
+      "file": "docs/images/gallery-v042/notification.png",
+      "source": "sa-mp-0000061.png",
+      "source_sha256": "20e6f4fe210f9d87f5df1b014e5f0514f198face552cead9c8c600a718e28936",
+      "output_sha256": "f96f051d449fc1e80ba79a3a096908605a32e8e2a8ae8e8402c7cea760fe8d82",
+      "crop": [
+        1541,
+        979,
+        1907,
+        1059
+      ],
+      "radius": 10,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        392,
+        106
+      ],
+      "group": "notification",
+      "theme": "graphite",
+      "note": ""
+    },
+    {
+      "file": "docs/images/gallery-v042/vehicle-trunk-balance.png",
+      "source": "vehicle-contents-20261016.png",
+      "source_sha256": "8f752219df77c208c43c70bc70948126b54a56a1cd35f66d1b43d849870f16fd",
+      "output_sha256": "255227c306d79ed9c6cbc7fcc00ff3a224e570ea6e5d36d60bcd8fdad3ac85d8",
+      "crop": [
+        1461,
+        328,
+        1907,
+        712
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        472,
+        410
+      ],
+      "group": "vehicle-menu",
+      "theme": "graphite",
+      "note": "Owner-accepted vehicle UX captures; original RGB retained. Rounded surroundings masked; no text retouching."
+    },
+    {
+      "file": "docs/images/gallery-v042/vehicle-tracking-active.png",
+      "source": "vehicle-tracking-20261016.png",
+      "source_sha256": "bcdaa3da5a3cc831b790e06886acf38c843e24a19d75ee4c0ec7098225eb3925",
+      "output_sha256": "55bf8e6ef93d10863bbf4ffe0ff3a72bf7ea1cd5f27ea322df1d5dbecd04a6c1",
+      "crop": [
+        1461,
+        328,
+        1907,
+        712
+      ],
+      "radius": 17,
+      "offset": [
+        13,
+        13
+      ],
+      "size": [
+        472,
+        410
+      ],
+      "group": "vehicle-menu",
+      "theme": "graphite",
+      "note": "Owner-accepted vehicle UX captures; original RGB retained. Rounded surroundings masked; no text retouching."
+    }
+  ],
+  "vehicle_update": {
+    "date": "2026-10-16",
+    "original_captures": 7,
+    "exports": 9,
+    "scope": "Current Controls/on-foot/Trunk/Storage/active Tracking and Personal/Family dashboards. Native-resolution crops and masks only."
+  }
+}

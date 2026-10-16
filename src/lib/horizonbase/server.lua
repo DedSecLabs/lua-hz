@@ -133,15 +133,14 @@ function M:toggleTrack(quiet)
     if not self.horizon then self.notify('Vehicle tracking is available on Horizon Roleplay.'); return end
     if self.track.active then
         self:stopTrack()
-        if quiet then self.actionNotify('Vehicle tracking stopped.','info','quick-actions')else self.notify('Vehicle tracker stopped.')end
+        self.actionNotify('Vehicle tracking stopped.','info','vehicle-tracker')
         return true
     end
     if self.clearNavigation then return false end
     self.track.active = true
     self.track.nextAt = self.now()
     self.track.refresh = false
-    if quiet then self.actionNotify('Choose your vehicle when prompted.','info','quick-actions')
-    else self.notify('Vehicle tracker enabled. Choose your vehicle if prompted.')end
+    self.actionNotify('Vehicle tracker enabled. Choose your vehicle when prompted.','info','vehicle-tracker')
     return true
 end
 

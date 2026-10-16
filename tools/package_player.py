@@ -14,11 +14,18 @@ import zipfile
 from package_base import ROOT, base_payload, prerequisite_checksums, sha
 
 GROUPS = (
-    'fonts', 'sa_map', 'weaponicons', 'hud-v0218', 'dashboard-v031', 'vehicle-v040',
+    'fonts', 'sa_map', 'weaponicons', 'hud-v0218', 'hud-science-gothic-v042',
+    'hud-pricedown-v042', 'dashboard-v031', 'vehicle-v040', 'vehicle-v042',
     'portraits-v0222', 'ui-v0212', 'native-v0232', 'loading-v0233',
 )
 REQUIRED = (
-    'moonloader/resource/horizonbase/hud-v0218/hud-font.png',
+    'moonloader/resource/horizonbase/hud-science-gothic-v042/font.png',
+    'moonloader/resource/horizonbase/hud-science-gothic-v042/OFL.txt',
+    'moonloader/resource/horizonbase/hud-science-gothic-v042/ATTRIBUTION.txt',
+    'moonloader/resource/horizonbase/hud-pricedown-v042/font.png',
+    'moonloader/resource/horizonbase/hud-pricedown-v042/read_me.html',
+    'moonloader/resource/horizonbase/hud-pricedown-v042/ATTRIBUTION.txt',
+    'moonloader/resource/horizonbase/hud-v0218/wanted-star.png',
     'moonloader/resource/horizonbase/dashboard-v031/car-door-lock.png',
     'moonloader/resource/horizonbase/dashboard-v031/car-door-lock-open.png',
     'moonloader/resource/horizonbase/dashboard-v031/car-gear.png',
@@ -32,6 +39,9 @@ REQUIRED = (
     'moonloader/resource/horizonbase/vehicle-v040/key.png',
     'moonloader/resource/horizonbase/vehicle-v040/users.png',
     'moonloader/resource/horizonbase/vehicle-v040/garage.png',
+    'moonloader/resource/horizonbase/vehicle-v042/garage.png',
+    'moonloader/resource/horizonbase/vehicle-v042/ATTRIBUTION.txt',
+    'moonloader/resource/horizonbase/vehicle-v042/CC0-1.0.txt',
     'moonloader/resource/horizonbase/sa_map/1.jpg',
     'moonloader/resource/horizonbase/sa_map/36.jpg',
     'moonloader/resource/horizonbase/ui-v0212/radar_centre.png',
@@ -51,6 +61,9 @@ def add_visuals(payload, resources, asi):
             raise ValueError('Missing current resource group: ' + group)
         for path in sorted(folder.rglob('*')):
             if path.is_symlink() or not path.is_file() or path.name.endswith('SOURCE.json'):
+                continue
+            # Retain historical inputs on disk; the accepted fonts use separate atlases.
+            if group == 'hud-v0218' and path.name == 'hud-font.png':
                 continue
             relative = 'moonloader/resource/horizonbase/' + path.relative_to(resources).as_posix()
             if not relative.startswith('moonloader/resource/horizonbase/' + group + '/'):
@@ -126,7 +139,7 @@ def install_notes(version):
 
 One download for Linux and Windows. It contains the HUD font, Quickmap, portraits, native visuals, and loading artwork. GTA, SA-MP, CLEO, SilentPatchSA Build 34.1, MoonLoader, SAMPFUNCS, and mimgui stay separate. The verified SAMP.Lua files are included. Install the tested prerequisites linked in the repository README first.
 
-Classic SA-MP 0.3.7 R5 remains supported. Starting with 0.4.1, [open.mp launcher 1.6.1](https://open.mp/downloads/launcher) is an optional alternative with native client build 6 and the verified R5 client. Point it at the GTA folder and select 0.3.7 R5. Other SA-MP versions and unrecognized open.mp client builds are outside the native compatibility scope. open.mp uses F9 for its browser: open `/luahz` and assign F12 or another available settings shortcut. Preferences are not changed automatically.
+Classic SA-MP 0.3.7 R5 remains supported. [open.mp launcher 1.7.0](https://open.mp/downloads/launcher) is an optional alternative using verified native client build 7 and the SA-MP R5 client; 1.6.1/build 6 remains supported. Point it at the GTA folder and select 0.3.7 R5. Other SA-MP versions and unrecognized open.mp client builds are outside the native compatibility scope. open.mp uses F9 for its browser: open `/luahz` and assign F12 or another available settings shortcut. Preferences are not changed automatically.
 
 Close GTA and both multiplayer launchers. Extract this ZIP outside the game folder.
 
@@ -138,7 +151,7 @@ The **GTA folder** contains `gta_sa.exe`. The installer verifies the payload and
 powershell -NoProfile -ExecutionPolicy Bypass -File .\\install.ps1 "C:\\Games\\GTA San Andreas"
 ```
 
-To upgrade an existing LuaHZ installation, add `-Upgrade`. Keep the backup until the new build works. The owner passed the Windows 11 0.4.1 checklist and final smoke test with both open.mp and classic SA-MP R5, including the combined helper, features/input/preferences and server switching. Linux source, installer/recovery fixtures and both native builds passed CI. Linux/Wine owner gameplay QA covers the previously published 0.4.0 archive. Exact archive hashes and owner acceptance are recorded separately; publication metadata changes preserve the tested game payload.
+To upgrade an existing LuaHZ installation, add `-Upgrade`. Keep the backup until the new build works. The loading helper passed owner QA on Windows 11 with open.mp 1.7.0/build 7, open.mp 1.6.1/build 6 and classic SA-MP R5. Exact release archive acceptance is recorded separately. Linux/Wine owner gameplay QA covers the previous 0.4.0 release.
 
 **Linux/Wine:** from the extracted folder, run:
 
@@ -149,6 +162,8 @@ bash install.sh "/path/to/GTA San Andreas"
 To upgrade, run `bash install.sh "/path/to/GTA San Andreas" --upgrade`. Existing resource groups not used by this build are left in place; recovery restores overwritten files and removes files added by this installation. Install SilentPatchSA Build 34.1 separately before upgrading from 0.2.39.
 
 Join samp.hzgaming.net:7777. F9 opens settings, I opens Character Status, M opens Quickmap, U opens character Quick Actions, K opens Vehicle, and X toggles cruise while driving. Hold Alt to click the Vehicle panel; release Alt for mouse/camera control. K or Escape closes it. Shortcuts are configurable in F9; existing key assignments are preserved.
+
+The Vehicle menu also shows contextual shortcuts for its active tab: Controls E/L/O/U/H/B; Trunk B/C; My vehicles V/R. Brackets change tabs. Configured settings/menu bindings take priority, and vehicle shortcuts pause while typing or using native dialogs. Existing action eligibility and server confirmations apply.
 
 Download `LuaHZ-{version}-player.zip` to install the mod. The “Source code” archives are for developers.
 '''.encode()
