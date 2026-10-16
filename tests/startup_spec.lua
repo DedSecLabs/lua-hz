@@ -339,9 +339,9 @@ onWindowMessage(0x0100,85,0);im.clicks['Stop finding##quickAction']=true;frames[
 onWindowMessage(0x0100,75,0);im.drawTexts={};frames[8].draw();assert(table.concat(im.drawTexts,'|'):find('Trunk balance',1,true),'K must open Trunk while on foot')
 im.clicks['My vehicles##vehicleTab3']=true;im.clicks['Track vehicle##vehicleAction']=true;down[18]=true;tick();frames[8].draw();down[18]=nil;gameClock=79500;tick();assert(sent[#sent]=='/trackcar')
 im.clicks['Stop tracking##vehicleAction']=true;down[18]=true;tick();frames[8].draw();down[18]=nil;tick()
-im.clicks['Controls##vehicleTab1']=true;im.clicks['Lock / unlock##vehicleAction']=true;down[18]=true;tick();frames[8].draw();down[18]=nil;gameClock=81000;tick();assert(sent[#sent]=='/pvl')
+im.clicks['Controls##vehicleTab1']=true;im.clicks['Doors##vehicleAction']=true;down[18]=true;tick();frames[8].draw();down[18]=nil;gameClock=81000;tick();assert(sent[#sent]=='/pvl')
 events.onTextDrawSetString(2050,'~g~Test Vehicle Unlocked')
-onWindowMessage(0x0100,85,0);onWindowMessage(0x0100,27,0);assert(not frames[7].Condition())
+onWindowMessage(0x0100,75,0);onWindowMessage(0x0100,85,0);onWindowMessage(0x0100,27,0);assert(not frames[7].Condition())
 assert(frames[7].LockPlayer and not frames[7].HideCursor)
 rawPrint('PASS character U panel and separate K storage/tracking/locking actions')
 local parkedCar=2
