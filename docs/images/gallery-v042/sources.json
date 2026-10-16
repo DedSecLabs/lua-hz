@@ -4,6 +4,30 @@
   "method": "Owner-authorized Python crops and alpha masks only; native-resolution RGB/text/version pixels preserved exactly. No generative editing, color changes or retouching. Captured translucent panels and HUD backdrop retained. Matching canvases within groups.",
   "images": [
     {
+      "file": "docs/images/gallery-v042/hud-settings.png",
+      "source": "hud-settings-0.4.2-20261016.png",
+      "source_sha256": "c7a35417a8aef3a8a5bdcbb04063ecdd3316585e97a434ce13019a2ce0b35c9c",
+      "output_sha256": "24b9b63d742ccbb700b33f404e3a3307563b2dd315b034a9cc1e25b8a959a482",
+      "crop": [
+        443,
+        245,
+        1523,
+        893
+      ],
+      "radius": 17,
+      "offset": [
+        12,
+        12
+      ],
+      "size": [
+        1104,
+        672
+      ],
+      "group": "menu",
+      "theme": "graphite",
+      "note": "Current HUD tab capture; rounded corners masked. Native-resolution RGB preserved."
+    },
+    {
       "file": "docs/images/gallery-v042/settings-quickmap.png",
       "source": "sa-mp-0000015.png",
       "source_sha256": "1f83df5455a8d32b0bc73b0daef35256a72ad85c2a800ce22de02c2726847f2c",

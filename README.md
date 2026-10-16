@@ -115,13 +115,13 @@ Add `samp.hzgaming.net:7777` in the SA-MP browser and connect. A LuaHZ notice ap
 
 > Change shortcuts and preset speeds in **LuaHZ settings (`/luahz`) → Keybinds → Normal keybinds**. Cruise works while you drive a road vehicle. Brake, or press **X** again, to cancel.
 
-The new **0.4.2** captures show Graphite + Ice Blue, its two alternative themes, compact job actions, Character/Server pages and vehicle interfaces. Older HUD-settings, map/radar, stamina/oxygen, and Find player illustrations remain where a new matching capture was not supplied. Screenshot text and colors are preserved exactly.
+The new **0.4.2** captures show Graphite + Ice Blue, its two alternative themes, compact job actions, Character/Server pages and vehicle interfaces. Older map/radar and stamina/oxygen illustrations remain where a new matching capture was not supplied. Screenshot text and colors are preserved exactly.
 
 ### HUD
 
 The HUD tab controls stamina and oxygen displays and the vehicle dashboard. Configure the HUD with `/luahz`.
 
-<img src="docs/images/gallery-v03/settings-hud.png" alt="HUD settings" width="720"><br>
+<img src="docs/images/gallery-v042/hud-settings.png" alt="HUD settings" width="720"><br>
 
 High-resolution HUD fonts and weapon icons keep the time, health, armor and cash readable.
 
@@ -272,8 +272,6 @@ Press U for navigation, skills, job locations and help, plus actions matched to 
 
 Select an online name or ID. The server checks detective-job access.
 
-<img src="docs/images/gallery-v03/find-player.png" alt="Find player" width="720"><br>
-
 ### Vehicle menu
 
 Press **K** for the panel aligned above the vehicle dashboard. Trunk opens on foot; Controls opens inside a vehicle. Keep moving or driving while it stays visible. Use the rounded key hints on the active tab, or hold **Alt** to click. **[ / ]** change tabs; **K** or **Escape** closes the panel. Configured settings/menu bindings take priority over conflicting contextual hints.
@@ -354,7 +352,7 @@ Original LuaHZ code is [MIT licensed](LICENSE). The mimgui adapter and Lucide ic
 
 These credits identify the sources currently recorded. Individual notices, licenses and remaining provenance details are in [third-party notices](THIRD_PARTY.md); LuaHZ's MIT license applies to its original code.
 
-LuaHZ is an independent project informed by the visible LunaHZ feature baseline. No affiliation with Horizon Gaming, Rockstar Games, SA-MP, or the prerequisite authors is implied.
+LuaHZ was inspired by the visible feature set of [LunaHZ](https://forums.hzgaming.net/showthread.php/562577-LunaHZ-HUD-Quickmap-amp-more) ([project page](https://github.com/lunahz/)). LuaHZ is a separate project and is not affiliated with LunaHZ, Horizon Gaming, Rockstar Games, SA-MP, or its prerequisite authors.
 
 ## Support
 
