@@ -6,7 +6,7 @@ function doesFileExist()return true end
 im.CreateTextureFromFile=function(path)paths[#paths+1]=path;return #paths end
 local o=require('horizonbase.overlay').new(im,{}, {}, {})
 o:initialize()
-assert(#paths==3,'Startup must upload only the essential HUD textures')
+assert(#paths==4,'Startup must upload only the two font atlases, wanted star and radar marker')
 assert(o:warmupPending())
 while o:warmupPending() do
     local before=#paths;o:warmupStep()

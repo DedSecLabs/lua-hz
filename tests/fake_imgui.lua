@@ -19,7 +19,9 @@ local style={Colors={}}
 function im.GetStyle() return style end
 local io={FontGlobalScale=1}
 function im.GetIO()return io end
-function im.GetFont()return ffi.cast('void*',1)end
+local font={FontSize=15}
+function font:FindGlyph()return {X0=0,Y0=0,X1=7,Y1=15,AdvanceX=7}end
+function im.GetFont()return font end
 function im.GetFontSize()return 15*io.FontGlobalScale end
 function im.SetWindowFontScale()end
 function im.GetScreenSize() return vec2(1920,1080) end
